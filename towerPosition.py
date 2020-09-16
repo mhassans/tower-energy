@@ -40,10 +40,9 @@ third_max_Overlap = ROOT.TH1D("third_max_Overlap","",20,0,20)
 nonZero_Overlap = ROOT.TH1D("nonZero_Overlap","",30,0,30)
 nonZero_OverlapVsEta = ROOT.TH2D("nonZero_OverlapVsEta","",30,0,30,nBinsEta,minEta,maxEta)
 
-for u in range(np.max(TCs['waferu'])): #wafer u
-    for v in range(np.max(TCs['waferv'])): #wafer v
-        #for l in range(1, 2): #layer number
-        for l in range(1, int(np.max(TCs['layer'])) ): #layer number
+for u in range(1+np.max(TCs['waferu'])): #wafer u
+    for v in range(1+np.max(TCs['waferv'])): #wafer v
+        for l in range(1, 1+int(np.max(TCs['layer'])) ): #layer number
             tower[u,v,l] = ROOT.TH2D("tower_u"+str(u)+"_v"+str(v)+"_layer"+str(l),"",nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
             
             for index, row in TCs[(TCs["waferu"]==u) & (TCs["waferv"]==v) & (TCs["layer"]==l)].iterrows():
