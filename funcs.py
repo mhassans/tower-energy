@@ -11,6 +11,14 @@ def chisquare(vec1, vec2):
         chi2 += np.power(vec1[i]-vec2[i], 2)
     return chi2
 
-
-#for p in partitions(8, 4):
-#    print(p)
+def calc_kernel(n):
+    kernel = np.zeros((n,n))
+    center = n//2
+    kernel[center, center] = 1.
+    for i in range(n):
+        for j in range(n):
+            if not (i==center and j==center):
+                kernel[i,j] = 0.001 / ( (i-center)**2 + (j-center)**2 )
+    
+    kernel /= kernel.sum() 
+    return kernel

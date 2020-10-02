@@ -2,17 +2,17 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import math
 
-sensorCell = False #sensor cell or trigger cell
+sensorCell = True #sensor cell or trigger cell
 
-u = 3
+u = 2
 v = 2
-layer = 36
+layer = 26
 
-eta_min = 31  
-eta_max = 39  
+eta_min = 32 
+eta_max = 38  
 
-phi_min = 1 
-phi_max = 11  
+phi_min = 8 
+phi_max = 16  
 
 eta_ticks = [a*(2*math.pi/72) for a in range(eta_min, eta_max)] 
 phi_ticks = [b*(2*math.pi/72) for b in range(phi_min, phi_max)] 
