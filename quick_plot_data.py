@@ -4,24 +4,24 @@ import math
 
 sensorCell = True #sensor cell or trigger cell
 
-u = 2
-v = 2
-layer = 26
+u = 9
+v = 10
+layer = 1
 
-eta_min = 32 
-eta_max = 38  
+eta_min = 16 
+eta_max = 20  
 
-phi_min = 8 
+phi_min = 11 
 phi_max = 16  
 
 eta_ticks = [a*(2*math.pi/72) for a in range(eta_min, eta_max)] 
 phi_ticks = [b*(2*math.pi/72) for b in range(phi_min, phi_max)] 
 
 if (sensorCell):
-    cells = pd.read_csv('TCPositions/sensorCell_positions.txt', sep=' ')
+    cells = pd.read_csv('cellPositions/sensorCell_positions.txt', sep=' ')
     cells.columns= ["layer","waferu","waferv","triggercellu","triggercellv","SC_eta","SC_phi"]
 else:
-    cells = pd.read_csv('TCPositions/TCPositions_Zminus_siliconOnly.csv', sep=' ')
+    cells = pd.read_csv('cellPositions/TCPositions_Zminus_siliconOnly.csv', sep=' ')
 
 cell_u_v_layer = cells[(cells['waferu'] == u) & (cells['waferv'] == v) & (cells['layer'] == layer)]
 

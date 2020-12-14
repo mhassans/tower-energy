@@ -55,8 +55,8 @@ counter_total = 0
 with open("splitModuleSumsOverTowers.txt", "w") as f:
     f.write("layer waferu waferv eta-phi-fraction\n")
 
-    for l in range(1, 1+int(np.max(SCs['layer'])) ): #layer number
-#    for l in range(1, 2): #layer number
+#    for l in range(1, 1+int(np.max(SCs['layer'])) ): #layer number
+    for l in range(1, 2): #layer number
         for u in range(1+np.max(SCs['waferu'])): #wafer u
             for v in range(1+np.max(SCs['waferv'])): #wafer v
                 tower[u,v,l] = ROOT.TH2D("tower_u"+str(u)+"_v"+str(v)+"_layer"+str(l),"",nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
