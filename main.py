@@ -64,8 +64,8 @@ kernel = calc_kernel(5)
 
 with open("splitModuleSumsOverTowers.txt", "w") as f:
     f.write("layer waferu waferv numOfTowers ListOf:eta-phi-fraction\n")
-#    for l in range(1, 1+int(np.max(cells['layer'])) ): #layer number
-    for l in range(1, 2): #layer number
+    for l in range(1, 1+int(np.max(cells['layer'])) ): #layer number
+#    for l in range(1, 2): #layer number
         if (l <= 28 and l%2 == 0): #only using trigger layers 
             continue
         print('layer= ', l)
