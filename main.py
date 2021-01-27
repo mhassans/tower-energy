@@ -63,9 +63,9 @@ inclusive_numOfModulesPerTowerPerLayer = ROOT.TH2D("inclusive_numOfModulesPerTow
 kernel = calc_kernel(5)
 
 with open("splitModuleSumsOverTowers.txt", "w") as f:
-    f.write("layer waferu waferv eta-phi-fraction\n")
-    for l in range(1, 1+int(np.max(cells['layer'])) ): #layer number
-#    for l in range(1, 2): #layer number
+    f.write("layer waferu waferv numOfTowers ListOf:eta-phi-fraction\n")
+#    for l in range(1, 1+int(np.max(cells['layer'])) ): #layer number
+    for l in range(1, 2): #layer number
         if (l <= 28 and l%2 == 0): #only using trigger layers 
             continue
         print('layer= ', l)
@@ -153,11 +153,16 @@ with open("splitModuleSumsOverTowers.txt", "w") as f:
 
                     eta_phi_fit_TC = [[l[0]-1, l[1]-7] for l in np.transpose(np.nonzero(fit_TC[u,v,l])).tolist()]
                     values_fit_TC = fit_TC[u,v,l][np.nonzero(fit_TC[u,v,l])].astype(int)
+                    NumTowersOverlapModule = len(eta_phi_fit_TC)
 
-                    nonZero_Overlap_afterFit.Fill(len(eta_phi_fit_TC))
+                    nonZero_Overlap_afterFit.Fill(NumTowersOverlapModule)
     
-                    f.write("{} {} {} {}\n".format(l, u, v, tuple(zip(eta_phi_fit_TC, values_fit_TC))))
-    
+                    f.write("{} {} {} ".format(l, u, v))#, tuple(zip(eta_phi_fit_TC, values_fit_TC))))
+                    f.write("{} ".format(NumTowersOverlapModule))
+                    for idx in range(NumTowersOverlapModule):
+                        f.write("{} {} {} ".format(eta_phi_fit_TC[idx][0], eta_phi_fit_TC[idx][1], values_fit_TC[idx]))
+                    f.write("\n")
+
                     inclusive_fit_TC.Add(fit_TC_hist[u,v,l])
                     inclusive.Add(tower[u,v,l])
                     inclusive_numOfModulesPerTowerPerLayer.Add(numOfModulesPerTower[u,v,l])
