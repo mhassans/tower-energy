@@ -62,10 +62,21 @@ inclusive_numOfModulesPerTowerPerLayer = ROOT.TH2D("inclusive_numOfModulesPerTow
 
 kernel = calc_kernel(5)
 
+###parameters matrix###
+#nTrigLayer = 14 + 22 #number of trigger layers in the HGC.
+#nEtaTower = 22 #conservative estimate of number of eta bins in tower energy hist.
+#nPhiTower = 32 #conservative estimate of number of eta bins in tower energy hist.
+#nModule = 14*14*nTrigLayer #conservative estimate of number of Modules. u and v are from 0 to 13
+#nTotalTower = nTrigLayer * nEtaTower * nPhiTower # conservative estimate of number of towers in all layers
+#param_mtx = np.zeros(shape=(nModule, nTotalTower))
+#######################
+
+param_mtx = pd.DataFrame()
+
 with open("splitModuleSumsOverTowers.txt", "w") as f:
     f.write("layer waferu waferv numOfTowers ListOf:eta-phi-fraction\n")
     for l in range(1, 1+int(np.max(cells['layer'])) ): #layer number
-#    for l in range(1, 2): #layer number
+#    for l in range(1, 6): #FIXME
         if (l <= 28 and l%2 == 0): #only using trigger layers 
             continue
         print('layer= ', l)
@@ -73,6 +84,8 @@ with open("splitModuleSumsOverTowers.txt", "w") as f:
 
         for u in range(1+np.max(cells['waferu'])): #wafer u
             for v in range(1+np.max(cells['waferv'])): #wafer v
+        #for u in range(5): #FIXME
+        #    for v in range(5): #FIXME
                 tower[u,v,l] = ROOT.TH2D("tower_u"+str(u)+"_v"+str(v)+"_layer"+str(l),"",nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
                 
                 wafer_data = cells[(cells["waferu"]==u) & (cells["waferv"]==v) & (cells["layer"]==l)] 
@@ -157,12 +170,21 @@ with open("splitModuleSumsOverTowers.txt", "w") as f:
 
                     nonZero_Overlap_afterFit.Fill(NumTowersOverlapModule)
     
-                    f.write("{} {} {} ".format(l, u, v))#, tuple(zip(eta_phi_fit_TC, values_fit_TC))))
-                    f.write("{} ".format(NumTowersOverlapModule))
+                    #f.write("{} {} {} ".format(l, u, v))#, tuple(zip(eta_phi_fit_TC, values_fit_TC))))
+                    #f.write("{} ".format(NumTowersOverlapModule))
+                    #for idx in range(NumTowersOverlapModule):
+                    #    f.write("{} {} {} ".format(eta_phi_fit_TC[idx][0], eta_phi_fit_TC[idx][1], values_fit_TC[idx]))
+                    #f.write("\n")
+                    
+                    ####################DataFrame#######################
+                    newColName = 'l' + str(l) + '-u' + str(u) + '-v' +str(v) # name of new column
+                    param_mtx.insert(len(param_mtx.columns), newColName, np.zeros(len(param_mtx)))
                     for idx in range(NumTowersOverlapModule):
-                        f.write("{} {} {} ".format(eta_phi_fit_TC[idx][0], eta_phi_fit_TC[idx][1], values_fit_TC[idx]))
-                    f.write("\n")
-
+                        newRowName = 'l'+str(l)+'-eta'+str(eta_phi_fit_TC[idx][0])+'-phi'+str(eta_phi_fit_TC[idx][1])
+                        param_mtx.loc[newRowName] = np.zeros(len(param_mtx.columns))
+                        param_mtx.at[newRowName, newColName] = values_fit_TC[idx]
+                    ######################DataFrame Ends#####################
+                    
                     inclusive_fit_TC.Add(fit_TC_hist[u,v,l])
                     inclusive.Add(tower[u,v,l])
                     inclusive_numOfModulesPerTowerPerLayer.Add(numOfModulesPerTower[u,v,l])
@@ -180,7 +202,7 @@ with open("splitModuleSumsOverTowers.txt", "w") as f:
 
 
 
-
+param_mtx.to_pickle('./jupyter/param_mtx.pkl')
 
 
 
