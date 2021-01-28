@@ -62,147 +62,140 @@ inclusive_numOfModulesPerTowerPerLayer = ROOT.TH2D("inclusive_numOfModulesPerTow
 
 kernel = calc_kernel(5)
 
-###parameters matrix###
-#nTrigLayer = 14 + 22 #number of trigger layers in the HGC.
-#nEtaTower = 22 #conservative estimate of number of eta bins in tower energy hist.
-#nPhiTower = 32 #conservative estimate of number of eta bins in tower energy hist.
-#nModule = 14*14*nTrigLayer #conservative estimate of number of Modules. u and v are from 0 to 13
-#nTotalTower = nTrigLayer * nEtaTower * nPhiTower # conservative estimate of number of towers in all layers
-#param_mtx = np.zeros(shape=(nModule, nTotalTower))
-#######################
+param_mtx_em = pd.DataFrame() #paramter matrix (module vs tower) for CE-E
+param_mtx_had = pd.DataFrame() #paramter matrix (module vs tower) for CE-H
+param_mtx = {0:param_mtx_em, 1:param_mtx_had}
 
-param_mtx = pd.DataFrame()
+#with open("splitModuleSumsOverTowers.txt", "w") as f:
+    #f.write("layer waferu waferv numOfTowers ListOf:eta-phi-fraction\n")
+for l in range(1, 1+int(np.max(cells['layer'])) ): #layer number
+    if (l <= 28 and l%2 == 0): #only using trigger layers 
+        continue
+    print('layer= ', l)
+    inclusive_numOfModulesPerTowerPerLayer.Reset()
+    for u in range(1+np.max(cells['waferu'])): #wafer u
+        for v in range(1+np.max(cells['waferv'])): #wafer v
+            tower[u,v,l] = ROOT.TH2D("tower_u"+str(u)+"_v"+str(v)+"_layer"+str(l),"",nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
+            
+            wafer_data = cells[(cells["waferu"]==u) & (cells["waferv"]==v) & (cells["layer"]==l)] 
+            if len(wafer_data)!=0:
 
-with open("splitModuleSumsOverTowers.txt", "w") as f:
-    f.write("layer waferu waferv numOfTowers ListOf:eta-phi-fraction\n")
-    for l in range(1, 1+int(np.max(cells['layer'])) ): #layer number
-#    for l in range(1, 6): #FIXME
-        if (l <= 28 and l%2 == 0): #only using trigger layers 
-            continue
-        print('layer= ', l)
-        inclusive_numOfModulesPerTowerPerLayer.Reset()
-
-        for u in range(1+np.max(cells['waferu'])): #wafer u
-            for v in range(1+np.max(cells['waferv'])): #wafer v
-        #for u in range(5): #FIXME
-        #    for v in range(5): #FIXME
-                tower[u,v,l] = ROOT.TH2D("tower_u"+str(u)+"_v"+str(v)+"_layer"+str(l),"",nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
+                for index, row in wafer_data.iterrows():
+                    tower[u,v,l].Fill(-1.0*row["SC_eta"], row["SC_phi"])
                 
-                wafer_data = cells[(cells["waferu"]==u) & (cells["waferv"]==v) & (cells["layer"]==l)] 
-                if len(wafer_data)!=0:
-    
-                    for index, row in wafer_data.iterrows():
-                        tower[u,v,l].Fill(-1.0*row["SC_eta"], row["SC_phi"])
-                    
-                    tower_array[u,v,l] = hist2array(tower[u,v,l])
-                    
-                    tower_array_Kernel_hist[u,v,l] = ROOT.TH2D("fitTCKernel_u"+str(u)+"_v"+str(v)+"_layer"+str(l),"",nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
-                    tower_array_Kernel[u,v,l] = ndimage.correlate(tower_array[u,v,l], kernel, mode='constant', cval = 0.0)  
-                    for i in range(tower_array[u,v,l].shape[0]):
-                        for j in range(tower_array[u,v,l].shape[1]):
-                            if tower_array[u,v,l][i][j] == 0:
-                                tower_array_Kernel[u,v,l][i][j] = 0
+                tower_array[u,v,l] = hist2array(tower[u,v,l])
+                
+                tower_array_Kernel_hist[u,v,l] = ROOT.TH2D("fitTCKernel_u"+str(u)+"_v"+str(v)+"_layer"+str(l),"",nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
+                tower_array_Kernel[u,v,l] = ndimage.correlate(tower_array[u,v,l], kernel, mode='constant', cval = 0.0)  
+                for i in range(tower_array[u,v,l].shape[0]):
+                    for j in range(tower_array[u,v,l].shape[1]):
+                        if tower_array[u,v,l][i][j] == 0:
+                            tower_array_Kernel[u,v,l][i][j] = 0
 
-                    _ = array2hist (tower_array_Kernel[u,v,l], tower_array_Kernel_hist[u,v,l])
-                    tower_flat_array[u,v,l] = tower_array_Kernel[u,v,l].flatten()
-                    #tower_flat_array[u,v,l] = tower_array[u,v,l].flatten()
+                _ = array2hist (tower_array_Kernel[u,v,l], tower_array_Kernel_hist[u,v,l])
+                tower_flat_array[u,v,l] = tower_array_Kernel[u,v,l].flatten()
+                #tower_flat_array[u,v,l] = tower_array[u,v,l].flatten()
+                
+                fit_TC[u,v,l] = np.zeros(len(tower_flat_array[u,v,l]))
+                fit_TC_hist[u,v,l] = ROOT.TH2D("fitTC_u"+str(u)+"_v"+str(v)+"_layer"+str(l),"",nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
+                sort_index = np.argsort(tower_flat_array[u,v,l])
+                
+                tower_flat_array[u,v,l].sort()
+                
+                if(config['debugging']):
+                    nonZero_Overlap_numOfTowers = len(tower_flat_array[u,v,l][tower_flat_array[u,v,l]!=0])
+                    nonZero_Overlap.Fill(nonZero_Overlap_numOfTowers)
+                    nonZero_OverlapVsEta.Fill(wafer_data["SC_eta"].mean()*-1.0, nonZero_Overlap_numOfTowers)
+
+                    if tower_flat_array[u,v,l][-1 * N_div] == tower_flat_array[u,v,l][-1 * N_div - 1]\
+                       and tower_flat_array[u,v,l][-1 * N_div]!=0:
+                        print("--------------------------------------------------")
+                        print("degeneracy in choosing the", N_div, "'th highest value.")
+                        print("u=", u, ", v=", v, ", l=", l)
+                        print(tower_flat_array[u,v,l][-3*N_div:])
+                        print("--------------------------------------------------")
                     
-                    fit_TC[u,v,l] = np.zeros(len(tower_flat_array[u,v,l]))
-                    fit_TC_hist[u,v,l] = ROOT.TH2D("fitTC_u"+str(u)+"_v"+str(v)+"_layer"+str(l),"",nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
-                    sort_index = np.argsort(tower_flat_array[u,v,l])
-                    
-                    tower_flat_array[u,v,l].sort()
-                    
-                    if(config['debugging']):
-                        nonZero_Overlap_numOfTowers = len(tower_flat_array[u,v,l][tower_flat_array[u,v,l]!=0])
-                        nonZero_Overlap.Fill(nonZero_Overlap_numOfTowers)
-                        nonZero_OverlapVsEta.Fill(wafer_data["SC_eta"].mean()*-1.0, nonZero_Overlap_numOfTowers)
-    
-                        if tower_flat_array[u,v,l][-1 * N_div] == tower_flat_array[u,v,l][-1 * N_div - 1]\
-                           and tower_flat_array[u,v,l][-1 * N_div]!=0:
-                            print("--------------------------------------------------")
-                            print("degeneracy in choosing the", N_div, "'th highest value.")
-                            print("u=", u, ", v=", v, ", l=", l)
-                            print(tower_flat_array[u,v,l][-3*N_div:])
-                            print("--------------------------------------------------")
+                    if tower_flat_array[u,v,l][-1 * N_div] == tower_flat_array[u,v,l][-1 * N_div + 1]\
+                       and tower_flat_array[u,v,l][-1 * N_div]!=0:
+                        print("++++++++++++++++++++++++++++++++++++++++++++++++++")
+                        print("degeneracy in choosing the", N_div - 1, "'th highest value.")
+                        print("u=", u, ", v=", v, ", l=", l)
+                        print(tower_flat_array[u,v,l][-3*N_div:])
+                        print("++++++++++++++++++++++++++++++++++++++++++++++++++")
+
+                tower_flat_array_highest[u,v,l] = tower_flat_array[u,v,l][-1 * N_div:] #keep N_div highest values
+                tower_flat_array_highest[u,v,l] = tower_flat_array_highest[u,v,l][tower_flat_array_highest[u,v,l]!=0] #remove zeros prevents possiblity giving energy to towers with zero overlap.
+                factor = tower_flat_array_highest[u,v,l].sum()
+                tower_flat_array_highest[u,v,l] = (tower_flat_array_highest[u,v,l]/factor)*N_div
                         
-                        if tower_flat_array[u,v,l][-1 * N_div] == tower_flat_array[u,v,l][-1 * N_div + 1]\
-                           and tower_flat_array[u,v,l][-1 * N_div]!=0:
-                            print("++++++++++++++++++++++++++++++++++++++++++++++++++")
-                            print("degeneracy in choosing the", N_div - 1, "'th highest value.")
-                            print("u=", u, ", v=", v, ", l=", l)
+                if len(tower_flat_array_highest[u,v,l])==0:
+                    print("Should not be the case?")
+                
+                chi2_min = 1000000.0
+                for p in partitions(N_div, len(tower_flat_array_highest[u,v,l])):
+                    chi2_temp = chisquare(p,tower_flat_array_highest[u,v,l])
+                    if (config['debugging']):
+                        if (abs(chi2_temp - chi2_min)<1.e-8):
+                            print("DEGENERATE!!!!!!", " u=", u, ", v=", v, ", l=", l)
                             print(tower_flat_array[u,v,l][-3*N_div:])
-                            print("++++++++++++++++++++++++++++++++++++++++++++++++++")
-    
-                    tower_flat_array_highest[u,v,l] = tower_flat_array[u,v,l][-1 * N_div:] #keep N_div highest values
-                    tower_flat_array_highest[u,v,l] = tower_flat_array_highest[u,v,l][tower_flat_array_highest[u,v,l]!=0] #remove zeros prevents possiblity giving energy to towers with zero overlap.
-                    factor = tower_flat_array_highest[u,v,l].sum()
-                    tower_flat_array_highest[u,v,l] = (tower_flat_array_highest[u,v,l]/factor)*N_div
-                            
-                    if len(tower_flat_array_highest[u,v,l])==0:
-                        print("Should not be the case?")
-                    
-                    chi2_min = 1000000.0
-                    for p in partitions(N_div, len(tower_flat_array_highest[u,v,l])):
-                        chi2_temp = chisquare(p,tower_flat_array_highest[u,v,l])
-                        if (config['debugging']):
-                            if (abs(chi2_temp - chi2_min)<1.e-8):
-                                print("DEGENERATE!!!!!!", " u=", u, ", v=", v, ", l=", l)
-                                print(tower_flat_array[u,v,l][-3*N_div:])
-                                print('-'*20)
-                        if (chi2_temp < chi2_min):
-                            chi2_min = chi2_temp
-                            tower_bestfit_flat_array[u,v,l] = p 
-               
-                    for fit_index in range(len(tower_bestfit_flat_array[u,v,l])):
-                        fit_TC[u,v,l][ sort_index[-1 - fit_index] ] = tower_bestfit_flat_array[u,v,l][-1 - fit_index]
-                    
-                    fit_TC[u,v,l] = fit_TC[u,v,l].reshape(nBinsEta, nBinsPhi)
-                    _ = array2hist (fit_TC[u,v,l], fit_TC_hist[u,v,l])
+                            print('-'*20)
+                    if (chi2_temp < chi2_min):
+                        chi2_min = chi2_temp
+                        tower_bestfit_flat_array[u,v,l] = p 
+           
+                for fit_index in range(len(tower_bestfit_flat_array[u,v,l])):
+                    fit_TC[u,v,l][ sort_index[-1 - fit_index] ] = tower_bestfit_flat_array[u,v,l][-1 - fit_index]
+                
+                fit_TC[u,v,l] = fit_TC[u,v,l].reshape(nBinsEta, nBinsPhi)
+                _ = array2hist (fit_TC[u,v,l], fit_TC_hist[u,v,l])
 
-                    numOfModulesPerTower[u,v,l] = ROOT.TH2D("numOfModulesPerTower_u"+str(u)+"_v"+str(v)+"_layer"+str(l),"",nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
-                    _ = array2hist((fit_TC[u,v,l]!=0).astype(int), numOfModulesPerTower[u,v,l])    
+                numOfModulesPerTower[u,v,l] = ROOT.TH2D("numOfModulesPerTower_u"+str(u)+"_v"+str(v)+"_layer"+str(l),"",nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
+                _ = array2hist((fit_TC[u,v,l]!=0).astype(int), numOfModulesPerTower[u,v,l])    
 
 
-                    eta_phi_fit_TC = [[l[0]-1, l[1]-7] for l in np.transpose(np.nonzero(fit_TC[u,v,l])).tolist()]
-                    values_fit_TC = fit_TC[u,v,l][np.nonzero(fit_TC[u,v,l])].astype(int)
-                    NumTowersOverlapModule = len(eta_phi_fit_TC)
+                eta_phi_fit_TC = [[l[0]-1, l[1]-7] for l in np.transpose(np.nonzero(fit_TC[u,v,l])).tolist()]
+                values_fit_TC = fit_TC[u,v,l][np.nonzero(fit_TC[u,v,l])].astype(int)
+                NumTowersOverlapModule = len(eta_phi_fit_TC)
 
-                    nonZero_Overlap_afterFit.Fill(NumTowersOverlapModule)
-    
-                    #f.write("{} {} {} ".format(l, u, v))#, tuple(zip(eta_phi_fit_TC, values_fit_TC))))
-                    #f.write("{} ".format(NumTowersOverlapModule))
-                    #for idx in range(NumTowersOverlapModule):
-                    #    f.write("{} {} {} ".format(eta_phi_fit_TC[idx][0], eta_phi_fit_TC[idx][1], values_fit_TC[idx]))
-                    #f.write("\n")
-                    
-                    ####################DataFrame#######################
-                    newColName = 'l' + str(l) + '-u' + str(u) + '-v' +str(v) # name of new column
-                    param_mtx.insert(len(param_mtx.columns), newColName, np.zeros(len(param_mtx)))
-                    for idx in range(NumTowersOverlapModule):
-                        newRowName = 'l'+str(l)+'-eta'+str(eta_phi_fit_TC[idx][0])+'-phi'+str(eta_phi_fit_TC[idx][1])
-                        param_mtx.loc[newRowName] = np.zeros(len(param_mtx.columns))
-                        param_mtx.at[newRowName, newColName] = values_fit_TC[idx]
-                    ######################DataFrame Ends#####################
-                    
-                    inclusive_fit_TC.Add(fit_TC_hist[u,v,l])
-                    inclusive.Add(tower[u,v,l])
-                    inclusive_numOfModulesPerTowerPerLayer.Add(numOfModulesPerTower[u,v,l])
-                    #if(numOfModulesPerTower[u,v,l].GetBinContent(2, 17)!=0):
-                    #    print("4 towers", " etaphi: ", eta_phi_fit_TC, " u=", u, ", v=", v, ", l=", l)
-                    inclusive_numOfModulesPerTower.Add(numOfModulesPerTower[u,v,l])
+                nonZero_Overlap_afterFit.Fill(NumTowersOverlapModule)
 
-        for row in range(1, 1 + nBinsEta):
-            for col in range(1, 1 + nBinsPhi):
-                #if(inclusive_numOfModulesPerTowerPerLayer.GetBinContent(row, col)!=0):
+                #f.write("{} {} {} ".format(l, u, v))#, tuple(zip(eta_phi_fit_TC, values_fit_TC))))
+                #f.write("{} ".format(NumTowersOverlapModule))
+                #for idx in range(NumTowersOverlapModule):
+                #    f.write("{} {} {} ".format(eta_phi_fit_TC[idx][0], eta_phi_fit_TC[idx][1], values_fit_TC[idx]))
+                #f.write("\n")
+                
+                ####################DataFrame#######################
+                isHad = l>28 # True if in CE-H
+                colName = 'l' + str(l) + '-u' + str(u) + '-v' +str(v) # name of new column
+                param_mtx[isHad].insert(len(param_mtx[isHad].columns), colName, np.zeros(len(param_mtx[isHad])))
+                prefixRowName = 'had' if isHad else 'em'
+                for idx in range(NumTowersOverlapModule):
+                    RowName = prefixRowName + '-eta' + str(eta_phi_fit_TC[idx][0]) + '-phi' + str(eta_phi_fit_TC[idx][1])
+                    if (not RowName in param_mtx[isHad].index):
+                        param_mtx[isHad].loc[RowName] = np.zeros(len(param_mtx[isHad].columns))
+                    param_mtx[isHad].at[RowName, colName] = values_fit_TC[idx]
+                ######################DataFrame Ends#####################
+                
+                inclusive_fit_TC.Add(fit_TC_hist[u,v,l])
+                inclusive.Add(tower[u,v,l])
+                inclusive_numOfModulesPerTowerPerLayer.Add(numOfModulesPerTower[u,v,l])
+                #if(numOfModulesPerTower[u,v,l].GetBinContent(2, 17)!=0):
+                #    print("4 towers", " etaphi: ", eta_phi_fit_TC, " u=", u, ", v=", v, ", l=", l)
+                inclusive_numOfModulesPerTower.Add(numOfModulesPerTower[u,v,l])
+
+    for row in range(1, 1 + nBinsEta):
+        for col in range(1, 1 + nBinsPhi):
+            #if(inclusive_numOfModulesPerTowerPerLayer.GetBinContent(row, col)!=0):
+            if(inclusive_numOfModulesPerTowerPerLayer.GetBinContent(row, col)==4):
+                numOfModulesPerTowerPerLayer.Fill(inclusive_numOfModulesPerTowerPerLayer.GetBinContent(row, col)) 
                 if(inclusive_numOfModulesPerTowerPerLayer.GetBinContent(row, col)==4):
-                    numOfModulesPerTowerPerLayer.Fill(inclusive_numOfModulesPerTowerPerLayer.GetBinContent(row, col)) 
-                    if(inclusive_numOfModulesPerTowerPerLayer.GetBinContent(row, col)==4):
-                        print(row, col, l)
+                    print(row, col, l)
 
 
 
-param_mtx.to_pickle('./jupyter/param_mtx.pkl')
+param_mtx[0].to_pickle('./jupyter/param_mtx_em.pkl')
+param_mtx[1].to_pickle('./jupyter/param_mtx_had.pkl')
 
 
 
