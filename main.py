@@ -21,7 +21,7 @@ except EnvironmentError:
     print("Please give a valid config file")
     exit()
 
-cells = pd.read_csv('cellPositions/sensorCell_positions.txt', sep=' ') 
+cells = pd.read_csv('input/cellPositions/sensorCell_positions.txt', sep=' ') 
 cells.columns= ["layer","waferu","waferv","triggercellu","triggercellv","SC_eta","SC_phi"]
  
 N_div = 8
