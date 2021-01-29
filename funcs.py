@@ -22,3 +22,30 @@ def calc_kernel(n):
     
     kernel /= kernel.sum() 
     return kernel
+
+
+def getModulesPerBundle(lines):
+
+    bundles = {} #will be {0:[], 1:[],..., 23:[]} with lists being module IDs
+    bundleID = -1 #goes from 0 to 23
+    for l in lines[1:]: # 1st line (column names) skipped
+        if len(l)==0:
+            print(20*'*'+'ERROR: Found an empty line in the file!'+20*'*')
+            sys.exit(1)
+        elif len(l.split())==1: #Lines with just the bundle number, i.e. 0, 1,2,...,23
+            bundleID += 1
+            bundles[bundleID]=[]
+            continue
+        else:
+            bundles[bundleID] += ['type'+l.split()[5*i+2]+'-l'+l.split()[5*i+3]+'-u'+l.split()[5*i+4]+'-v'+l.split()[5*i+5] for i in range(int(l.split()[1]))]
+    
+    for key in bundles:
+        bundles[key] = list(dict.fromkeys(bundles[key])) #remove repeated modules (some modules are connected to >1 lpgbt)
+        for module in bundles[key][:]: #DO NOT REMOVE "[:]" otherwise skips next member when a member removed (python trick)
+            if(len(module))<5: #check for possible bugs
+                print(20*'*'+'ERROR: Check the module name: ' + module + 20*'*')
+                sys.exit(1)
+            if(module[:5]=='type1'):
+                bundles[key].remove(module) # remove scintillator modules as data is not yet included 
+
+    return bundles
