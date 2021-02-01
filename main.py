@@ -191,6 +191,7 @@ def module_per_tower(inputdir, outputdir, bundles_file_path):
         lines = [line.rstrip('\n') for line in f]
     f.close()
     bundles = getModulesPerBundle(lines)
+    #writeFileParamMtxPerBundle()
 
 
 def main():
@@ -208,13 +209,15 @@ def main():
         exit()
     
     if (config['function']['param_mtx']):
-        param_mtx(inputdir=config['param_mtx']['inputdir'], SC_position_file=config['param_mtx']['SC_position_file'], outputdir=config['param_mtx']['outputdir'], debugging=config['debugging'])
+        param_mtx(inputdir=config['param_mtx']['inputdir'], SC_position_file=config['param_mtx']['SC_position_file'],\
+                        outputdir=config['param_mtx']['outputdir'], debugging=config['debugging'])
 
     #if (config['function']['tower_per_module']):
     #    tower_per_module()
 
     if (config['function']['module_per_tower']):
-        module_per_tower(inputdir=config['module_per_tower']['inputdir'], outputdir=config['module_per_tower']['outputdir'], bundles_file_path=config['module_per_tower']['bundles_file'])
+        module_per_tower(inputdir=config['module_per_tower']['inputdir'], outputdir=config['module_per_tower']['outputdir'],\
+                              bundles_file_path=config['module_per_tower']['bundles_file'])
 
 if __name__ == "__main__":
     main()
