@@ -1,0 +1,19 @@
+function:
+    param_mtx: False
+    tower_per_module: False
+    module_per_tower: True
+
+debugging: False
+
+param_mtx:
+    SC_position_file: 'sensorCell_positions.txt'
+    inputdir: './input/cellPositions/'
+    outputdir: './output/tower_module_mapping_array/'
+
+tower_per_module:
+    outputdir: './output/tower_per_module/'
+
+module_per_tower:
+    bundles_file: 'allocation_20200729_1.txt'
+    inputdir: './input/allocation/'
+    outputdir: './output/module_per_tower/'
