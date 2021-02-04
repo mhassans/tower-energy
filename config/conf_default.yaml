@@ -9,6 +9,8 @@ param_mtx:
     SC_position_file: 'sensorCell_positions.txt'
     inputdir: './input/cellPositions/'
     outputdir: './output/tower_module_mapping_array/'
+    param_mtx_em_name: 'param_mtx_em.pkl'
+    param_mtx_had_name: 'param_mtx_had.pkl'
 
 tower_per_module:
     outputdir: './output/tower_per_module/'

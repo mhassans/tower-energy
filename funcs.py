@@ -1,5 +1,6 @@
 import itertools
 import numpy as np
+import pandas as pd
 
 def partitions(n, k):
     for c in itertools.combinations(range(n+k-1), k-1):
@@ -51,12 +52,30 @@ def getModulesPerBundle(lines):
                 print(20*'*'+'ERROR: Check the module name: ' + module + 20*'*')
                 sys.exit(1)
 
-    for bundle in bundles:
+    for bundle in bundles:#This loop could be merged with the previous one, but safer not to!
         for index, module in enumerate(bundles[bundle]):
             if(module[:5]=='type0'):
-                bundles[bundle][index] = module[6:]
+                bundles[bundle][index] = module[6:] #remove 'type0-'
             else:
                 print(20*'*'+'ERROR: Check the module name: ' + module + 20*'*')
                 sys.exit(1)
 
     return bundles
+
+def getParMtxPerBundle(bundles, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name):
+    parMtxEM = pd.read_pickle(inputdir_paramMtx + param_mtx_em_name).astype('int')
+    parMtxHad = pd.read_pickle(inputdir_paramMtx + param_mtx_had_name).astype('int')
+
+    
+    parMtxEM_PerBundle = {}
+    parMtxHad_PerBundle = {}
+
+    for i in range(len(bundles)):
+        parMtxEM_PerBundle[i] = parMtxEM[parMtxEM.columns.intersection(bundles[i])]
+        parMtxHad_PerBundle[i] = parMtxHad[parMtxHad.columns.intersection(bundles[i])]
+    
+    return parMtxEM_PerBundle, parMtxHad_PerBundle
+
+def parMtxEM_PerBundle(parMtx):
+   with open("", "w") as f: 
+    

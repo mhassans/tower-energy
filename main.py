@@ -5,10 +5,10 @@ import sys
 import math
 import yaml
 from  root_numpy import hist2array, array2hist
-from funcs import partitions, chisquare, calc_kernel, getModulesPerBundle
+from funcs import partitions, chisquare, calc_kernel, getModulesPerBundle, writeParMtxPerBundleToFile
 from scipy import ndimage
 
-def param_mtx(inputdir, SC_position_file, outputdir, debugging):
+def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mtx_had_name, debugging):
 
     cells = pd.read_csv(inputdir + SC_position_file , sep=' ') 
     cells.columns= ["layer","waferu","waferv","triggercellu","triggercellv","SC_eta","SC_phi"]
@@ -180,18 +180,19 @@ def param_mtx(inputdir, SC_position_file, outputdir, debugging):
                     numOfModulesPerTowerPerLayer.Fill(inclusive_numOfModulesPerTowerPerLayer.GetBinContent(row, col)) 
                     if(inclusive_numOfModulesPerTowerPerLayer.GetBinContent(row, col)==4):
                         print(row, col, l)
-    
-    
-    
-    param_mtx[0].to_pickle(outputdir + '/param_mtx_em.pkl')
-    param_mtx[1].to_pickle(outputdir + '/param_mtx_had.pkl')
+        
+    param_mtx[0].to_pickle(outputdir + param_mtx_em_name)
+    param_mtx[1].to_pickle(outputdir + param_mtx_had_name)
 
-def module_per_tower(inputdir, outputdir, bundles_file_path):
+def module_per_tower(inputdir, outputdir, bundles_file_path, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name):
     with open(inputdir + bundles_file_path) as f:
         lines = [line.rstrip('\n') for line in f]
     f.close()
     bundles = getModulesPerBundle(lines)
-    #writeFileParamMtxPerBundle()
+    parMtxEM_PerBundle, parMtxHad_PerBundle = getParMtxPerBundle(bundles, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name)
+    writeParMtxPerBundleToFile(parMtxEM_PerBundle)
+    writeParMtxPerBundleToFile(parMtxHad_PerBundle)
+    return parMtxEM_PerBundle, parMtxHad_PerBundle
 
 
 def main():
@@ -209,15 +210,28 @@ def main():
         exit()
     
     if (config['function']['param_mtx']):
-        param_mtx(inputdir=config['param_mtx']['inputdir'], SC_position_file=config['param_mtx']['SC_position_file'],\
-                        outputdir=config['param_mtx']['outputdir'], debugging=config['debugging'])
+        param_mtx(inputdir=config['param_mtx']['inputdir'], \
+                  SC_position_file=config['param_mtx']['SC_position_file'],\
+                  outputdir=config['param_mtx']['outputdir'], \
+                  param_mtx_em_name=config['param_mtx']['param_mtx_em_name'],\
+                  param_mtx_had_name=config['param_mtx']['param_mtx_had_name'], \
+                  debugging=config['debugging']\
+                  )
 
     #if (config['function']['tower_per_module']):
     #    tower_per_module()
 
     if (config['function']['module_per_tower']):
-        module_per_tower(inputdir=config['module_per_tower']['inputdir'], outputdir=config['module_per_tower']['outputdir'],\
-                              bundles_file_path=config['module_per_tower']['bundles_file'])
+        parMtxEM_PerBundle, parMtxHad_PerBundle = module_per_tower(inputdir=config['module_per_tower']['inputdir'],\
+                         outputdir=config['module_per_tower']['outputdir'],\
+                         bundles_file_path=config['module_per_tower']['bundles_file'],\
+                         inputdir_paramMtx=config['param_mtx']['outputdir'],\
+                         param_mtx_em_name=config['param_mtx']['param_mtx_em_name'],\
+                         param_mtx_had_name=config['param_mtx']['param_mtx_had_name']\
+                         )
+    return parMtxEM_PerBundle, parMtxHad_PerBundle 
 
 if __name__ == "__main__":
-    main()
+    print('Program started!')
+    #main()
+    parMtxEM_PerBundle, parMtxHad_PerBundle = main()
