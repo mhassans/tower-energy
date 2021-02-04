@@ -5,7 +5,7 @@ import sys
 import math
 import yaml
 from  root_numpy import hist2array, array2hist
-from funcs import partitions, chisquare, calc_kernel, getModulesPerBundle, writeParMtxPerBundleToFile
+from funcs import partitions, chisquare, calc_kernel, getModulesPerBundle, getParMtxPerBundle, writeParMtxPerBundleToFile
 from scipy import ndimage
 
 def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mtx_had_name, debugging):
@@ -190,9 +190,8 @@ def module_per_tower(inputdir, outputdir, bundles_file_path, inputdir_paramMtx, 
     f.close()
     bundles = getModulesPerBundle(lines)
     parMtxEM_PerBundle, parMtxHad_PerBundle = getParMtxPerBundle(bundles, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name)
-    writeParMtxPerBundleToFile(parMtxEM_PerBundle)
-    writeParMtxPerBundleToFile(parMtxHad_PerBundle)
-    return parMtxEM_PerBundle, parMtxHad_PerBundle
+    writeParMtxPerBundleToFile(outputdir, parMtxEM_PerBundle, name='CE-E')
+    writeParMtxPerBundleToFile(outputdir, parMtxHad_PerBundle, name='CE-H')
 
 
 def main():
@@ -222,16 +221,14 @@ def main():
     #    tower_per_module()
 
     if (config['function']['module_per_tower']):
-        parMtxEM_PerBundle, parMtxHad_PerBundle = module_per_tower(inputdir=config['module_per_tower']['inputdir'],\
+        module_per_tower(inputdir=config['module_per_tower']['inputdir'],\
                          outputdir=config['module_per_tower']['outputdir'],\
                          bundles_file_path=config['module_per_tower']['bundles_file'],\
                          inputdir_paramMtx=config['param_mtx']['outputdir'],\
                          param_mtx_em_name=config['param_mtx']['param_mtx_em_name'],\
                          param_mtx_had_name=config['param_mtx']['param_mtx_had_name']\
                          )
-    return parMtxEM_PerBundle, parMtxHad_PerBundle 
 
 if __name__ == "__main__":
     print('Program started!')
-    #main()
-    parMtxEM_PerBundle, parMtxHad_PerBundle = main()
+    main()

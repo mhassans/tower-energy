@@ -76,6 +76,18 @@ def getParMtxPerBundle(bundles, inputdir_paramMtx, param_mtx_em_name, param_mtx_
     
     return parMtxEM_PerBundle, parMtxHad_PerBundle
 
-def parMtxEM_PerBundle(parMtx):
-   with open("", "w") as f: 
-    
+def writeParMtxPerBundleToFile(outputdir, parMtx, name):
+    for i in parMtx:
+        with open(outputdir + name + '_' + str(i) + '.txt', "w") as f:
+            f.write('tower numModules moduleID fraction\n')
+            for idx, tower in parMtx[i].iterrows():
+                towerModuleOverlap = tuple(zip(tower.loc[tower!=0].index, tower.loc[tower!=0].values))#sth like (('l29-u0-v2', 7.0), ('l31-u0-v2', 3.0), ('l33-u0-v2', 1.0))
+                f.write('{} {}'.format(tower.name, len(towerModuleOverlap)))
+                for module in towerModuleOverlap:
+                    f.write(' {} {}'.format(parMtx[i].columns.get_loc(module[0]), module[1]))
+                f.write('\n')
+        f.close()
+
+
+
+
