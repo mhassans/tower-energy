@@ -193,6 +193,10 @@ def module_per_tower(inputdir, outputdir, bundles_file_path, inputdir_paramMtx, 
     writeParMtxPerBundleToFile(outputdir, parMtxEM_PerBundle, name='CE-E')
     writeParMtxPerBundleToFile(outputdir, parMtxHad_PerBundle, name='CE-H')
 
+def tower_per_module(outputdir, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name)
+    parMtxEM = pd.read_pickle(inputdir_paramMtx + param_mtx_em_name).astype('int')
+    parMtxHad = pd.read_pickle(inputdir_paramMtx + param_mtx_had_name).astype('int')
+    writeTowerPerModuleToFile(parMtxEM, parMtxHad, outputdir)
 
 def main():
 
@@ -217,8 +221,12 @@ def main():
                   debugging=config['debugging']\
                   )
 
-    #if (config['function']['tower_per_module']):
-    #    tower_per_module()
+    if (config['function']['tower_per_module']):
+        tower_per_module(outputdir=config['tower_per_module']['outputdir'],\
+                         inputdir_paramMtx=config['param_mtx']['outputdir'],\
+                         param_mtx_em_name=config['param_mtx']['param_mtx_em_name'],\
+                         param_mtx_had_name=config['param_mtx']['param_mtx_had_name']\
+                         )
 
     if (config['function']['module_per_tower']):
         module_per_tower(inputdir=config['module_per_tower']['inputdir'],\

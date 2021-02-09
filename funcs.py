@@ -81,12 +81,27 @@ def writeParMtxPerBundleToFile(outputdir, parMtx, name):
         with open(outputdir + name + '_' + str(i) + '.txt', "w") as f:
             f.write('tower numModules moduleID fraction\n')
             for idx, tower in parMtx[i].iterrows():
-                towerModuleOverlap = tuple(zip(tower.loc[tower!=0].index, tower.loc[tower!=0].values))#sth like (('l29-u0-v2', 7.0), ('l31-u0-v2', 3.0), ('l33-u0-v2', 1.0))
+                towerModuleOverlap = tuple(zip(tower.loc[tower!=0].index,\
+                                        tower.loc[tower!=0].values))
+                                        #becomes sth like (('l29-u0-v2', 7), ('l31-u0-v2', 3), ('l33-u0-v2', 1))
                 f.write('{} {}'.format(tower.name, len(towerModuleOverlap)))
                 for module in towerModuleOverlap:
                     f.write(' {} {}'.format(parMtx[i].columns.get_loc(module[0]), module[1]))
                 f.write('\n')
         f.close()
+
+def writeTowerPerModuleToFile(outputdir, parMtxEM, parMtxHad)
+    with open(outputdir + 'tower_per_module.txt', 'w') as f:
+        f.write('layer waferu waferv numTowers binEta binPhi fraction')
+        for col in parMtxEM.columns:
+            for tower, frac in parMtxEM[col].loc[parMtxEM[col]!=0].items(): #tower like 'had-eta2-phi23'. frac is 1,2,3,..
+                
+            #towersPerModule = tuple(zip(parMtxEM[col].loc[parMtxEM[col]!=0].index, \
+             #                   parMtxEM[col].loc[parMtxEM[col]!=0].values))
+                                #becomes sth like ('em-eta14-phi21', 3), ('em-eta14-phi22', 2), ...
+
+
+    
 
 
 

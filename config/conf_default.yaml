@@ -1,7 +1,7 @@
 function:
     param_mtx: False
-    tower_per_module: False
-    module_per_tower: True
+    tower_per_module: True
+    module_per_tower: False
 
 debugging: False
 
