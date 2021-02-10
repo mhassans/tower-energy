@@ -103,6 +103,7 @@ def writeTowerPerModuleToFile(outputdir, parMtxEM, parMtxHad):
                 for tower, frac in towersInModule.items(): #tower like 'had-eta2-phi23'. frac is 1,2,3,..
                    f.write('{} {} {} '.format(tower[tower.find('eta')+3 : tower.find('-phi')], tower[tower.find('-phi')+4:], frac))
                 f.write('\n')
+    f.close()
 
 
     
