@@ -5,7 +5,7 @@ import sys
 import math
 import yaml
 from  root_numpy import hist2array, array2hist
-from funcs import partitions, chisquare, calc_kernel, getModulesPerBundle, getParMtxPerBundle, writeParMtxPerBundleToFile
+from funcs import partitions, chisquare, calc_kernel, getModulesPerBundle, getParMtxPerBundle, writeParMtxPerBundleToFile, writeTowerPerModuleToFile
 from scipy import ndimage
 
 def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mtx_had_name, debugging):
@@ -193,10 +193,10 @@ def module_per_tower(inputdir, outputdir, bundles_file_path, inputdir_paramMtx, 
     writeParMtxPerBundleToFile(outputdir, parMtxEM_PerBundle, name='CE-E')
     writeParMtxPerBundleToFile(outputdir, parMtxHad_PerBundle, name='CE-H')
 
-def tower_per_module(outputdir, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name)
+def tower_per_module(outputdir, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name):
     parMtxEM = pd.read_pickle(inputdir_paramMtx + param_mtx_em_name).astype('int')
     parMtxHad = pd.read_pickle(inputdir_paramMtx + param_mtx_had_name).astype('int')
-    writeTowerPerModuleToFile(parMtxEM, parMtxHad, outputdir)
+    writeTowerPerModuleToFile(outputdir, parMtxEM, parMtxHad)
 
 def main():
 

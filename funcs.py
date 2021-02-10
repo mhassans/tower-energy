@@ -90,15 +90,19 @@ def writeParMtxPerBundleToFile(outputdir, parMtx, name):
                 f.write('\n')
         f.close()
 
-def writeTowerPerModuleToFile(outputdir, parMtxEM, parMtxHad)
+def writeTowerPerModuleToFile(outputdir, parMtxEM, parMtxHad):
     with open(outputdir + 'tower_per_module.txt', 'w') as f:
-        f.write('layer waferu waferv numTowers binEta binPhi fraction')
-        for col in parMtxEM.columns:
-            for tower, frac in parMtxEM[col].loc[parMtxEM[col]!=0].items(): #tower like 'had-eta2-phi23'. frac is 1,2,3,..
-                
-            #towersPerModule = tuple(zip(parMtxEM[col].loc[parMtxEM[col]!=0].index, \
-             #                   parMtxEM[col].loc[parMtxEM[col]!=0].values))
-                                #becomes sth like ('em-eta14-phi21', 3), ('em-eta14-phi22', 2), ...
+        f.write('layer waferu waferv numTowers binEta binPhi fraction\n')
+        for parMtx in [parMtxEM, parMtxHad]:
+            for col in parMtx.columns:
+                f.write('{} {} {} '.format(col[col.find('l')+1 : col.find('-u')],\
+                                           col[col.find('u')+1 : col.find('-v')],\
+                                           col[col.find('v')+1 : ]))
+                towersInModule = parMtx[col].loc[parMtx[col]!=0]
+                f.write('{} '.format(len(towersInModule)))
+                for tower, frac in towersInModule.items(): #tower like 'had-eta2-phi23'. frac is 1,2,3,..
+                   f.write('{} {} {} '.format(tower[tower.find('eta')+3 : tower.find('-phi')], tower[tower.find('-phi')+4:], frac))
+                f.write('\n')
 
 
     
