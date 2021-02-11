@@ -38,7 +38,6 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
     tower = {}
     fit_TC_hist = {}
     fit_TC = {}
-    #tower_bestfit = {}
     tower_array = {}
     tower_array_Kernel = {}
     tower_array_Kernel_hist = {}
@@ -55,8 +54,6 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
     param_mtx_had = pd.DataFrame() #paramter matrix (module vs tower) for CE-H
     param_mtx = {0:param_mtx_em, 1:param_mtx_had}
     
-    #with open("./output/towers_per_module/splitModuleSumsOverTowers.txt", "w") as f:
-        #f.write("layer waferu waferv numOfTowers ListOf:eta-phi-fraction\n")
     for l in range(1, 1+int(np.max(cells['layer'])) ): #layer number
         if (l <= 28 and l%2 == 0): #only using trigger layers 
             continue
@@ -148,12 +145,6 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
     
                     nonZero_Overlap_afterFit.Fill(NumTowersOverlapModule)
     
-                    #f.write("{} {} {} ".format(l, u, v))#, tuple(zip(eta_phi_fit_TC, values_fit_TC))))
-                    #f.write("{} ".format(NumTowersOverlapModule))
-                    #for idx in range(NumTowersOverlapModule):
-                    #    f.write("{} {} {} ".format(eta_phi_fit_TC[idx][0], eta_phi_fit_TC[idx][1], values_fit_TC[idx]))
-                    #f.write("\n")
-                    
                     ####################DataFrame#######################
                     isHad = l>28 # True if in CE-H
                     colName = 'l' + str(l) + '-u' + str(u) + '-v' +str(v) # name of new column
