@@ -116,6 +116,19 @@ def getModulesWithTC(bundlesFileFullPath):
         modules += bundles[bundle]
     return modules
 
+def applyKernel(tower, kernel):
+    tower_array = hist2array(tower)#convert to array
+    towerSmoothed = ndimage.correlate(tower_array, kernel, mode='constant', cval = 0.0)
+    for i in range(tower_array.shape[0]): #smoothing should not turn zeros to non-zeros
+        for j in range(tower_array.shape[1]):
+            if tower_array[i][j] == 0:
+                towerSmoothed[i][j] = 0
+    return towerSmoothed
+
+
+
+
+
 
 
 

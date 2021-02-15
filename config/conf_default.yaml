@@ -3,8 +3,6 @@ function:
     tower_per_module: False
     module_per_tower: False
 
-debugging: False
-
 param_mtx:
     SC_position_file: 'sensorCell_positions.txt'
     inputdir: './input/cellPositions/'
