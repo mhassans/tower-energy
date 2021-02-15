@@ -5,10 +5,11 @@ import sys
 import math
 import yaml
 from  root_numpy import hist2array, array2hist
-from funcs import partitions, chisquare, calc_kernel, getModulesPerBundle, getParMtxPerBundle, writeParMtxPerBundleToFile, writeTowerPerModuleToFile
+from funcs import partitions, chisquare, calc_kernel, getModulesPerBundle, getParMtxPerBundle, writeParMtxPerBundleToFile, writeTowerPerModuleToFile, getModulesWithTC
 from scipy import ndimage
 
-def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mtx_had_name, debugging):
+def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mtx_had_name,\
+                debugging, inputdir_bundlefile, bundles_file_path):
 
     cells = pd.read_csv(inputdir + SC_position_file , sep=' ') 
     cells.columns= ["layer","waferu","waferv","triggercellu","triggercellv","SC_eta","SC_phi"]
@@ -48,14 +49,20 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
     tower_bestfit_flat_array = {}
     numOfModulesPerTower = {}
     numOfModulesPerTowerPerLayer = ROOT.TH1D("numOfModulesPerTowerPerLayer","",6,0,6)
-    inclusive_numOfModulesPerTowerPerLayer = ROOT.TH2D("inclusive_numOfModulesPerTowerPerLayer","",nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
+    inclusive_numOfModulesPerTowerPerLayer = ROOT.TH2D("inclusive_numOfModulesPerTowerPerLayer","",\
+                                                nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
     
-    kernel = calc_kernel(5)
+    kernel = calc_kernel(5) #nxn matrix for smoothening. The input(i.e. n) should be odd.
     
     param_mtx_em = pd.DataFrame() #paramter matrix (module vs tower) for CE-E
     param_mtx_had = pd.DataFrame() #paramter matrix (module vs tower) for CE-H
     param_mtx = {0:param_mtx_em, 1:param_mtx_had}
     
+
+#Some partial modules have SC but not TC ('c' shaped). The line below finds modules with TC
+    modulesWithTC = getModulesWithTC(inputdir_bundlefile + bundles_file_path)
+
+
     for l in range(1, 1+int(np.max(cells['layer'])) ): #layer number
         if (l <= 28 and l%2 == 0): #only using trigger layers 
             continue
@@ -66,14 +73,15 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
                 tower[u,v,l] = ROOT.TH2D("tower_u"+str(u)+"_v"+str(v)+"_layer"+str(l),"",nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
                 
                 wafer_data = cells[(cells["waferu"]==u) & (cells["waferv"]==v) & (cells["layer"]==l)] 
-                if len(wafer_data)!=0:
+                if (len(wafer_data)!=0) and ('l'+str(l)+'-u'+str(u)+'-v'+str(v) in modulesWithTC): #if module has TC. len(wafer_data) redundant?
     
                     for index, row in wafer_data.iterrows():
                         tower[u,v,l].Fill(-1.0*row["SC_eta"], row["SC_phi"])
                     
                     tower_array[u,v,l] = hist2array(tower[u,v,l])
                     
-                    tower_array_Kernel_hist[u,v,l] = ROOT.TH2D("fitTCKernel_u"+str(u)+"_v"+str(v)+"_layer"+str(l),"",nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
+                    tower_array_Kernel_hist[u,v,l] = ROOT.TH2D("fitTCKernel_u"+str(u)+"_v"+str(v)+"_layer"+str(l),\
+                                                        "",nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
                     tower_array_Kernel[u,v,l] = ndimage.correlate(tower_array[u,v,l], kernel, mode='constant', cval = 0.0)  
                     for i in range(tower_array[u,v,l].shape[0]):
                         for j in range(tower_array[u,v,l].shape[1]):
@@ -85,7 +93,8 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
                     #tower_flat_array[u,v,l] = tower_array[u,v,l].flatten()
                     
                     fit_TC[u,v,l] = np.zeros(len(tower_flat_array[u,v,l]))
-                    fit_TC_hist[u,v,l] = ROOT.TH2D("fitTC_u"+str(u)+"_v"+str(v)+"_layer"+str(l),"",nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
+                    fit_TC_hist[u,v,l] = ROOT.TH2D("fitTC_u"+str(u)+"_v"+str(v)+"_layer"+str(l),"",\
+                                            nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
                     sort_index = np.argsort(tower_flat_array[u,v,l])
                     
                     tower_flat_array[u,v,l].sort()
@@ -112,7 +121,8 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
                             print("++++++++++++++++++++++++++++++++++++++++++++++++++")
     
                     tower_flat_array_highest[u,v,l] = tower_flat_array[u,v,l][-1 * N_div:] #keep N_div highest values
-                    tower_flat_array_highest[u,v,l] = tower_flat_array_highest[u,v,l][tower_flat_array_highest[u,v,l]!=0] #remove zeros prevents possiblity giving energy to towers with zero overlap.
+                    tower_flat_array_highest[u,v,l] = tower_flat_array_highest[u,v,l][tower_flat_array_highest[u,v,l]!=0] 
+                                                    #remove zeros prevents possiblity giving energy to towers with zero overlap.
                     factor = tower_flat_array_highest[u,v,l].sum()
                     tower_flat_array_highest[u,v,l] = (tower_flat_array_highest[u,v,l]/factor)*N_div
                             
@@ -137,7 +147,9 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
                     fit_TC[u,v,l] = fit_TC[u,v,l].reshape(nBinsEta, nBinsPhi)
                     _ = array2hist (fit_TC[u,v,l], fit_TC_hist[u,v,l])
     
-                    numOfModulesPerTower[u,v,l] = ROOT.TH2D("numOfModulesPerTower_u"+str(u)+"_v"+str(v)+"_layer"+str(l),"",nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
+                    numOfModulesPerTower[u,v,l] = ROOT.TH2D("numOfModulesPerTower_u"\
+                                                    +str(u)+"_v"+str(v)+"_layer"+str(l),"",\
+                                                    nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
                     _ = array2hist((fit_TC[u,v,l]!=0).astype(int), numOfModulesPerTower[u,v,l])    
     
     
@@ -176,6 +188,8 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
         
     param_mtx[0].to_pickle(outputdir + param_mtx_em_name)
     param_mtx[1].to_pickle(outputdir + param_mtx_had_name)
+    
+    return inclusive_numOfModulesPerTower
 
 def module_per_tower(inputdir, outputdir, bundles_file_path, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name):
     with open(inputdir + bundles_file_path) as f:
@@ -206,12 +220,14 @@ def main():
         exit()
     
     if (config['function']['param_mtx']):
-        param_mtx(inputdir=config['param_mtx']['inputdir'], \
+        inclusive_numOfModulesPerTower = param_mtx(inputdir=config['param_mtx']['inputdir'], \
                   SC_position_file=config['param_mtx']['SC_position_file'],\
                   outputdir=config['param_mtx']['outputdir'], \
                   param_mtx_em_name=config['param_mtx']['param_mtx_em_name'],\
                   param_mtx_had_name=config['param_mtx']['param_mtx_had_name'], \
-                  debugging=config['debugging']\
+                  debugging=config['debugging'],\
+                  inputdir_bundlefile=config['module_per_tower']['inputdir'],\
+                  bundles_file_path=config['module_per_tower']['bundles_file']\
                   )
 
     if (config['function']['tower_per_module']):
@@ -229,7 +245,11 @@ def main():
                          param_mtx_em_name=config['param_mtx']['param_mtx_em_name'],\
                          param_mtx_had_name=config['param_mtx']['param_mtx_had_name']\
                          )
+    
+    return inclusive_numOfModulesPerTower
+
+
 
 if __name__ == "__main__":
     print('Program started!')
-    main()
+    inclusive_numOfModulesPerTower = main()

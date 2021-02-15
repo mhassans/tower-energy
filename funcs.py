@@ -12,7 +12,7 @@ def chisquare(vec1, vec2):
         chi2 += np.power(vec1[i]-vec2[i], 2)
     return chi2
 
-def calc_kernel(n):
+def calc_kernel(n): #n should be odd
     kernel = np.zeros((n,n))
     center = n//2
     kernel[center, center] = 1.
@@ -106,7 +106,15 @@ def writeTowerPerModuleToFile(outputdir, parMtxEM, parMtxHad):
     f.close()
 
 
-    
+def getModulesWithTC(bundlesFileFullPath):
+    with open(bundlesFileFullPath) as f:
+        lines = [line.rstrip('\n') for line in f]
+    f.close()
+    bundles = getModulesPerBundle(lines)
+    modules =[]
+    for bundle in bundles:
+        modules += bundles[bundle]
+    return modules
 
 
 
