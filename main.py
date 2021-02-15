@@ -15,14 +15,16 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
      
     N_div = 8
     
-    bin_step = 2*math.pi/72
+    etaBinStep = 0.0870
     
-    minEta = 16 * bin_step
-    maxEta = 38 * bin_step
+    minEta = 16 * etaBinStep
+    maxEta = 38 * etaBinStep
     nBinsEta = 38 - 16
     
-    minPhi = -7 * bin_step 
-    maxPhi = 30 * bin_step
+    phiBinStep = 2*math.pi/72
+    
+    minPhi = -7 * phiBinStep
+    maxPhi = 30 * phiBinStep
     nBinsPhi = 30 - (-7)
         
     inclusive = ROOT.TH2D("inclusive","",nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
