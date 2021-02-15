@@ -14,7 +14,7 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
     cells = pd.read_csv(inputdir + SC_position_file , sep=' ') 
     cells.columns= ["layer","waferu","waferv","triggercellu","triggercellv","SC_eta","SC_phi"]
      
-    N_div = 8
+    N_div = 1
     
     etaBinStep = 0.0870
     
@@ -73,17 +73,17 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
                 tower[u,v,l] = ROOT.TH2D("tower_u"+str(u)+"_v"+str(v)+"_layer"+str(l),"",nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
                 
                 wafer_data = cells[(cells["waferu"]==u) & (cells["waferv"]==v) & (cells["layer"]==l)] 
-                if (len(wafer_data)!=0) and ('l'+str(l)+'-u'+str(u)+'-v'+str(v) in modulesWithTC): #if module has TC. len(wafer_data) redundant?
+                if (len(wafer_data)!=0) and ('l'+str(l)+'-u'+str(u)+'-v'+str(v) in modulesWithTC):
     
                     for index, row in wafer_data.iterrows():
-                        tower[u,v,l].Fill(-1.0*row["SC_eta"], row["SC_phi"])
+                        tower[u,v,l].Fill(-1.0*row["SC_eta"], row["SC_phi"])#2D hist of the number of SC
                     
-                    tower_array[u,v,l] = hist2array(tower[u,v,l])
+                    tower_array[u,v,l] = hist2array(tower[u,v,l])#convert to array
                     
                     tower_array_Kernel_hist[u,v,l] = ROOT.TH2D("fitTCKernel_u"+str(u)+"_v"+str(v)+"_layer"+str(l),\
                                                         "",nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
                     tower_array_Kernel[u,v,l] = ndimage.correlate(tower_array[u,v,l], kernel, mode='constant', cval = 0.0)  
-                    for i in range(tower_array[u,v,l].shape[0]):
+                    for i in range(tower_array[u,v,l].shape[0]): #smoothing should not turn zeros to non-zeros
                         for j in range(tower_array[u,v,l].shape[1]):
                             if tower_array[u,v,l][i][j] == 0:
                                 tower_array_Kernel[u,v,l][i][j] = 0
@@ -95,7 +95,7 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
                     fit_TC[u,v,l] = np.zeros(len(tower_flat_array[u,v,l]))
                     fit_TC_hist[u,v,l] = ROOT.TH2D("fitTC_u"+str(u)+"_v"+str(v)+"_layer"+str(l),"",\
                                             nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
-                    sort_index = np.argsort(tower_flat_array[u,v,l])
+                    sort_index = np.argsort(tower_flat_array[u,v,l]) #save positions before sorting
                     
                     tower_flat_array[u,v,l].sort()
                     
