@@ -1,6 +1,10 @@
+print("start importing func")
 import itertools
+from  root_numpy import hist2array, array2hist
+from scipy import ndimage
 import numpy as np
 import pandas as pd
+print("finish importing func")
 
 def partitions(n, k):
     for c in itertools.combinations(range(n+k-1), k-1):

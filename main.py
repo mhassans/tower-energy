@@ -1,3 +1,4 @@
+print("start importing main")
 import pandas as pd
 import numpy as np
 import ROOT
@@ -5,25 +6,29 @@ import sys
 import math
 import yaml
 from  root_numpy import hist2array, array2hist
-from funcs import partitions, chisquare, calc_kernel, getModulesPerBundle, getParMtxPerBundle, writeParMtxPerBundleToFile, writeTowerPerModuleToFile, getModulesWithTC, applyKernel
-from scipy import ndimage
+from funcs import partitions, chisquare, calc_kernel, getModulesPerBundle,\
+                    getParMtxPerBundle, writeParMtxPerBundleToFile, writeTowerPerModuleToFile,\
+                    getModulesWithTC, applyKernel
+
+print("finish importing main")
 
 def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mtx_had_name,\
                 inputdir_bundlefile, bundles_file_path):
 
     cells = pd.read_csv(inputdir + SC_position_file , sep=' ') 
     cells.columns= ["layer","waferu","waferv","triggercellu","triggercellv","SC_eta","SC_phi"]
-     
+    
+    cells = cells[(cells.layer % 2 == 1) | (cells.layer >28)].reset_index(drop=True)#Only use trigger layers. 
+    cells["SC_phi"] = cells["SC_phi"].replace(0, 1e-5) #Force SCs on border phi=0 to fill positive phi bins.
+    
     N_div = 1
     
     etaBinStep = 0.0870
-    
     minEta = 16 * etaBinStep
     maxEta = 38 * etaBinStep
     nBinsEta = 38 - 16
     
     phiBinStep = 2*math.pi/72
-    
     minPhi = -7 * phiBinStep
     maxPhi = 30 * phiBinStep
     nBinsPhi = 30 - (-7)
@@ -46,8 +51,7 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
     param_mtx_had = pd.DataFrame() #paramter matrix (module vs tower) for CE-H
     param_mtx = {0:param_mtx_em, 1:param_mtx_had}
     
-#Some partial modules have SC but not TC ('c' shaped). The line below finds modules with TC
-    modulesWithTC = getModulesWithTC(inputdir_bundlefile + bundles_file_path)
+    modulesWithTC = getModulesWithTC(inputdir_bundlefile + bundles_file_path)#Some partial modules have SC but not TC ('c' shaped). The line below finds modules with TC
 
     for l in range(1, 1+int(np.max(cells['layer'])) ): #layer number
         if (l <= 28 and l%2 == 0): #only using trigger layers 
@@ -184,5 +188,5 @@ def main():
 
 
 if __name__ == "__main__":
-    print('Program started!')
+    print('main started!')
     inclusive_numOfModulesPerTower = main()
