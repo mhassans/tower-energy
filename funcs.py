@@ -2,15 +2,28 @@ print("start importing func")
 import itertools
 from  root_numpy import hist2array, array2hist
 from scipy import ndimage
+import sys
+print("start importing np in func")
 import numpy as np
+print("start importing pd in func")
 import pandas as pd
 print("finish importing func")
 
-def partitions(n, k):
+def partitions(n, k): 
+    """
+    This is a generator function. It can be used for iteration. For example, if a=partitions(3, 2) then "a" can be used only once.
+    
+    partitions(n,k) yields ALL arrays of non-negative integers with len=k and sum=n
+    
+    e.g. patitions(3,2) are [0 3], [1 2], [2 1], [3 0]
+    """
     for c in itertools.combinations(range(n+k-1), k-1):
         yield np.array([b-a-1 for a, b in zip((-1,)+c, c+(n+k-1,))])
 
 def chisquare(vec1, vec2):
+    if len(vec1)!=len(vec2):
+        print(20*'*' + 'ERROR: Different vector length for Chi2-Squared' + 20*'*')
+        sys.exit(1)
     chi2 = 0
     for i in range(len(vec1)):
         chi2 += np.power(vec1[i]-vec2[i], 2)
@@ -129,10 +142,52 @@ def applyKernel(tower, kernel):
                 towerSmoothed[i][j] = 0
     return towerSmoothed
 
+def sortAndNormalize(tower, N_div):
+    tower_flat = tower.flatten()
+    tower_flat.sort()
+    
+    if (tower_flat[-1 * N_div] == tower_flat[-1 * N_div -1]): #check degeneracy before removing low values
+        print('check: degenerate!')
+        print('cut value=', tower_flat[-1 * N_div], ', max=', tower_flat[-1], ' ratio=', tower_flat[-1 * N_div]/tower_flat[-1])
+        print(20*'-')
+    
+    tower_flat = tower_flat[-1 * N_div:] #keep N_div highest values
+    tower_flat = tower_flat[tower_flat!=0] #remove zeros to prevent energy allocation to towers with zero overlap after fit.
+    
+    tower_flat = (tower_flat/tower_flat.sum())*N_div #normalize s.t. sum=N_div
 
+    if len(tower_flat)==0:
+        print(20*'*' + 'ERROR: Empty array! Should not be the case?: ' + 20*'*')
+        sys.exit(1)
+    return tower_flat
 
+def findBestFit(towerSortedNormed, N_div) 
+    chi2_min = N_div * 1000000.0 #a very large number
+    for p in partitions(N_div, len(towerSortedNormed)): #partitions(A,B) yields ALL arrays of non-negative integers with len=B and sum=A
+        chi2_temp = chisquare(p,towerSortedNormed)
+        if (chi2_temp < chi2_min):
+            chi2_min = chi2_temp
+            bestFit = p 
+    return bestFit, chi2_min
 
+def isDegenerate(towerSortedNormed, N_div, chi2_min)
+    count = 0
+    for p in partitions(N_div, len(towerSortedNormed)): #partitions(A,B) yields ALL arrays of non-negative integers with len=B and sum=A
+        chi2_temp = chisquare(p,towerSortedNormed)
+        if (chi2_temp < chi2_min):
+            print(20*'*' + 'ERROR: Already optimized but got better chi2?' + 20*'*')
+            sys.exit(1)
+        elif (chi2_temp == chi2_min):
+            count += 1
+    if (count==1): # no degeneracy
+        return False
+    elif (count==0):
+        print(20*'*' + 'ERROR: count should not be 0!' + 20*'*')
+        sys.exit(1)
+    else:
+        return True
 
-
-
+         
+        
+             
 

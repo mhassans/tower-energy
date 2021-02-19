@@ -1,6 +1,4 @@
 print("start importing main")
-import pandas as pd
-import numpy as np
 import ROOT
 import sys
 import math
@@ -8,8 +6,11 @@ import yaml
 from  root_numpy import hist2array, array2hist
 from funcs import partitions, chisquare, calc_kernel, getModulesPerBundle,\
                     getParMtxPerBundle, writeParMtxPerBundleToFile, writeTowerPerModuleToFile,\
-                    getModulesWithTC, applyKernel
-
+                    getModulesWithTC, applyKernel, sortAndNormalize, findBestFit, isDegenerate
+print("start importing np in main")
+import numpy as np
+print("start importing pd in main")
+import pandas as pd
 print("finish importing main")
 
 def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mtx_had_name,\
@@ -37,13 +38,9 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
     inclusive_numOfModulesPerTower = ROOT.TH2D("inclusive_numOfModulesPerTower","",nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
     
     tower = {}
-    fit_TC_hist = {}
-    fit_TC = {}
-    tower_flat_array = {}
-    tower_flat_array_highest = {}
+    towerFit = {}
     tower_bestfit_flat_array = {}
     numOfModulesPerTower = {}
-    numOfModulesPerTowerPerLayer = ROOT.TH1D("numOfModulesPerTowerPerLayer","",6,0,6)
     
     kernel = calc_kernel(5) #nxn matrix for smoothening. The input(i.e. n) should be odd.
     
@@ -51,7 +48,8 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
     param_mtx_had = pd.DataFrame() #paramter matrix (module vs tower) for CE-H
     param_mtx = {0:param_mtx_em, 1:param_mtx_had}
     
-    modulesWithTC = getModulesWithTC(inputdir_bundlefile + bundles_file_path)#Some partial modules have SC but not TC ('c' shaped). The line below finds modules with TC
+    modulesWithTC = getModulesWithTC(inputdir_bundlefile + bundles_file_path)
+                    #Some partial modules have SC but not TC ('c' shaped). The line below finds modules with TC
 
     for l in range(1, 1+int(np.max(cells['layer'])) ): #layer number
         if (l <= 28 and l%2 == 0): #only using trigger layers 
@@ -67,46 +65,67 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
                     for index, row in wafer_data.iterrows():
                         tower[u,v,l].Fill(-1.0*row["SC_eta"], row["SC_phi"])#2D hist of the number of SC
                     
-                    towerSmoothed = applyKernel(tower[u,v,l], kernel)#tower smoothed with kernel. type: np 2D array 
+                    towerSmoothed = applyKernel(tower[u,v,l], kernel)#tower smoothed with kernel. returns np 2D array 
                     
-                    tower_flat_array[u,v,l] = towerSmoothed.flatten()
+                    sort_index = np.argsort(towerSmoothed.flatten())#save indices before sorting
                     
-                    fit_TC[u,v,l] = np.zeros(len(tower_flat_array[u,v,l]))
-                    fit_TC_hist[u,v,l] = ROOT.TH2D("fitTC_u"+str(u)+"_v"+str(v)+"_layer"+str(l),"",\
-                                            nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
+                    towerSortedNormed = sortAndNormalize(towerSmoothed, N_div) #returns 1D np array of float type with sum=N_div
+
+                    bestFit, chi2_min = findBestFit(towerSortedNormed, N_div) #returns 1D np array of integer type with sum=N_div
                     
-                    sort_index = np.argsort(tower_flat_array[u,v,l]) #save positions before sorting
-                    tower_flat_array[u,v,l].sort()
+                    if (isDegenerate(towerSortedNormed, N_div, chi2_min)):
+                        print('check: degenerate fit result!')
+                        print('l=', l, 'u=', u, "v=", v)
+                        print(20*'-')
                     
-                    tower_flat_array_highest[u,v,l] = tower_flat_array[u,v,l][-1 * N_div:] #keep N_div highest values
-                    tower_flat_array_highest[u,v,l] = tower_flat_array_highest[u,v,l][tower_flat_array_highest[u,v,l]!=0] 
+                    ##########
+                    ###tower_flat_array[u,v,l] = towerSmoothed.flatten()
+                    
+                    ###fit_TC[u,v,l] = np.zeros(len(tower_flat_array[u,v,l]))
+                    ###fit_TC_hist[u,v,l] = ROOT.TH2D("fitTC_u"+str(u)+"_v"+str(v)+"_layer"+str(l),"",\
+                    ###                        nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
+                    
+                    ###sort_index = np.argsort(tower_flat_array[u,v,l]) #save positions before sorting
+                    ###tower_flat_array[u,v,l].sort()
+                    
+                    ###if (tower_flat_array[u,v,l][-1 * N_div] == tower_flat_array[u,v,l][-1 * N_div -1]):
+                    ###    print('check: degenerate!')
+                    ###tower_flat_array_highest[u,v,l] = tower_flat_array[u,v,l][-1 * N_div:] #keep N_div highest values
+                    ###tower_flat_array_highest[u,v,l] = tower_flat_array_highest[u,v,l][tower_flat_array_highest[u,v,l]!=0] 
                                                     #remove zeros prevents possiblity giving energy to towers with zero overlap.
-                    factor = tower_flat_array_highest[u,v,l].sum()
-                    tower_flat_array_highest[u,v,l] = (tower_flat_array_highest[u,v,l]/factor)*N_div
+                    ###factor = tower_flat_array_highest[u,v,l].sum()
+                    ###tower_flat_array_highest[u,v,l] = (tower_flat_array_highest[u,v,l]/factor)*N_div
                             
-                    if len(tower_flat_array_highest[u,v,l])==0:
-                        print("Should not be the case?")
+                    ###if len(tower_flat_array_highest[u,v,l])==0:
+                    ###    print(20*'*' + 'ERROR: Should not be the case?: ' + 20*'*')
+                    ###    sys.exit(1)
+                   ########### 
+                    ###chi2_min = 1000000.0 #a very large number
+                    ###for p in partitions(N_div, len(tower_flat_array_highest[u,v,l])):
+                    ###    chi2_temp = chisquare(p,tower_flat_array_highest[u,v,l])
+                    ###    if (chi2_temp < chi2_min):
+                    ###        chi2_min = chi2_temp
+                    ###        tower_bestfit_flat_array[u,v,l] = p 
                     
-                    chi2_min = 1000000.0
-                    for p in partitions(N_div, len(tower_flat_array_highest[u,v,l])):
-                        chi2_temp = chisquare(p,tower_flat_array_highest[u,v,l])
-                        if (chi2_temp < chi2_min):
-                            chi2_min = chi2_temp
-                            tower_bestfit_flat_array[u,v,l] = p 
+                    ###FIXME CHECK DEGENERATE SOLUTIONS        
+                    
+                    towerFit_array = np.zeros(len(towerSmoothed.flatten()))
+                    towerFit[u,v,l] = ROOT.TH2D("fitTC_u"+str(u)+"_v"+str(v)+"_layer"+str(l),"",\
+                                            nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
                
-                    for fit_index in range(len(tower_bestfit_flat_array[u,v,l])):
-                        fit_TC[u,v,l][ sort_index[-1 - fit_index] ] = tower_bestfit_flat_array[u,v,l][-1 - fit_index]
+                    for fit_index in range(len(tower_bestfit_flat_array[u,v,l])):#undo sort (retrieve original index)
+                        towerFit_array[ sort_index[-1 - fit_index] ] = tower_bestfit_flat_array[u,v,l][-1 - fit_index]
                     
-                    fit_TC[u,v,l] = fit_TC[u,v,l].reshape(nBinsEta, nBinsPhi)
-                    _ = array2hist (fit_TC[u,v,l], fit_TC_hist[u,v,l])
+                    towerFit_array = towerFit_array.reshape(nBinsEta, nBinsPhi)
+                    _ = array2hist (towerFit_array, towerFit[u,v,l])
     
                     numOfModulesPerTower[u,v,l] = ROOT.TH2D("numOfModulesPerTower_u"\
                                                     +str(u)+"_v"+str(v)+"_layer"+str(l),"",\
                                                     nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
-                    _ = array2hist((fit_TC[u,v,l]!=0).astype(int), numOfModulesPerTower[u,v,l])    
+                    _ = array2hist((towerFit_array!=0).astype(int), numOfModulesPerTower[u,v,l])#(array!=0).astype(int) includes 0 & 1 only
     
-                    eta_phi_fit_TC = [[m[0]-1, m[1]-7] for m in np.transpose(np.nonzero(fit_TC[u,v,l])).tolist()]
-                    values_fit_TC = fit_TC[u,v,l][np.nonzero(fit_TC[u,v,l])].astype(int)
+                    eta_phi_fit_TC = [[m[0]-1, m[1]-7] for m in np.transpose(np.nonzero(towerFit_array)).tolist()]
+                    values_fit_TC = towerFit_array[np.nonzero(towerFit_array)].astype(int)
                     NumTowersOverlapModule = len(eta_phi_fit_TC)
     
                     ####################DataFrame#######################
@@ -121,7 +140,7 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
                         param_mtx[isHad].at[RowName, colName] = values_fit_TC[idx]
                     ######################DataFrame#####################
                     
-                    inclusive_fit_TC.Add(fit_TC_hist[u,v,l])
+                    inclusive_fit_TC.Add(towerFit[u,v,l])
                     inclusive_numOfModulesPerTower.Add(numOfModulesPerTower[u,v,l])
     
     param_mtx[0].to_pickle(outputdir + param_mtx_em_name)
