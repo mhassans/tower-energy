@@ -146,7 +146,7 @@ def sortAndNormalize(tower, N_div):
     tower_flat = tower.flatten()
     tower_flat.sort()
     
-    if (tower_flat[-1 * N_div] == tower_flat[-1 * N_div -1]): #check degeneracy before removing low values
+    if (tower_flat[-1 * N_div] == tower_flat[-1 * N_div -1] and tower_flat[-1 * N_div]!=0): #check degeneracy before removing low values
         print('check: degenerate!')
         print('cut value=', tower_flat[-1 * N_div], ', max=', tower_flat[-1], ' ratio=', tower_flat[-1 * N_div]/tower_flat[-1])
         print(20*'-')
@@ -161,7 +161,7 @@ def sortAndNormalize(tower, N_div):
         sys.exit(1)
     return tower_flat
 
-def findBestFit(towerSortedNormed, N_div) 
+def findBestFit(towerSortedNormed, N_div):
     chi2_min = N_div * 1000000.0 #a very large number
     for p in partitions(N_div, len(towerSortedNormed)): #partitions(A,B) yields ALL arrays of non-negative integers with len=B and sum=A
         chi2_temp = chisquare(p,towerSortedNormed)
@@ -170,7 +170,7 @@ def findBestFit(towerSortedNormed, N_div)
             bestFit = p 
     return bestFit, chi2_min
 
-def isDegenerate(towerSortedNormed, N_div, chi2_min)
+def isDegenerate(towerSortedNormed, N_div, chi2_min):
     count = 0
     for p in partitions(N_div, len(towerSortedNormed)): #partitions(A,B) yields ALL arrays of non-negative integers with len=B and sum=A
         chi2_temp = chisquare(p,towerSortedNormed)

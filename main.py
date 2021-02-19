@@ -22,7 +22,7 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
     cells = cells[(cells.layer % 2 == 1) | (cells.layer >28)].reset_index(drop=True)#Only use trigger layers. 
     cells["SC_phi"] = cells["SC_phi"].replace(0, 1e-5) #Force SCs on border phi=0 to fill positive phi bins.
     
-    N_div = 1
+    N_div = 8 # Divide module sum to (1/N_div)'s
     
     etaBinStep = 0.0870
     minEta = 16 * etaBinStep
@@ -39,7 +39,6 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
     
     tower = {}
     towerFit = {}
-    tower_bestfit_flat_array = {}
     numOfModulesPerTower = {}
     
     kernel = calc_kernel(5) #nxn matrix for smoothening. The input(i.e. n) should be odd.
@@ -51,7 +50,8 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
     modulesWithTC = getModulesWithTC(inputdir_bundlefile + bundles_file_path)
                     #Some partial modules have SC but not TC ('c' shaped). The line below finds modules with TC
 
-    for l in range(1, 1+int(np.max(cells['layer'])) ): #layer number
+    #for l in range(1, 1+int(np.max(cells['layer'])) ): #layer number
+    for l in [3, 29, 30, 35, 36, 37]: #layer number
         if (l <= 28 and l%2 == 0): #only using trigger layers 
             continue
         print('layer= ', l)
@@ -107,28 +107,19 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
                     ###        chi2_min = chi2_temp
                     ###        tower_bestfit_flat_array[u,v,l] = p 
                     
-                    ###FIXME CHECK DEGENERATE SOLUTIONS        
-                    
                     towerFit_array = np.zeros(len(towerSmoothed.flatten()))
-                    towerFit[u,v,l] = ROOT.TH2D("fitTC_u"+str(u)+"_v"+str(v)+"_layer"+str(l),"",\
-                                            nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
                
-                    for fit_index in range(len(tower_bestfit_flat_array[u,v,l])):#undo sort (retrieve original index)
-                        towerFit_array[ sort_index[-1 - fit_index] ] = tower_bestfit_flat_array[u,v,l][-1 - fit_index]
+                    for fit_index in range(len(bestFit)):#undo sort (retrieve original index)
+                        towerFit_array[ sort_index[-1 - fit_index] ] = bestFit[-1 - fit_index]
                     
                     towerFit_array = towerFit_array.reshape(nBinsEta, nBinsPhi)
-                    _ = array2hist (towerFit_array, towerFit[u,v,l])
     
-                    numOfModulesPerTower[u,v,l] = ROOT.TH2D("numOfModulesPerTower_u"\
-                                                    +str(u)+"_v"+str(v)+"_layer"+str(l),"",\
-                                                    nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
-                    _ = array2hist((towerFit_array!=0).astype(int), numOfModulesPerTower[u,v,l])#(array!=0).astype(int) includes 0 & 1 only
-    
-                    eta_phi_fit_TC = [[m[0]-1, m[1]-7] for m in np.transpose(np.nonzero(towerFit_array)).tolist()]
+                    eta_phi_fit_TC = [[m[0]-1, m[1]-7] for m in np.transpose(np.nonzero(towerFit_array)).tolist()]\
+                                                                             #1 and 7 are just offset in eta and phi
                     values_fit_TC = towerFit_array[np.nonzero(towerFit_array)].astype(int)
                     NumTowersOverlapModule = len(eta_phi_fit_TC)
     
-                    ####################DataFrame#######################
+                    ####################DataFrame begins#######################
                     isHad = l>28 # True if in CE-H
                     colName = 'l' + str(l) + '-u' + str(u) + '-v' +str(v) # name of new column
                     param_mtx[isHad].insert(len(param_mtx[isHad].columns), colName, np.zeros(len(param_mtx[isHad])))
@@ -138,15 +129,27 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
                         if (not RowName in param_mtx[isHad].index):
                             param_mtx[isHad].loc[RowName] = np.zeros(len(param_mtx[isHad].columns))
                         param_mtx[isHad].at[RowName, colName] = values_fit_TC[idx]
-                    ######################DataFrame#####################
+                    ######################DataFrame ends#####################
                     
-                    inclusive_fit_TC.Add(towerFit[u,v,l])
-                    inclusive_numOfModulesPerTower.Add(numOfModulesPerTower[u,v,l])
+                    #####################2D Hist begins#######################
+                    #hist: how many (1/N_div)'s each tower gets from a module
+                    towerFit[u,v,l] = ROOT.TH2D("fitTC_u"+str(u)+"_v"+str(v)+"_layer"+str(l),"",\
+                                            nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
+                    _ = array2hist (towerFit_array, towerFit[u,v,l])
+                    inclusive_fit_TC.Add(towerFit[u,v,l]) #inclusive all layers
+                    
+                    #hist: which towers a module overlaps with (i.e. fills with 0 or 1). "Inclusive" shows how many sums needed
+                    numOfModulesPerTower[u,v,l] = ROOT.TH2D("numOfModulesPerTower_u"\
+                                                    +str(u)+"_v"+str(v)+"_layer"+str(l),"",\
+                                                    nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
+                    _ = array2hist((towerFit_array!=0).astype(int), numOfModulesPerTower[u,v,l])#(array!=0).astype(int) includes 0 & 1 only
+                    inclusive_numOfModulesPerTower.Add(numOfModulesPerTower[u,v,l]) #inclusive all layers
+                    #####################2D Hist ends#######################
     
     param_mtx[0].to_pickle(outputdir + param_mtx_em_name)
     param_mtx[1].to_pickle(outputdir + param_mtx_had_name)
     
-    return inclusive_numOfModulesPerTower
+    return tower, towerFit, numOfModulesPerTower, inclusive_fit_TC, inclusive_numOfModulesPerTower
 
 def module_per_tower(inputdir, outputdir, bundles_file_path, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name):
     with open(inputdir + bundles_file_path) as f:
@@ -177,7 +180,7 @@ def main():
         exit()
     
     if (config['function']['param_mtx']):
-        inclusive_numOfModulesPerTower = param_mtx(inputdir=config['param_mtx']['inputdir'], \
+        tower, towerFit, numOfModulesPerTower, inclusive_fit_TC, inclusive_numOfModulesPerTower = param_mtx(inputdir=config['param_mtx']['inputdir'], \
                   SC_position_file=config['param_mtx']['SC_position_file'],\
                   outputdir=config['param_mtx']['outputdir'], \
                   param_mtx_em_name=config['param_mtx']['param_mtx_em_name'],\
@@ -202,10 +205,10 @@ def main():
                          param_mtx_had_name=config['param_mtx']['param_mtx_had_name']\
                          )
     
-    return inclusive_numOfModulesPerTower
+    return tower, towerFit, numOfModulesPerTower, inclusive_fit_TC, inclusive_numOfModulesPerTower
 
 
 
 if __name__ == "__main__":
     print('main started!')
-    inclusive_numOfModulesPerTower = main()
+    tower, towerFit, numOfModulesPerTower, inclusive_fit_TC, inclusive_numOfModulesPerTower = main()
