@@ -9,6 +9,7 @@ param_mtx:
     outputdir: './output/tower_module_mapping_array/'
     param_mtx_em_name: 'param_mtx_em.pkl'
     param_mtx_had_name: 'param_mtx_had.pkl'
+    do2DHists: True
 
 tower_per_module:
     outputdir: './output/tower_per_module/'
