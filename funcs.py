@@ -1,13 +1,9 @@
-print("start importing func")
 import itertools
 from  root_numpy import hist2array, array2hist
 from scipy import ndimage
 import sys
-print("start importing np in func")
 import numpy as np
-print("start importing pd in func")
 import pandas as pd
-print("finish importing func")
 
 def partitions(n, k): 
     """
