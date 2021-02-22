@@ -4,25 +4,28 @@ import math
 
 sensorCell = True #sensor cell or trigger cell
 
-u = 9
-v = 10
+u = 5
+v = 0
 layer = 1
 
-eta_min = 16 
-eta_max = 20  
+eta_min = 22 
+eta_max = 26  
+etaBinStep = 0.0870
 
-phi_min = 11 
-phi_max = 16  
+phi_min = -2
+phi_max = 3  
+phiBinStep = 2*math.pi/72
 
-eta_ticks = [a*(2*math.pi/72) for a in range(eta_min, eta_max)] 
-phi_ticks = [b*(2*math.pi/72) for b in range(phi_min, phi_max)] 
+eta_ticks = [a * etaBinStep for a in range(eta_min, eta_max)] 
+phi_ticks = [b * phiBinStep for b in range(phi_min, phi_max)] 
 
 if (sensorCell):
-    cells = pd.read_csv('cellPositions/sensorCell_positions.txt', sep=' ')
+    cells = pd.read_csv('input/cellPositions/sensorCell_positions.txt', sep=' ')
     cells.columns= ["layer","waferu","waferv","triggercellu","triggercellv","SC_eta","SC_phi"]
 else:
-    cells = pd.read_csv('cellPositions/TCPositions_Zminus_siliconOnly.csv', sep=' ')
+    cells = pd.read_csv('input/cellPositions/TCPositions_Zminus_siliconOnly.csv', sep=' ')
 
+cells["SC_phi"] = cells["SC_phi"].replace(0, 1e-5)
 cell_u_v_layer = cells[(cells['waferu'] == u) & (cells['waferv'] == v) & (cells['layer'] == layer)]
 
 fig = plt.figure()
