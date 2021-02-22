@@ -1,4 +1,7 @@
-# Optimize tower energies based on HGC geometry 
+# Find an optimized way to split the HGCal module energy over multiple "towers"
 To run:
 
-python main.py config/conf_default.yaml
+python3 main.py config/conf_default.yaml
+
+need the following python packages:
+ROOT, numpy, pandas, sys, math, yaml, root_numpy, scipy, itertools
