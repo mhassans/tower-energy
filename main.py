@@ -8,7 +8,7 @@ import yaml
 from  root_numpy import hist2array, array2hist
 from funcs import partitions, chisquare, calc_kernel, getModulesPerBundle,\
                     getParMtxPerBundle, writeParMtxPerBundleToFile, writeTowerPerModuleToFile,\
-                    getModulesWithTC, applyKernel, sortAndNormalize, findBestFit
+                    getModulesWithTC, applyKernel, sortAndNormalize, findBestFit, SaveHist
 
 def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mtx_had_name,\
                 inputdir_bundlefile, bundles_file_path, do2DHists):
@@ -19,7 +19,7 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
     cells = cells[(cells.layer % 2 == 1) | (cells.layer >28)].reset_index(drop=True)#Only use trigger layers. 
     cells["SC_phi"] = cells["SC_phi"].replace(0, 1e-5) #Force SCs on border phi=0 to fill positive-phi bins.
     
-    N_div = 8 # Divide module sum to (1/N_div)'s
+    N_div = 2 # Divide module sum to (1/N_div)'s
     
     etaBinStep = 0.0870
     minBinEta = 16
@@ -58,8 +58,7 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
     modulesWithTC = getModulesWithTC(inputdir_bundlefile + bundles_file_path)
                     #Some partial modules have SC but not TC ('c' shaped). The line below finds modules with TC
 
-    #for l in range(1, 1+int(np.max(cells['layer'])) ): #layer number
-    for l in [1, 33]: #layer number
+    for l in range(1, 1+int(np.max(cells['layer'])) ): #layer number
         if (l <= 28 and l%2 == 0): #only using trigger layers 
             continue
         print('layer= ', l)
@@ -130,7 +129,10 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
     param_mtx[0].to_pickle(outputdir + param_mtx_em_name)
     param_mtx[1].to_pickle(outputdir + param_mtx_had_name)
     
-    return inclusive_towerFit, inclusive_numOfModulesPerTower
+    inclusive_towerFit.Scale(1./N_div) #normalize
+    SaveHist(inclusive_towerFit, outputdir, 'inclusive_towerFit_1Over'+str(N_div)+'s') #how the module sum (energy) is distributed
+    SaveHist(inclusive_tower, outputdir, 'inclusive_tower_1Over'+str(N_div)+'s') #just to show SC occupation
+    SaveHist(inclusive_numOfModulesPerTower, outputdir, 'inclusive_numOfModulesPerTower_1Over'+str(N_div)+'s') #How many sums per tower
 
 def module_per_tower(inputdir, outputdir, bundles_file_path, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name):
     with open(inputdir + bundles_file_path) as f:
@@ -161,7 +163,7 @@ def main():
         exit()
     
     if (config['function']['param_mtx']):
-        inclusive_towerFit, inclusive_numOfModulesPerTower = param_mtx(inputdir=config['param_mtx']['inputdir'], \
+        param_mtx(inputdir=config['param_mtx']['inputdir'], \
                   SC_position_file=config['param_mtx']['SC_position_file'],\
                   outputdir=config['param_mtx']['outputdir'], \
                   param_mtx_em_name=config['param_mtx']['param_mtx_em_name'],\
@@ -186,10 +188,8 @@ def main():
                          param_mtx_em_name=config['param_mtx']['param_mtx_em_name'],\
                          param_mtx_had_name=config['param_mtx']['param_mtx_had_name']\
                          )
-    
-    return inclusive_towerFit, inclusive_numOfModulesPerTower
 
 if __name__ == "__main__":
     start = time.time()
-    inclusive_towerFit, inclusive_numOfModulesPerTower = main()
+    main()
     print('The program ran in', time.time() - start, 'seconds!')

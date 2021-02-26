@@ -1,4 +1,5 @@
 import itertools
+import ROOT
 from  root_numpy import hist2array, array2hist
 from scipy import ndimage
 import sys
@@ -172,3 +173,7 @@ def findBestFit(towerSortedNormed, N_div):
         
     return bestFit, isDegenerate
 
+def SaveHist(hist, outputdir, name):
+    f = ROOT.TFile.Open(outputdir+'/plots/'+name+'.root', 'RECREATE')
+    hist.Write()
+    f.Close()
