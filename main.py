@@ -21,7 +21,7 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
     cells = cells[(cells.layer % 2 == 1) | (cells.layer > last_CE_E_layer)].reset_index(drop=True)#Only use trigger layers. 
     cells["SC_phi"] = cells["SC_phi"].replace(0, 1e-5) #Force SCs on border phi=0 to fill positive-phi bins.
     
-    N_div = 2 # Divide module sum to (1/N_div)'s
+    N_div = 8 # Divide module sum to (1/N_div)'s
     
     etaBinStep = 0.0870
     minBinEta = 16
@@ -45,7 +45,12 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
     #inclusives
     inclusive_tower = ROOT.TH2D("inclusive_tower","",nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
     inclusive_towerFit = ROOT.TH2D("inclusive_towerFit","",nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
-    inclusive_numOfModulesPerTower = ROOT.TH2D("inclusive_numOfModulesPerTower","",nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
+    inclusive_numOfModulesPerTower = ROOT.TH2D("inclusive_numOfModulesPerTower"\
+                                     ,"",nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
+    inclusive_numOfModulesPerTower_OnlyEM = ROOT.TH2D("inclusive_numOfModulesPerTower_OnlyEM"\
+                                            ,"",nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
+    inclusive_numOfModulesPerTower_OnlyHad = ROOT.TH2D("inclusive_numOfModulesPerTower_OnlyHad"\
+                                            ,"",nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
     
     if(do2DHists): #save all! good for debugging, but slows down
         tower_saved = {}#key: tuple showing module ID. value: ROOT 2D hist showing how much the module overlap with each tower
@@ -115,6 +120,10 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
                     _ = array2hist((towerFit_array!=0).astype(int), numOfModulesPerTower)
                                         #(array!=0).astype(int) includes 0 & 1 only
                     inclusive_numOfModulesPerTower.Add(numOfModulesPerTower) #inclusive all layers
+                    if (isHad):
+                        inclusive_numOfModulesPerTower_OnlyHad.Add(numOfModulesPerTower) #inclusive all CE-H layers
+                    else:
+                        inclusive_numOfModulesPerTower_OnlyEM.Add(numOfModulesPerTower) #inclusive all CE-E layers
                     
                     if (do2DHists): #Save hists per module
                         #copy "tower" 2D hist
@@ -128,13 +137,20 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
                                                 nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
                         _ = array2hist (towerFit_array, towerFit_saved[u,v,l])
 
+    param_mtx[0].drop([x for x in param_mtx[0].index if (x[:8]=='em-eta18')])#remove eta>3.045
+    param_mtx[1].drop([x for x in param_mtx[1].index if (x[:9]=='had-eta18')])#remove eta>3.045
     param_mtx[0].to_pickle(outputdir + param_mtx_em_name)
     param_mtx[1].to_pickle(outputdir + param_mtx_had_name)
     
     inclusive_towerFit.Scale(1./N_div) #normalize
     SaveHist(inclusive_towerFit, outputdir, 'inclusive_towerFit_1Over'+str(N_div)+'s') #how the module sum (energy) is distributed
     SaveHist(inclusive_tower, outputdir, 'inclusive_tower_1Over'+str(N_div)+'s') #just to show SC occupation
-    SaveHist(inclusive_numOfModulesPerTower, outputdir, 'inclusive_numOfModulesPerTower_1Over'+str(N_div)+'s') #How many sums per tower
+    SaveHist(inclusive_numOfModulesPerTower, outputdir, \
+                    'inclusive_numOfModulesPerTower_1Over'+str(N_div)+'s') #How many sums per tower
+    SaveHist(inclusive_numOfModulesPerTower_OnlyHad, outputdir, \
+                    'inclusive_numOfModulesPerTower_OnlyHad_1Over'+str(N_div)+'s') #How many sums per tower in CE-H
+    SaveHist(inclusive_numOfModulesPerTower_OnlyEM, outputdir, \
+                    'inclusive_numOfModulesPerTower_OnlyEM_1Over'+str(N_div)+'s') #How many sums per tower in CE-E
 
 def module_per_tower(inputdir, outputdir, bundles_file_path, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name):
     with open(inputdir + bundles_file_path) as f:
