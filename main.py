@@ -137,8 +137,8 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
                                                 nBinsEta,minEta,maxEta, nBinsPhi,minPhi,maxPhi)
                         _ = array2hist (towerFit_array, towerFit_saved[u,v,l])
 
-    param_mtx[0].drop([x for x in param_mtx[0].index if (x[:8]=='em-eta18')])#remove eta>3.045
-    param_mtx[1].drop([x for x in param_mtx[1].index if (x[:9]=='had-eta18')])#remove eta>3.045
+    param_mtx[0] = param_mtx[0].drop([x for x in param_mtx[0].index if (x[:8]=='em-eta18')])#remove eta>3.045 (Not removed from hists)
+    param_mtx[1] = param_mtx[1].drop([x for x in param_mtx[1].index if (x[:9]=='had-eta18')])#remove eta>3.045 (Not removed from hists)
     param_mtx[0].to_pickle(outputdir + param_mtx_em_name)
     param_mtx[1].to_pickle(outputdir + param_mtx_had_name)
     
