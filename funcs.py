@@ -173,7 +173,10 @@ def findBestFit(towerSortedNormed, N_div):
         
     return bestFit, isDegenerate
 
-def SaveHist(hist, outputdir, name):
-    f = ROOT.TFile.Open(outputdir+'/plots/'+name+'.root', 'RECREATE')
-    hist.Write()
-    f.Close()
+def SaveHist(hist, outputdir, name, fileType):
+    c = ROOT.TCanvas("canvas")
+    hist.Draw('colz')
+    c.Print(outputdir+name+'.'+fileType)
+    #f = ROOT.TFile.Open(outputdir+name+'.'+whatType, 'RECREATE')
+    #hist.Write()
+    #f.Close()

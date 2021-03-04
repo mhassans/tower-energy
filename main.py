@@ -143,14 +143,14 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
     param_mtx[1].to_pickle(outputdir + param_mtx_had_name)
     
     inclusive_towerFit.Scale(1./N_div) #normalize
-    SaveHist(inclusive_towerFit, outputdir, 'inclusive_towerFit_1Over'+str(N_div)+'s') #how the module sum (energy) is distributed
-    SaveHist(inclusive_tower, outputdir, 'inclusive_tower_1Over'+str(N_div)+'s') #just to show SC occupation
-    SaveHist(inclusive_numOfModulesPerTower, outputdir, \
-                    'inclusive_numOfModulesPerTower_1Over'+str(N_div)+'s') #How many sums per tower
-    SaveHist(inclusive_numOfModulesPerTower_OnlyHad, outputdir, \
-                    'inclusive_numOfModulesPerTower_OnlyHad_1Over'+str(N_div)+'s') #How many sums per tower in CE-H
-    SaveHist(inclusive_numOfModulesPerTower_OnlyEM, outputdir, \
-                    'inclusive_numOfModulesPerTower_OnlyEM_1Over'+str(N_div)+'s') #How many sums per tower in CE-E
+    SaveHist(inclusive_towerFit, outputdir+'/plots/', 'inclusive_towerFit_1Over'+str(N_div)+'s', 'root') #how the module sum (energy) is distributed
+    SaveHist(inclusive_tower, outputdir+'/plots/', 'inclusive_tower_1Over'+str(N_div)+'s', 'root') #just to show SC occupation
+    SaveHist(inclusive_numOfModulesPerTower, outputdir+'/plots/', \
+                    'inclusive_numOfModulesPerTower_1Over'+str(N_div)+'s', 'root') #How many sums per tower
+    SaveHist(inclusive_numOfModulesPerTower_OnlyHad, outputdir+'/plots/', \
+                    'inclusive_numOfModulesPerTower_OnlyHad_1Over'+str(N_div)+'s', 'root') #How many sums per tower in CE-H
+    SaveHist(inclusive_numOfModulesPerTower_OnlyEM, outputdir+'/plots/', \
+                    'inclusive_numOfModulesPerTower_OnlyEM_1Over'+str(N_div)+'s', 'root') #How many sums per tower in CE-E
 
 def module_per_tower(inputdir, outputdir, bundles_file_path, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name):
     with open(inputdir + bundles_file_path) as f:
