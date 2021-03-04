@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import ROOT
 
-TCs = pd.read_csv('TCPositions/TCPositions_sctintillator.csv', sep=' ')
+TCs = pd.read_csv('input/cellPositions/TCPositions_sctintillator.csv', sep=' ')
 ietaVslayer = ROOT.TH2D("ietaVslayer","",14,37,51,22,0,22)
 
 for index, row in TCs.iterrows():
