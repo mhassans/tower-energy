@@ -1,1 +1,8 @@
 *.pdf
+*.png
+*.root
+test.py
+*pycache*
+jupyter/.ipynb_checkpoints/
+jupyter/Untitled.ipynb
+estimate_area_alternative_ThisIsDepricated/
