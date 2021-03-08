@@ -4,16 +4,16 @@ import math
 
 sensorCell = True #sensor cell or trigger cell
 
-u = 5
-v = 0
 layer = 1
+u = 2
+v = 0
 
-eta_min = 22 
-eta_max = 26  
+eta_min = 27
+eta_max = 36
 etaBinStep = 0.0870
 
 phi_min = -2
-phi_max = 3  
+phi_max = 6 
 phiBinStep = 2*math.pi/72
 
 eta_ticks = [a * etaBinStep for a in range(eta_min, eta_max)] 

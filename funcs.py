@@ -1,4 +1,5 @@
 import itertools
+import math
 import ROOT
 from  root_numpy import hist2array, array2hist
 from scipy import ndimage
@@ -176,6 +177,12 @@ def findBestFit(towerSortedNormed, N_div):
 def SaveHist(hist, outputdir, name, fileType):
     c = ROOT.TCanvas("canvas")
     hist.Draw('colz')
+    nominal_low = ROOT.TLine(1.4,0,3.2,0)
+    nominal_high = ROOT.TLine(1.4,2*math.pi/3,3.2,2*math.pi/3)
+    nominal_low.Draw('same')
+    nominal_low.SetLineStyle(7)
+    nominal_high.Draw('same')
+    nominal_high.SetLineStyle(7)
     c.Print(outputdir+name+'.'+fileType)
     #f = ROOT.TFile.Open(outputdir+name+'.'+whatType, 'RECREATE')
     #hist.Write()
