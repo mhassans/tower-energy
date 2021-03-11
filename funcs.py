@@ -187,3 +187,9 @@ def SaveHist(hist, outputdir, name, fileType):
     #f = ROOT.TFile.Open(outputdir+name+'.'+whatType, 'RECREATE')
     #hist.Write()
     #f.Close()
+
+def find_eta(name):
+    return int(name[name.find('eta')+3 : name.find('-phi')])
+
+def find_phi(name):
+    return int(name[name.find('-phi')+4:])

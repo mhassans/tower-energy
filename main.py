@@ -21,7 +21,7 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
     cells = cells[(cells.layer % 2 == 1) | (cells.layer > last_CE_E_layer)].reset_index(drop=True)#Only use trigger layers. 
     cells["SC_phi"] = cells["SC_phi"].replace(0, 1e-5) #Force SCs on border phi=0 to fill positive-phi bins.
     
-    N_div = 8 # Divide module sum to (1/N_div)'s
+    N_div = 16 # Divide module sum to (1/N_div)'s
     
     etaBinStep = 0.0870
     minBinEta = 16
@@ -74,6 +74,7 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
                 wafer_data = cells[(cells["waferu"]==u) & (cells["waferv"]==v) & (cells["layer"]==l)] 
                 
                 if (len(wafer_data)!=0) and ('l'+str(l)+'-u'+str(u)+'-v'+str(v) in modulesWithTC):
+                    print('l=',l,', u=',u, ', v=', v)
                     tower.Reset()
                     for index, row in wafer_data.iterrows():
                         tower.Fill(-1.0*row["SC_eta"], row["SC_phi"])#2D hist of the number of SC
@@ -143,7 +144,8 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
     param_mtx[1].to_pickle(outputdir + param_mtx_had_name)
     
     inclusive_towerFit.Scale(1./N_div) #normalize
-    SaveHist(inclusive_towerFit, outputdir+'/plots/', 'inclusive_towerFit_1Over'+str(N_div)+'s', 'root') #how the module sum (energy) is distributed
+    SaveHist(inclusive_towerFit, outputdir+'/plots/', 'inclusive_towerFit_1Over'+str(N_div)+'s', 'root')
+                                                                            #how the module sum (energy) is distributed
     SaveHist(inclusive_tower, outputdir+'/plots/', 'inclusive_tower_1Over'+str(N_div)+'s', 'root') #just to show SC occupation
     SaveHist(inclusive_numOfModulesPerTower, outputdir+'/plots/', \
                     'inclusive_numOfModulesPerTower_1Over'+str(N_div)+'s', 'root') #How many sums per tower

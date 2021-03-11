@@ -1,23 +1,28 @@
 import sys
+from pathlib import Path
 import matplotlib.pyplot as plt
 import pandas as pd
 import math
 import yaml
-from funcs_plotter import find_eta, find_phi
-#from funcs import getParMtxPerBundle, getModulesPerBundle, SaveHist #FIXME:The commented lines cause crash when imported with plt
-#import ROOT
+import matplotlib.patches as patches
+from funcs import getParMtxPerBundle, getModulesPerBundle, SaveHist, find_eta, find_phi
+import ROOT
 
-#ROOT.gStyle.SetOptStat(0)
-#ROOT.gROOT.SetBatch()
+ROOT.gStyle.SetOptStat(0)
+ROOT.gROOT.SetBatch()
 
-def plotSCsOverTower(SC_file, outputdir):
+def plotSCsOverTower_singleModule(SC_file, outputdir): #for quick plotting single module position wrt tower coordinate
+    layer = 1
+    u = 2
+    v = 0
+    
     etaBinStep = 0.0870
-    minBinEta = 24
-    maxBinEta = 37
+    minBinEta = 27
+    maxBinEta = 36
     
     phiBinStep = 2*math.pi/72
-    minBinPhi = -4
-    maxBinPhi = 8
+    minBinPhi = -2
+    maxBinPhi = 6
 
     eta_ticks = [round(a * etaBinStep,3) for a in range(minBinEta, maxBinEta)] 
     phi_ticks = [round(b * phiBinStep,3) for b in range(minBinPhi, maxBinPhi)] 
@@ -27,22 +32,69 @@ def plotSCsOverTower(SC_file, outputdir):
 
     cells["SC_phi"] = cells["SC_phi"].replace(0, 1e-5)
 
+    if not Path(outputdir).exists():
+        Path(outputdir).mkdir(parents=True)
     fig = plt.figure()
     ax = fig.add_subplot(1,1,1)
     
-    layer = 1
-    for u, v in [(2,0),(3,0),(3,1)]: # u and v: module coordinates
-        cell_u_v_layer = cells[(cells['waferu'] == u) & (cells['waferv'] == v) & (cells['layer'] == layer)]
-        plt.scatter(cell_u_v_layer['SC_eta']*-1.0, cell_u_v_layer['SC_phi'])
-    
+    cell_u_v_layer = cells[(cells['waferu'] == u) & (cells['waferv'] == v) & (cells['layer'] == layer)]
+    plt.scatter(cell_u_v_layer['SC_eta']*-1.0, cell_u_v_layer['SC_phi'],s=10)
+
     ax.set_xticks(eta_ticks)
     ax.set_xticklabels(eta_ticks, rotation = 45)
     ax.set_yticks(phi_ticks)
     ax.grid(which='both')
     ax.set_xlabel('eta')
     ax.set_ylabel('phi')
-    plt.show()
-    fig.savefig(outputdir+'SCs_layer'+str(layer)+'.png', dpi=300)
+    plt.tight_layout()
+    fig.savefig(outputdir+'l'+str(layer)+'-u'+str(u)+'-v'+str(v)+'.png', dpi=300)
+
+def plotSCsOverTower(SC_file, outputdir):
+    etaBinStep = 0.0870
+    minBinEta = 27
+    maxBinEta = 39
+    
+    phiBinStep = 2*math.pi/72
+    minBinPhi = -4
+    maxBinPhi = 8
+
+    etaBinToExamine = 31 #tower coordinate
+    phiBinToExamine = 1 #tower coordinate
+
+    eta_ticks = [round(a * etaBinStep,3) for a in range(minBinEta, maxBinEta)] 
+    phi_ticks = [round(b * phiBinStep,3) for b in range(minBinPhi, maxBinPhi)] 
+    
+    cells = pd.read_csv(SC_file, sep=' ')
+    cells.columns= ["layer","waferu","waferv","triggercellu","triggercellv","SC_eta","SC_phi"]
+
+    cells["SC_phi"] = cells["SC_phi"].replace(0, 1e-5)
+
+    outputdir +='/tower_EtaStep'+str(etaBinToExamine)+'_phiStep'+str(phiBinToExamine)+'/'
+    if not Path(outputdir).exists():
+        Path(outputdir).mkdir(parents=True)
+    fig = plt.figure()
+    for layer in range(1,51):
+        if ((layer%2==0) and (layer<=28)):
+            continue
+        plt.clf()
+        ax = fig.add_subplot(1,1,1)
+        
+        for u, v in [(2,0),(3,0),(3,1)]: # u and v: module coordinates
+            cell_u_v_layer = cells[(cells['waferu'] == u) & (cells['waferv'] == v) & (cells['layer'] == layer)]
+            plt.scatter(cell_u_v_layer['SC_eta']*-1.0, cell_u_v_layer['SC_phi'],s=10)
+
+        rect = patches.Rectangle((etaBinStep*31, phiBinStep*1), etaBinStep, phiBinStep, linewidth=2, edgecolor='black', facecolor='none')
+        ax.add_patch(rect)
+        
+        ax.set_xticks(eta_ticks)
+        ax.set_xticklabels(eta_ticks, rotation = 45)
+        ax.set_yticks(phi_ticks)
+        ax.grid(which='both')
+        ax.set_xlabel('eta')
+        ax.set_ylabel('phi')
+        ax.set_axisbelow(True)
+        plt.tight_layout()
+        fig.savefig(outputdir+'SCs_layer'+str(layer)+'.png', dpi=300)
     
 
 def towersPerStage1(lpgbtMappingsFile, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name, outputdir):
@@ -156,6 +208,11 @@ def main():
     if (config['plotting']['plotSCsOverTower']):
         plotSCsOverTower(SC_file=config['param_mtx']['inputdir']+config['param_mtx']['SC_position_file'],\
                         outputdir=config['plotSCsOverTower']['outputdir']\
+                        )
+
+    if (config['plotting']['plotSCsOverTower_singleModule']):
+        plotSCsOverTower_singleModule(SC_file=config['param_mtx']['inputdir']+config['param_mtx']['SC_position_file'],\
+                        outputdir=config['plotSCsOverTower_singleModule']['outputdir']\
                         )
 
 if __name__ == "__main__":

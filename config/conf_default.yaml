@@ -22,9 +22,12 @@ module_per_tower:
 ##########Plotting##########
 plotting:
     towersPerStage1: False
-    plotSCsOverTower: True
+    plotSCsOverTower: False
+    plotSCsOverTower_singleModule: True
 
 towersPerStage1:
     outputdir: './output/plots/towersPerStage1/'
 plotSCsOverTower:
     outputdir: './output/plots/plotSCsOverTower/'
+plotSCsOverTower_singleModule:
+    outputdir: './output/plots/plotSCsOverTower_singleModule/'
