@@ -183,6 +183,7 @@ def SaveHist(hist, outputdir, name, fileType):
     nominal_low.SetLineStyle(7)
     nominal_high.Draw('same')
     nominal_high.SetLineStyle(7)
+    c.SetRightMargin(0.15)
     c.Print(outputdir+name+'.'+fileType)
     #f = ROOT.TFile.Open(outputdir+name+'.'+whatType, 'RECREATE')
     #hist.Write()
@@ -193,3 +194,27 @@ def find_eta(name):
 
 def find_phi(name):
     return int(name[name.find('-phi')+4:])
+
+def getPerStage1TowerHists(parMtx_PerBundle, coord, name):
+    below30 = {}
+    above30 = {}
+    for bundle in parMtx_PerBundle: #bundle = 0,1,2,...,23
+        sumPerTower = parMtx_PerBundle[bundle][(parMtx_PerBundle[bundle]!=0).any(axis=1)]
+        sumPerTower = sumPerTower.astype(bool).astype(int).sum(axis=1)
+        below30[bundle] = ROOT.TH2D("towerFit_"+name+"_below30deg_Stage1FPGA_num"+str(bundle),""\
+                                    ,coord[0],coord[1],coord[2],coord[3],coord[4],coord[5])
+        below30[bundle].SetTitle(";eta;phi;required number of sums")
+        
+        above30[bundle] = ROOT.TH2D("towerFit_"+name+"_above30deg_Stage1FPGA_num"+str(bundle),""\
+                                    ,coord[0],coord[1],coord[2],coord[3],coord[4],coord[5])
+        above30[bundle].SetTitle(";eta;phi;required number of sums")
+        
+        for tower in sumPerTower.index:
+            if(find_phi(tower)<=5):
+                below30[bundle].SetBinContent(find_eta(tower)+2, find_phi(tower)+8, sumPerTower[tower])#2 and 8 are just offset
+            else:
+                above30[bundle].SetBinContent(find_eta(tower)+2, find_phi(tower)+8, sumPerTower[tower])#2 and 8 are just offset
+    return below30, above30
+
+
+

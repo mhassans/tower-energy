@@ -5,7 +5,7 @@ import pandas as pd
 import math
 import yaml
 import matplotlib.patches as patches
-from funcs import getParMtxPerBundle, getModulesPerBundle, SaveHist, find_eta, find_phi
+from funcs import getParMtxPerBundle, getModulesPerBundle, SaveHist, getPerStage1TowerHists
 import ROOT
 
 ROOT.gStyle.SetOptStat(0)
@@ -114,75 +114,35 @@ def towersPerStage1(lpgbtMappingsFile, inputdir_paramMtx, param_mtx_em_name, par
     nBinsPhi = maxBinPhi - minBinPhi
         
     inclusive = ROOT.TH2D("towerFit_inclusive","",nBinsEta,minEta,maxEta,nBinsPhi,minPhi,maxPhi)
-
-    perStage1_towerFit_EM_below30deg = {} #would be like {0:2D Hist of towerFit of 1st Stage1 FPGA towers, 1:...2nd...,..., 23:...24th..}
-    perStage1_towerFit_EM_above30deg = {} #would be like {0:2D Hist of towerFit of 1st Stage1 FPGA towers, 1:...2nd...,..., 23:...24th..}
-    perStage1_towerFit_Had_below30deg = {}
-    perStage1_towerFit_Had_above30deg = {}
+    inclusive.SetTitle(";eta;phi;required number of sums")
     
     with open(lpgbtMappingsFile) as f:
         lines = [line.rstrip('\n') for line in f]
         f.close()
     bundles = getModulesPerBundle(lines)
     parMtxEM_PerBundle, parMtxHad_PerBundle = getParMtxPerBundle(bundles, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name)
-    for bundle in parMtxEM_PerBundle: #bundle = 0,1,2,...,23
-        sumPerTower = parMtxEM_PerBundle[bundle][(parMtxEM_PerBundle[bundle]!=0).any(axis=1)]
-        sumPerTower = sumPerTower.astype(bool).astype(int).sum(axis=1)
-        perStage1_towerFit_EM_below30deg[bundle] = ROOT.TH2D("towerFit_EM_below30deg_Stage1FPGA_num"+str(bundle),""\
-                                                  ,nBinsEta,minEta,maxEta,nBinsPhi,minPhi,maxPhi)
-        perStage1_towerFit_EM_above30deg[bundle] = ROOT.TH2D("towerFit_EM_above30deg_Stage1FPGA_num"+str(bundle),""\
-                                                  ,nBinsEta,minEta,maxEta,nBinsPhi,minPhi,maxPhi)
-        for tower in sumPerTower.index:
-            if(find_phi(tower)<=5):
-                perStage1_towerFit_EM_below30deg[bundle].SetBinContent(find_eta(tower)+2, find_phi(tower)+8, sumPerTower[tower])
-                                                                                       #2 and 8 are just offset
-            else:
-                perStage1_towerFit_EM_above30deg[bundle].SetBinContent(find_eta(tower)+2, find_phi(tower)+8, sumPerTower[tower])
-                                                                                       #2 and 8 are just offset
-    
-    for bundle in parMtxHad_PerBundle: #bundle = 0,1,2,...,23
-        sumPerTower = parMtxHad_PerBundle[bundle][(parMtxHad_PerBundle[bundle]!=0).any(axis=1)]
-        sumPerTower = sumPerTower.astype(bool).astype(int).sum(axis=1)
-        perStage1_towerFit_Had_below30deg[bundle] = ROOT.TH2D("towerFit_Had_below30deg_Stage1FPGA_num"+str(bundle),""\
-                                                   ,nBinsEta,minEta,maxEta,nBinsPhi,minPhi,maxPhi)
-        perStage1_towerFit_Had_above30deg[bundle] = ROOT.TH2D("towerFit_Had_above30deg_Stage1FPGA_num"+str(bundle),""\
-                                                   ,nBinsEta,minEta,maxEta,nBinsPhi,minPhi,maxPhi)
-        for tower in sumPerTower.index:
-            if(find_phi(tower)<=5):
-                perStage1_towerFit_Had_below30deg[bundle].SetBinContent(find_eta(tower)+2, find_phi(tower)+8, sumPerTower[tower])
-                                                                                       #2 and 8 are just offset
-            else:
-                perStage1_towerFit_Had_above30deg[bundle].SetBinContent(find_eta(tower)+2, find_phi(tower)+8, sumPerTower[tower])
-                                                                                       #2 and 8 are just offset
+   
+    coord = [nBinsEta,minEta,maxEta,nBinsPhi,minPhi,maxPhi]
+    #below are dictionaries in this format: {0:2D Hist of towerFit of 1st Stage1 FPGA towers, 1:...2nd...,..., 23rd:...}
+    perStage1_towerFit_EM_below30deg, perStage1_towerFit_EM_above30deg = getPerStage1TowerHists(parMtxEM_PerBundle, coord, name='EM')
+    perStage1_towerFit_Had_below30deg, perStage1_towerFit_Had_above30deg = getPerStage1TowerHists(parMtxHad_PerBundle, coord, name='Had')
     
     ####Printing
     fileType = 'pdf'
+    if not Path(outputdir).exists():
+        Path(outputdir).mkdir(parents=True)
     for bundle in parMtxEM_PerBundle:
-        perStage1_towerFit_EM_below30deg[bundle].GetXaxis().SetTitle('eta')
-        perStage1_towerFit_EM_below30deg[bundle].GetYaxis().SetTitle('phi')
         SaveHist(perStage1_towerFit_EM_below30deg[bundle], outputdir, 'towerFit_EM_below30deg_Stage1FPGA_num'+str(bundle), fileType)
-        
-        perStage1_towerFit_EM_above30deg[bundle].GetXaxis().SetTitle('eta')
-        perStage1_towerFit_EM_above30deg[bundle].GetYaxis().SetTitle('phi')
         SaveHist(perStage1_towerFit_EM_above30deg[bundle], outputdir, 'towerFit_EM_above30deg_Stage1FPGA_num'+str(bundle), fileType)
-        
-        perStage1_towerFit_Had_below30deg[bundle].GetXaxis().SetTitle('eta')
-        perStage1_towerFit_Had_below30deg[bundle].GetYaxis().SetTitle('phi')
         SaveHist(perStage1_towerFit_Had_below30deg[bundle], outputdir, 'towerFit_Had_below30deg_Stage1FPGA_num'+str(bundle), fileType)
-        
-        perStage1_towerFit_Had_above30deg[bundle].GetXaxis().SetTitle('eta')
-        perStage1_towerFit_Had_above30deg[bundle].GetYaxis().SetTitle('phi')
         SaveHist(perStage1_towerFit_Had_above30deg[bundle], outputdir, 'towerFit_Had_above30deg_Stage1FPGA_num'+str(bundle), fileType)
 
         inclusive.Add(perStage1_towerFit_EM_below30deg[bundle])
         inclusive.Add(perStage1_towerFit_EM_above30deg[bundle])
         inclusive.Add(perStage1_towerFit_Had_below30deg[bundle])
         inclusive.Add(perStage1_towerFit_Had_above30deg[bundle])
-        inclusive.GetXaxis().SetTitle('eta')
-        inclusive.GetYaxis().SetTitle('phi')
         
     SaveHist(inclusive, outputdir, 'inclusive', fileType)
-    
 
 def main():
     try:
