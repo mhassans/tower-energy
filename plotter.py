@@ -72,11 +72,10 @@ def plotSCsOverTower(SC_file, outputdir):
     outputdir +='/tower_EtaStep'+str(etaBinToExamine)+'_phiStep'+str(phiBinToExamine)+'/'
     if not Path(outputdir).exists():
         Path(outputdir).mkdir(parents=True)
-    fig = plt.figure()
-    for layer in range(1,51):
+    for layer in range(1,29):
         if ((layer%2==0) and (layer<=28)):
             continue
-        plt.clf()
+        fig = plt.figure()
         ax = fig.add_subplot(1,1,1)
         
         for u, v in [(2,0),(3,0),(3,1)]: # u and v: module coordinates
@@ -95,7 +94,7 @@ def plotSCsOverTower(SC_file, outputdir):
         ax.set_axisbelow(True)
         plt.tight_layout()
         fig.savefig(outputdir+'SCs_layer'+str(layer)+'.png', dpi=300)
-    
+        plt.clf()
 
 def towersPerStage1(lpgbtMappingsFile, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name, outputdir):
     
