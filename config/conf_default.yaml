@@ -1,5 +1,5 @@
 ###########main.py#########
-function:
+mainFuncs:
     param_mtx: True
     tower_per_module: False
     module_per_tower: False
@@ -21,7 +21,7 @@ module_per_tower:
     outputdir: './output/module_per_tower/'
 
 ##########plotter.py##########
-plotting:
+plotterFuncs:
     towersPerStage1: True
     plotSCsOverTower: False
     plotSCsOverTower_singleModule: False

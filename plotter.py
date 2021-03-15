@@ -156,7 +156,7 @@ def main():
         print("Please give a valid config file")
         exit()
     
-    if (config['plotting']['towersPerStage1']):
+    if (config['plotterFuncs']['towersPerStage1']):
         towersPerStage1(lpgbtMappingsFile=config['module_per_tower']['inputdir']+config['module_per_tower']['bundles_file'],\
                         inputdir_paramMtx=config['param_mtx']['outputdir'],\
                         param_mtx_em_name=config['param_mtx']['param_mtx_em_name'],\
@@ -164,12 +164,12 @@ def main():
                         outputdir=config['towersPerStage1']['outputdir']\
                         )
     
-    if (config['plotting']['plotSCsOverTower']):
+    if (config['plotterFuncs']['plotSCsOverTower']):
         plotSCsOverTower(SC_file=config['param_mtx']['inputdir']+config['param_mtx']['SC_position_file'],\
                         outputdir=config['plotSCsOverTower']['outputdir']\
                         )
 
-    if (config['plotting']['plotSCsOverTower_singleModule']):
+    if (config['plotterFuncs']['plotSCsOverTower_singleModule']):
         plotSCsOverTower_singleModule(SC_file=config['param_mtx']['inputdir']+config['param_mtx']['SC_position_file'],\
                         outputdir=config['plotSCsOverTower_singleModule']['outputdir']\
                         )

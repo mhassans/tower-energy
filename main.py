@@ -156,6 +156,11 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
     SaveHist(inclusive_numOfModulesPerTower_OnlyEM, outputdir+'/plots/', \
                     'inclusive_numOfModulesPerTower_OnlyEM_1Over'+str(N_div)+'s', 'root') #How many sums per tower in CE-E
 
+def tower_per_module(outputdir, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name):
+    parMtxEM = pd.read_pickle(inputdir_paramMtx + param_mtx_em_name).astype('int')
+    parMtxHad = pd.read_pickle(inputdir_paramMtx + param_mtx_had_name).astype('int')
+    writeTowerPerModuleToFile(outputdir, parMtxEM, parMtxHad)
+
 def module_per_tower(inputdir, outputdir, bundles_file_path, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name):
     with open(inputdir + bundles_file_path) as f:
         lines = [line.rstrip('\n') for line in f]
@@ -164,11 +169,6 @@ def module_per_tower(inputdir, outputdir, bundles_file_path, inputdir_paramMtx, 
     parMtxEM_PerBundle, parMtxHad_PerBundle = getParMtxPerBundle(bundles, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name)
     writeParMtxPerBundleToFile(outputdir, parMtxEM_PerBundle, name='CE-E')
     writeParMtxPerBundleToFile(outputdir, parMtxHad_PerBundle, name='CE-H')
-
-def tower_per_module(outputdir, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name):
-    parMtxEM = pd.read_pickle(inputdir_paramMtx + param_mtx_em_name).astype('int')
-    parMtxHad = pd.read_pickle(inputdir_paramMtx + param_mtx_had_name).astype('int')
-    writeTowerPerModuleToFile(outputdir, parMtxEM, parMtxHad)
 
 def main():
 
@@ -184,7 +184,7 @@ def main():
         print("Please give a valid config file")
         exit()
     
-    if (config['function']['param_mtx']):
+    if (config['mainFuncs']['param_mtx']):
         param_mtx(inputdir=config['param_mtx']['inputdir'], \
                   SC_position_file=config['param_mtx']['SC_position_file'],\
                   outputdir=config['param_mtx']['outputdir'], \
@@ -195,14 +195,14 @@ def main():
                   do2DHists=config['param_mtx']['do2DHists']\
                   )
 
-    if (config['function']['tower_per_module']):
+    if (config['mainFuncs']['tower_per_module']):
         tower_per_module(outputdir=config['tower_per_module']['outputdir'],\
                          inputdir_paramMtx=config['param_mtx']['outputdir'],\
                          param_mtx_em_name=config['param_mtx']['param_mtx_em_name'],\
                          param_mtx_had_name=config['param_mtx']['param_mtx_had_name']\
                          )
 
-    if (config['function']['module_per_tower']):
+    if (config['mainFuncs']['module_per_tower']):
         module_per_tower(inputdir=config['module_per_tower']['inputdir'],\
                          outputdir=config['module_per_tower']['outputdir'],\
                          bundles_file_path=config['module_per_tower']['bundles_file'],\
