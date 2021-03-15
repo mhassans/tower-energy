@@ -10,6 +10,9 @@ from funcs import partitions, chisquare, calc_kernel, getModulesPerBundle,\
                     getParMtxPerBundle, writeParMtxPerBundleToFile, writeTowerPerModuleToFile,\
                     getModulesWithTC, applyKernel, sortAndNormalize, findBestFit, SaveHist
 
+ROOT.gStyle.SetOptStat(0)
+ROOT.gROOT.SetBatch()
+
 def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mtx_had_name,\
                 inputdir_bundlefile, bundles_file_path, do2DHists):
 
