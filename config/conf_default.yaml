@@ -1,3 +1,4 @@
+###########main.py#########
 function:
     param_mtx: True
     tower_per_module: False
@@ -19,7 +20,7 @@ module_per_tower:
     inputdir: './input/allocation/'
     outputdir: './output/module_per_tower/'
 
-##########Plotting##########
+##########plotter.py##########
 plotting:
     towersPerStage1: True
     plotSCsOverTower: False
