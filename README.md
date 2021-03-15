@@ -1,6 +1,6 @@
 # Find an optimized way to split the HGCal module energy over multiple "towers"
 
-python3 with the following packages is neeeded to run this code:
+- python3 with the following packages is neeeded to run this code:
     - numpy
     - pandas
     - matplotlib
@@ -27,11 +27,11 @@ The config file is in `config/conf_default.yaml`. In this file, only the boolean
 The command to run is:
 `python3 main.py config/conf_default.yaml`
 
-The `param_mtx` function is the core of this analysis. It finds how the energy of HGCal modules (module sums) should split over multiple towers. The total energy is divided to (1/`N_div`)th's (e.g. 1/8th's for `N_div`=8). The outputs are two dataframes (also called parameter matrices) showing the optimized split for all modules. A few plots are also made (explained in the code). `N_div` can be changed inside the function.
+- The `param_mtx` function is the core of this analysis. It finds how the energy of HGCal modules (module sums) should split over multiple towers. The total energy is divided to (1/`N_div`)th's (e.g. 1/8th's for `N_div`=8). The outputs are two dataframes (also called parameter matrices) showing the optimized split for all modules. A few plots are also made (explained in the code). `N_div` can be changed inside the function.
 
-`tower_per_module` function reads the parameter matrices produced in `param_mtx`. It then finds which towers correspond to each module and writes it into a txt file.
+- `tower_per_module` function reads the parameter matrices produced in `param_mtx`. It then finds which towers correspond to each module and writes it into a txt file.
 
-Likewise, `module_per_tower` function also reads the parameter matrices from the output of `param_mtx`.  This function finds which modules correspond to each tower. It treats CE-E and CE-H seperately. The results are written into two txt files for CE-E and CE-H, seperately.
+- Likewise, `module_per_tower` function also reads the parameter matrices from the output of `param_mtx`.  This function finds which modules correspond to each tower. It treats CE-E and CE-H seperately. The results are written into two txt files for CE-E and CE-H, seperately.
 
 
 ## `plotter.py`
