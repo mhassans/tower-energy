@@ -24,7 +24,7 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
     cells = cells[(cells.layer % 2 == 1) | (cells.layer > last_CE_E_layer)].reset_index(drop=True)#Only use trigger layers. 
     cells["SC_phi"] = cells["SC_phi"].replace(0, 1e-5) #Force SCs on border phi=0 to fill positive-phi bins.
     
-    N_div = 1 # Divide module sum to (1/N_div)'s
+    N_div = 8 # Divide module sum to (1/N_div)'s
     
     etaBinStep = 0.0870
     minBinEta = 16 #chosen conservatively for visualization
