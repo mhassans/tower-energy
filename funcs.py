@@ -144,12 +144,13 @@ def sortAndNormalize(tower, N_div):
     tower_flat = tower.flatten()
     tower_flat.sort()
     
-    if (tower_flat[-1 * N_div] == tower_flat[-1 * N_div -1] and tower_flat[-1 * N_div]!=0): #check degeneracy before removing low values
-        print('check: degenerate!')
-        print('cut value=', tower_flat[-1 * N_div], ', max=', tower_flat[-1], ' ratio=', tower_flat[-1 * N_div]/tower_flat[-1])
-        print(20*'-')
+    if (N_div<len(tower_flat)):
+        if (tower_flat[-1 * N_div] == tower_flat[-1 * N_div -1] and tower_flat[-1 * N_div]!=0): #check degeneracy before removing low values
+            print('check: degenerate!')
+            print('cut value=', tower_flat[-1 * N_div], ', max=', tower_flat[-1], ' ratio=', tower_flat[-1 * N_div]/tower_flat[-1])
+            print(20*'-')    
+        tower_flat = tower_flat[-1 * N_div:] #keep N_div highest values
     
-    tower_flat = tower_flat[-1 * N_div:] #keep N_div highest values
     tower_flat = tower_flat[tower_flat!=0] #remove zeros to prevent energy allocation to towers with zero overlap after fit.
     
     tower_flat = (tower_flat/tower_flat.sum())*N_div #normalize s.t. sum=N_div
