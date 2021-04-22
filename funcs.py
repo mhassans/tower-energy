@@ -166,10 +166,12 @@ def findBestFit(towerSortedNormed, N_div):
     chi2_min = N_div * 1000000.0 #a very large number
     for p in partitions(N_div, len(towerSortedNormed)): #partitions(A,B) yields ALL arrays of non-negative integers with len=B and sum=A
         chi2_temp = chisquare(p,towerSortedNormed)
+        if(chi2_temp <= chi2_min+1e-7): #To check for degeneracy. 1e-7 to cover round off error
+            l.append(chi2_temp)
         if (chi2_temp <= chi2_min):
             chi2_min = chi2_temp
-            bestFit = p 
-            l.append(chi2_min)
+            bestFit = p     
+    l=[round(elem,7) for elem in l]
     if(l.count(np.min(l))>1):#more than one best solution exist
         isDegenerate = True
         
