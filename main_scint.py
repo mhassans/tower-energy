@@ -2,7 +2,8 @@ import pandas as pd
 import numpy as np
 from funcs import findBestFit, sortAndNormalize
 
-N_div=8
+N_div = 16
+half_N_div = N_div//2 #Splitting over two phi slices (of 5 deg) assumed to be the same. So optmiziation performed on one only.
 
 TCs = pd.read_csv('input/cellPositions/TCPositions_sctintillator.csv', sep=' ')
 
@@ -43,18 +44,45 @@ borders = pd.DataFrame({
     "eta_high": eta_high,    
 })
 
-test = np.array([4, 2.3, 5.1, 0.1, 5, 7, 12, 1, 8, 3])
 
-sort_index = np.argsort(test)#save indices before sorting
 
-towerSortedNormed = sortAndNormalize(towerSmoothed, N_div) #returns 1D np array of float type with sum=N_div
-                    
-bestFit, isDegenerate = findBestFit(towerSortedNormed, N_div) #returns 1D np array of integer type with sum=N_div
-if (isDegenerate):
-    print('check: degenerate fit result!')
-    print('')
-    print(20*'-')
-towerFit_array = np.zeros(len(test))
-for fit_index in range(len(bestFit)):#undo sort (retrieve original index)
-    towerFit_array[ sort_index[-1 - fit_index] ] = bestFit[-1 - fit_index]
+modules = {}
+modulesFit = {}
+towerEtaLines = []
+
+for i in range(15, 28):
+    towerEtaLines.append(i*0.0870)
+
+for layer in borders['layer']:
+    tower_u0 = np.zeros(len(towerEtaLines)-1)
+    tower_u1 = np.zeros(len(towerEtaLines)-1)
+    low = borders['eta_low'][borders['layer']==layer].iloc[0]
+    mid = borders['eta_mid'][borders['layer']==layer].iloc[0]
+    high = borders['eta_high'][borders['layer']==layer].iloc[0]
+    
+    for index in range(len(towerEtaLines)-1):
+        if ( (towerEtaLines[index] < mid) and (towerEtaLines[index+1] > low )):
+            tower_u1[index] = min(towerEtaLines[index+1], mid) - max(towerEtaLines[index], low)
+        if ( (towerEtaLines[index] < high) and (towerEtaLines[index+1] > mid )):
+            tower_u0[index] = min(towerEtaLines[index+1], high) - max(towerEtaLines[index], mid)
+    
+    modules['l'+str(layer)+'-u0'] = tower_u0
+    modules['l'+str(layer)+'-u1'] = tower_u1
+
+
+for module in modules:
+    sort_index = np.argsort(modules[module])#save indices before sorting
+    
+    towerSortedNormed = sortAndNormalize(modules[module], half_N_div) #returns 1D np array of float type with sum=half_N_div
+                        
+    bestFit, isDegenerate = findBestFit(towerSortedNormed, half_N_div) #returns 1D np array of integer type with sum=half_N_div
+    if (isDegenerate):
+        print('check: degenerate fit result!')
+        print(module)
+        print(20*'-')
+    towerFit = np.zeros(len(modules[module]))
+    for fit_index in range(len(bestFit)):#undo sort (retrieve original index)
+        towerFit[ sort_index[-1 - fit_index] ] = bestFit[-1 - fit_index]
+    
+    modulesFit[module] = towerFit
 
