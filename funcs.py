@@ -217,5 +217,11 @@ def getPerStage1TowerHists(parMtx_PerBundle, coord, name):
                 above30[bundle].SetBinContent(find_eta(tower)+2, find_phi(tower)+8, sumPerTower[tower])#2 and 8 are just offset
     return below30, above30
 
+def weight(highEtaEdge, lowEtaEdge, noWeight=False):
+    if(noWeight):
+        return 1
+    else:
+        return  1/np.sinh(lowEtaEdge)**2 - 1/np.sinh(highEtaEdge)**2
+
 
 

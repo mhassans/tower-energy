@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from funcs import findBestFit, sortAndNormalize
+from funcs import findBestFit, sortAndNormalize, weight
 
 N_div = 16
 half_N_div = N_div//2 #Splitting over two phi slices (of 5 deg) assumed to be the same. So optmiziation performed on one only.
@@ -61,10 +61,17 @@ for layer in borders['layer']:
     high = borders['eta_high'][borders['layer']==layer].iloc[0]
     
     for index in range(len(towerEtaLines)-1):
+        
         if ( (towerEtaLines[index] < mid) and (towerEtaLines[index+1] > low )):
-            tower_u1[index] = min(towerEtaLines[index+1], mid) - max(towerEtaLines[index], low)
+            highEtaEdge=min(towerEtaLines[index+1], mid)
+            lowEtaEdge=max(towerEtaLines[index], low)
+            tower_u1[index] = (highEtaEdge - lowEtaEdge) * weight(highEtaEdge, lowEtaEdge, noWeight=False) * 1000
+        
         if ( (towerEtaLines[index] < high) and (towerEtaLines[index+1] > mid )):
-            tower_u0[index] = min(towerEtaLines[index+1], high) - max(towerEtaLines[index], mid)
+            highEtaEdge=min(towerEtaLines[index+1], high)
+            lowEtaEdge=max(towerEtaLines[index], mid)
+            tower_u0[index] = (highEtaEdge - lowEtaEdge) * weight(highEtaEdge, lowEtaEdge, noWeight=False) * 1000
+            #tower_u0[index] = ( min(towerEtaLines[index+1], high) - max(towerEtaLines[index], mid) )
     
     modules['l'+str(layer)+'-u0'] = tower_u0
     modules['l'+str(layer)+'-u1'] = tower_u1
