@@ -40,10 +40,9 @@ def calc_kernel(n): #n should be odd
     return kernel
 
 
-def getModulesPerBundle(lines):
-
+def getModulesPerBundle(lines, isScintil): #if isScintil is 1(True) get only scintillators. Otherwise silicons.
     bundles = {} #will be like {0:[], 1:[],..., 23:[]} with lists being module IDs
-    bundleID = -1 #goes from 0 to 23
+    bundleID = -1 #this variable will get values from 0 to 23
     for l in lines[1:]: # 1st line (column names) skipped
         if len(l)==0:
             print(20*'*'+'ERROR: Found an empty line in the file!'+20*'*')
@@ -61,16 +60,16 @@ def getModulesPerBundle(lines):
             if(len(module))<5: #check for possible bugs
                 print(20*'*'+'ERROR: Check the module name: ' + module + 20*'*')
                 sys.exit(1)
-            if(module[:5]=='type1'):
-                bundles[bundle].remove(module) # remove scintillator modules as data is not yet included 
-            elif(module[:5]!='type0'):
+            if(module[:5]=='type'+str(int(not isScintil))):
+                bundles[bundle].remove(module) # remove scintillator or silicon modules (depending on isScintil value)
+            elif(module[:5]!='type'+str(int(isScintil))):
                 print(20*'*'+'ERROR: Check the module name: ' + module + 20*'*')
                 sys.exit(1)
 
     for bundle in bundles:#This loop could be merged with the previous one, but safer not to!
         for index, module in enumerate(bundles[bundle]):
-            if(module[:5]=='type0'):
-                bundles[bundle][index] = module[6:] #remove 'type0-'
+            if(module[:5]=='type'+str(int(isScintil))):
+                bundles[bundle][index] = module[6:] #remove 'type0-' or 'type1-'
             else:
                 print(20*'*'+'ERROR: Check the module name: ' + module + 20*'*')
                 sys.exit(1)
@@ -125,7 +124,7 @@ def getModulesWithTC(bundlesFileFullPath):
     with open(bundlesFileFullPath) as f:
         lines = [line.rstrip('\n') for line in f]
     f.close()
-    bundles = getModulesPerBundle(lines)
+    bundles = getModulesPerBundle(lines, isScintil=False)
     modules =[]
     for bundle in bundles:
         modules += bundles[bundle]

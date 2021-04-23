@@ -165,7 +165,7 @@ def module_per_tower(inputdir, outputdir, bundles_file_path, inputdir_paramMtx, 
     with open(inputdir + bundles_file_path) as f:
         lines = [line.rstrip('\n') for line in f]
     f.close()
-    bundles = getModulesPerBundle(lines)
+    bundles = getModulesPerBundle(lines, isScintil=False)
     parMtxEM_PerBundle, parMtxHad_PerBundle = getParMtxPerBundle(bundles, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name)
     writeParMtxPerBundleToFile(outputdir, parMtxEM_PerBundle, name='CE-E')
     writeParMtxPerBundleToFile(outputdir, parMtxHad_PerBundle, name='CE-H')
