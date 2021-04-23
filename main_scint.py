@@ -71,7 +71,6 @@ for layer in borders['layer']:
             highEtaEdge=min(towerEtaLines[index+1], high)
             lowEtaEdge=max(towerEtaLines[index], mid)
             tower_u0[index] = (highEtaEdge - lowEtaEdge) * weight(highEtaEdge, lowEtaEdge, noWeight=False) * 1000
-            #tower_u0[index] = ( min(towerEtaLines[index+1], high) - max(towerEtaLines[index], mid) )
     
     modules['l'+str(layer)+'-u0'] = tower_u0
     modules['l'+str(layer)+'-u1'] = tower_u1
