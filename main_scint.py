@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from funcs import findBestFit, sortAndNormalize, weight
+from funcs import findBestFit, sortAndNormalize, weight, getModulesPerBundle
 
 N_div = 16
 half_N_div = N_div//2 #Splitting over two phi slices (of 5 deg) assumed to be the same. So optmiziation performed on one only.
@@ -46,8 +46,8 @@ borders = pd.DataFrame({
 
 
 
-modules = {}
-modulesFit = {}
+lu_slices = {}
+lu_slicesFit = {}
 towerEtaLines = []
 
 for i in range(15, 28):
@@ -72,23 +72,41 @@ for layer in borders['layer']:
             lowEtaEdge=max(towerEtaLines[index], mid)
             tower_u0[index] = (highEtaEdge - lowEtaEdge) * weight(highEtaEdge, lowEtaEdge, noWeight=False) * 1000
     
-    modules['l'+str(layer)+'-u0'] = tower_u0
-    modules['l'+str(layer)+'-u1'] = tower_u1
+    lu_slices['l'+str(layer)+'-u0'] = tower_u0
+    lu_slices['l'+str(layer)+'-u1'] = tower_u1
 
 
-for module in modules:
-    sort_index = np.argsort(modules[module])#save indices before sorting
+for lu_slice in lu_slices:
+    sort_index = np.argsort(lu_slices[lu_slice])#save indices before sorting
     
-    towerSortedNormed = sortAndNormalize(modules[module], half_N_div) #returns 1D np array of float type with sum=half_N_div
+    towerSortedNormed = sortAndNormalize(lu_slices[lu_slice], half_N_div) #returns 1D np array of float type with sum=half_N_div
                         
     bestFit, isDegenerate = findBestFit(towerSortedNormed, half_N_div) #returns 1D np array of integer type with sum=half_N_div
     if (isDegenerate):
         print('check: degenerate fit result!')
-        print(module)
+        print(lu_slice)
         print(20*'-')
-    towerFit = np.zeros(len(modules[module]))
+    towerFit = np.zeros(len(lu_slices[lu_slice]))
     for fit_index in range(len(bestFit)):#undo sort (retrieve original index)
         towerFit[ sort_index[-1 - fit_index] ] = bestFit[-1 - fit_index]
     
-    modulesFit[module] = towerFit
+    lu_slicesFit[lu_slice] = towerFit
+
+
+with open('input/allocation/allocation_20210421.txt') as f:
+    lines = [line.rstrip('\n') for line in f]
+    f.close()
+
+bundlesScint = getModulesPerBundle(lines, isScintil=True)
+
+modules = []
+for bundle in bundlesScint:
+    modules += bundlesScint[bundle]
+
+towers = []
+for towerPhi in range(24):
+    for towerEta in range(-2,10):
+        towers.append('had-eta'+str(towerEta)+'-phi'+str(towerPhi))
+
+param_mtx = pd.DataFrame(0, index=towers, columns=modules)
 
