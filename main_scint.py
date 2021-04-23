@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from funcs import findBestFit, sortAndNormalize, weight, getModulesPerBundle
+from funcs import findBestFit, sortAndNormalize, weight, getModulesPerBundle, find_v
 
 N_div = 16
 half_N_div = N_div//2 #Splitting over two phi slices (of 5 deg) assumed to be the same. So optmiziation performed on one only.
@@ -46,16 +46,16 @@ borders = pd.DataFrame({
 
 
 
-lu_slices = {}
-lu_slicesFit = {}
+luSlices = {} #layer and u slices
+luSlicesFit = {}
 towerEtaLines = []
 
 for i in range(15, 28):
     towerEtaLines.append(i*0.0870)
 
 for layer in borders['layer']:
-    tower_u0 = np.zeros(len(towerEtaLines)-1)
-    tower_u1 = np.zeros(len(towerEtaLines)-1)
+    slice_u0 = np.zeros(len(towerEtaLines)-1)
+    slice_u1 = np.zeros(len(towerEtaLines)-1)
     low = borders['eta_low'][borders['layer']==layer].iloc[0]
     mid = borders['eta_mid'][borders['layer']==layer].iloc[0]
     high = borders['eta_high'][borders['layer']==layer].iloc[0]
@@ -65,32 +65,32 @@ for layer in borders['layer']:
         if ( (towerEtaLines[index] < mid) and (towerEtaLines[index+1] > low )):
             highEtaEdge=min(towerEtaLines[index+1], mid)
             lowEtaEdge=max(towerEtaLines[index], low)
-            tower_u1[index] = (highEtaEdge - lowEtaEdge) * weight(highEtaEdge, lowEtaEdge, noWeight=False) * 1000
+            slice_u1[index] = (highEtaEdge - lowEtaEdge) * weight(highEtaEdge, lowEtaEdge, noWeight=False) * 1000
         
         if ( (towerEtaLines[index] < high) and (towerEtaLines[index+1] > mid )):
             highEtaEdge=min(towerEtaLines[index+1], high)
             lowEtaEdge=max(towerEtaLines[index], mid)
-            tower_u0[index] = (highEtaEdge - lowEtaEdge) * weight(highEtaEdge, lowEtaEdge, noWeight=False) * 1000
+            slice_u0[index] = (highEtaEdge - lowEtaEdge) * weight(highEtaEdge, lowEtaEdge, noWeight=False) * 1000
     
-    lu_slices['l'+str(layer)+'-u0'] = tower_u0
-    lu_slices['l'+str(layer)+'-u1'] = tower_u1
+    luSlices['l'+str(layer)+'-u0'] = slice_u0
+    luSlices['l'+str(layer)+'-u1'] = slice_u1
 
 
-for lu_slice in lu_slices:
-    sort_index = np.argsort(lu_slices[lu_slice])#save indices before sorting
+for luSlice in luSlices:
+    sort_index = np.argsort(luSlices[luSlice])#save indices before sorting
     
-    towerSortedNormed = sortAndNormalize(lu_slices[lu_slice], half_N_div) #returns 1D np array of float type with sum=half_N_div
+    luSliceSortedNormed = sortAndNormalize(luSlices[luSlice], half_N_div) #returns 1D np array of float type with sum=half_N_div
                         
-    bestFit, isDegenerate = findBestFit(towerSortedNormed, half_N_div) #returns 1D np array of integer type with sum=half_N_div
+    bestFit, isDegenerate = findBestFit(luSliceSortedNormed, half_N_div) #returns 1D np array of integer type with sum=half_N_div
     if (isDegenerate):
         print('check: degenerate fit result!')
-        print(lu_slice)
+        print(luSlice)
         print(20*'-')
-    towerFit = np.zeros(len(lu_slices[lu_slice]))
+    sliceFit = np.zeros(len(luSlices[luSlice]))
     for fit_index in range(len(bestFit)):#undo sort (retrieve original index)
-        towerFit[ sort_index[-1 - fit_index] ] = bestFit[-1 - fit_index]
+        sliceFit[ sort_index[-1 - fit_index] ] = bestFit[-1 - fit_index]
     
-    lu_slicesFit[lu_slice] = towerFit
+    luSlicesFit[luSlice] = sliceFit
 
 
 with open('input/allocation/allocation_20210421.txt') as f:
@@ -108,5 +108,19 @@ for towerPhi in range(24):
     for towerEta in range(-2,10):
         towers.append('had-eta'+str(towerEta)+'-phi'+str(towerPhi))
 
-param_mtx = pd.DataFrame(0, index=towers, columns=modules)
+parMtx = pd.DataFrame(0, index=towers, columns=modules)
+
+for module in modules:
+    shares = luSlicesFit[module[:6]]
+    for index in range(len(shares)):
+        parMtx.at['had-eta'+str(index-2)+'-phi'+str(2*find_v(module)), module] = shares[index]
+        parMtx.at['had-eta'+str(index-2)+'-phi'+str(1+2*find_v(module)), module] = shares[index]
+
+parMtx_perBundle = {}
+
+for i in range(len(bundlesScint)):
+    parMtx_perBundle[i] = parMtx[parMtx.columns.intersection(bundlesScint[i])]
+
+
+
 

@@ -197,6 +197,9 @@ def find_eta(name):
 def find_phi(name):
     return int(name[name.find('-phi')+4:])
 
+def find_v(name):
+    return int(name[name.find('-v')+2:])
+
 def getPerStage1TowerHists(parMtx_PerBundle, coord, name):
     below30 = {}
     above30 = {}
