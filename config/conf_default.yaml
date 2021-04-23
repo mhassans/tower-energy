@@ -16,7 +16,8 @@ tower_per_module:
     outputdir: './output/tower_per_module/'
 
 module_per_tower:
-    bundles_file: 'allocation_20200729_1.txt'
+    #bundles_file: 'allocation_20200729_1.txt'
+    bundles_file: 'allocation_20210421.txt'
     inputdir: './input/allocation/'
     outputdir: './output/module_per_tower/'
 
