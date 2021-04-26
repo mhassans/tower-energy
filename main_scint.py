@@ -111,15 +111,17 @@ for towerPhi in range(24):
 parMtx = pd.DataFrame(0, index=towers, columns=modules)
 
 for module in modules:
-    shares = luSlicesFit[module[:6]]
+    shares = luSlicesFit[module[6:12]]
     for index in range(len(shares)):
         parMtx.at['had-eta'+str(index-2)+'-phi'+str(2*find_v(module)), module] = shares[index]
         parMtx.at['had-eta'+str(index-2)+'-phi'+str(1+2*find_v(module)), module] = shares[index]
 
-parMtx_perBundle = {}
+parMtx.to_pickle('output/tower_module_mapping_array/param_mtx_had_Scint.pkl')
 
-for i in range(len(bundlesScint)):
-    parMtx_perBundle[i] = parMtx[parMtx.columns.intersection(bundlesScint[i])]
+#parMtx_perBundle = {}
+
+#for i in range(len(bundlesScint)):
+#    parMtx_perBundle[i] = parMtx[parMtx.columns.intersection(bundlesScint[i])]
 
 
 

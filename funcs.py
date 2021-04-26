@@ -74,6 +74,10 @@ def getModulesPerBundle(lines, isScintil): #if isScintil is 1(True) get only sci
                 print(20*'*'+'ERROR: Check the module name: ' + module + 20*'*')
                 sys.exit(1)
 
+    if (isScintil):
+        for bundle in bundles:
+            bundles[bundle] = ['scint-'+x for x in bundles[bundle]]
+    
     return bundles
 
 def getParMtxPerBundle(bundles, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name):
