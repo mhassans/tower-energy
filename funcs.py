@@ -80,10 +80,9 @@ def getModulesPerBundle(lines, isScintil): #if isScintil is 1(True) get only sci
     
     return bundles
 
-def getParMtxPerBundle(bundles, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name):
+def getParMtxPerBundle_Silic(bundles, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name_silic):
     parMtxEM = pd.read_pickle(inputdir_paramMtx + param_mtx_em_name).astype('int')
-    parMtxHad = pd.read_pickle(inputdir_paramMtx + param_mtx_had_name).astype('int')
-
+    parMtxHad = pd.read_pickle(inputdir_paramMtx + param_mtx_had_name_silic).astype('int')
     
     parMtxEM_PerBundle = {}
     parMtxHad_PerBundle = {}
@@ -93,6 +92,13 @@ def getParMtxPerBundle(bundles, inputdir_paramMtx, param_mtx_em_name, param_mtx_
         parMtxHad_PerBundle[i] = parMtxHad[parMtxHad.columns.intersection(bundles[i])]
     
     return parMtxEM_PerBundle, parMtxHad_PerBundle
+
+def getParMtxPerBundle_Scint(bundlesScint, inputdir_paramMtx, param_mtx_had_name_scint):    
+    parMtxHadScint = pd.read_pickle(inputdir_paramMtx + param_mtx_had_name_scint).astype('int')    
+    parMtxHadScint_PerBundle = {}
+    for i in range(len(bundlesScint)):
+        parMtxHadScint_PerBundle[i] = parMtxHadScint[parMtxHadScint.columns.intersection(bundlesScint[i])]    
+    return parMtxHadScint_PerBundle
 
 def writeParMtxPerBundleToFile(outputdir, parMtx, name):
     for i in parMtx:
@@ -124,7 +130,7 @@ def writeTowerPerModuleToFile(outputdir, parMtxEM, parMtxHad):
     f.close()
 
 
-def getModulesWithTC(bundlesFileFullPath):
+def getModulesWithTC(bundlesFileFullPath): #There are a few (partial) modules with SC but without TC. This function discards them and returns the rest.
     with open(bundlesFileFullPath) as f:
         lines = [line.rstrip('\n') for line in f]
     f.close()
@@ -180,20 +186,37 @@ def findBestFit(towerSortedNormed, N_div):
         
     return bestFit, isDegenerate
 
-def SaveHist(hist, outputdir, name, fileType):
+def SaveHist(hist, outputdir, name, fileType, AddGrid):
     c = ROOT.TCanvas("canvas")
     hist.Draw('colz')
-    nominal_low = ROOT.TLine(1.4,0,3.2,0)
-    nominal_high = ROOT.TLine(1.4,2*math.pi/3,3.2,2*math.pi/3)
+    nominal_low = ROOT.TLine(1.4,0,3.07,0)
+    nominal_high = ROOT.TLine(1.4,2*math.pi/3,3.07,2*math.pi/3)
     nominal_low.Draw('same')
-    nominal_low.SetLineStyle(7)
+    nominal_low.SetLineStyle(9)
+    nominal_low.SetLineWidth(3)
     nominal_high.Draw('same')
-    nominal_high.SetLineStyle(7)
+    nominal_high.SetLineStyle(9)
+    nominal_high.SetLineWidth(3)
+    
+    if(AddGrid):
+        lineVert=[]
+        for etaLine in [0.087*etaBin for etaBin in range(15,36)]:
+            lineVert.append(ROOT.TLine(etaLine,-0.3,etaLine,2.2))
+            lineVert[-1].SetLineStyle(2)
+            lineVert[-1].SetLineWidth(1)
+            lineVert[-1].SetLineColor(16)
+            lineVert[-1].Draw("same")
+        
+        lineHorz=[]
+        for phiLine in [2*math.pi/72*phiBin for phiBin in range(-3,26)]:
+            lineHorz.append(ROOT.TLine(1.3, phiLine,3.1, phiLine))
+            lineHorz[-1].SetLineStyle(2)
+            lineHorz[-1].SetLineWidth(1)
+            lineHorz[-1].SetLineColor(16)
+            lineHorz[-1].Draw("same")
+
     c.SetRightMargin(0.15)
     c.Print(outputdir+name+'.'+fileType)
-    #f = ROOT.TFile.Open(outputdir+name+'.'+whatType, 'RECREATE')
-    #hist.Write()
-    #f.Close()
 
 def find_eta(name):
     return int(name[name.find('eta')+3 : name.find('-phi')])
@@ -220,9 +243,9 @@ def getPerStage1TowerHists(parMtx_PerBundle, coord, name):
         
         for tower in sumPerTower.index:
             if(find_phi(tower)<=5):
-                below30[bundle].SetBinContent(find_eta(tower)+2, find_phi(tower)+8, sumPerTower[tower])#2 and 8 are just offset
+                below30[bundle].SetBinContent(find_eta(tower)+4, find_phi(tower)+6, sumPerTower[tower])#4 and 6 are just offset
             else:
-                above30[bundle].SetBinContent(find_eta(tower)+2, find_phi(tower)+8, sumPerTower[tower])#2 and 8 are just offset
+                above30[bundle].SetBinContent(find_eta(tower)+4, find_phi(tower)+6, sumPerTower[tower])#4 and 6 are just offset
     return below30, above30
 
 def weight(highEtaEdge, lowEtaEdge, noWeight=False):
@@ -231,5 +254,20 @@ def weight(highEtaEdge, lowEtaEdge, noWeight=False):
     else:
         return  1/np.sinh(lowEtaEdge)**2 - 1/np.sinh(highEtaEdge)**2
 
+def fillTowersIncl(df, hist, DoNumOfSums, N_div): #N_div is ignored when DoNumOfSums=True
+    if(DoNumOfSums):
+        dfSum = df.astype(bool).astype(int).sum(axis=1)
+        ztitle = 'required number of sums'
+        title = 'Distribution of total number of sums per tower'
+    else:
+        dfSum = df.sum(axis=1)
+        dfSum /= N_div
+        title = 'Energy distribution if each ECON-T gets 1 unit of energy'
+        ztitle = 'total energy'
+    for tower in dfSum.index:
+        hist.SetBinContent(find_eta(tower)+4, find_phi(tower)+6, dfSum[tower])#4 and 6 are just offsets
+    hist.SetTitle(title+";eta;phi;"+ztitle)
+    
+    return hist
 
 

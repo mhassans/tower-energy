@@ -7,13 +7,13 @@ import math
 import yaml
 from  root_numpy import hist2array, array2hist
 from funcs import partitions, chisquare, calc_kernel, getModulesPerBundle,\
-                    getParMtxPerBundle, writeParMtxPerBundleToFile, writeTowerPerModuleToFile,\
+                    getParMtxPerBundle_Silic, writeParMtxPerBundleToFile, writeTowerPerModuleToFile,\
                     getModulesWithTC, applyKernel, sortAndNormalize, findBestFit, SaveHist
 
 ROOT.gStyle.SetOptStat(0)
 ROOT.gROOT.SetBatch()
 
-def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mtx_had_name,\
+def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mtx_had_name_silic,\
                 inputdir_bundlefile, bundles_file_path, do2DHists):
 
     last_CE_E_layer = 28
@@ -143,30 +143,30 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
     param_mtx[0] = param_mtx[0].drop([x for x in param_mtx[0].index if (x[:8]=='em-eta18')])#remove eta>3.045 (Not removed from hists)
     param_mtx[1] = param_mtx[1].drop([x for x in param_mtx[1].index if (x[:9]=='had-eta18')])#remove eta>3.045 (Not removed from hists)
     param_mtx[0].to_pickle(outputdir + param_mtx_em_name)
-    param_mtx[1].to_pickle(outputdir + param_mtx_had_name)
+    param_mtx[1].to_pickle(outputdir + param_mtx_had_name_silic)
     
     inclusive_towerFit.Scale(1./N_div) #normalize
-    SaveHist(inclusive_towerFit, outputdir+'/plots/', 'inclusive_towerFit_1Over'+str(N_div)+'s', 'root')
+    SaveHist(inclusive_towerFit, outputdir+'/plots/', 'inclusive_towerFit_1Over'+str(N_div)+'s', 'root', AddGrid=False)
                                                                             #how the module sum (energy) is distributed
-    SaveHist(inclusive_tower, outputdir+'/plots/', 'inclusive_tower_1Over'+str(N_div)+'s', 'root') #just to show SC occupation
+    SaveHist(inclusive_tower, outputdir+'/plots/', 'inclusive_tower_1Over'+str(N_div)+'s', 'root', AddGrid=False) #just to show SC occupation
     SaveHist(inclusive_numOfModulesPerTower, outputdir+'/plots/', \
-                    'inclusive_numOfModulesPerTower_1Over'+str(N_div)+'s', 'root') #How many sums per tower
+                    'inclusive_numOfModulesPerTower_1Over'+str(N_div)+'s', 'root', AddGrid=False) #How many sums per tower
     SaveHist(inclusive_numOfModulesPerTower_OnlyHad, outputdir+'/plots/', \
-                    'inclusive_numOfModulesPerTower_OnlyHad_1Over'+str(N_div)+'s', 'root') #How many sums per tower in CE-H
+                    'inclusive_numOfModulesPerTower_OnlyHad_1Over'+str(N_div)+'s', 'root', AddGrid=False) #How many sums per tower in CE-H
     SaveHist(inclusive_numOfModulesPerTower_OnlyEM, outputdir+'/plots/', \
-                    'inclusive_numOfModulesPerTower_OnlyEM_1Over'+str(N_div)+'s', 'root') #How many sums per tower in CE-E
+                    'inclusive_numOfModulesPerTower_OnlyEM_1Over'+str(N_div)+'s', 'root', AddGrid=False) #How many sums per tower in CE-E
 
-def tower_per_module(outputdir, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name):
+def tower_per_module(outputdir, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name_silic):
     parMtxEM = pd.read_pickle(inputdir_paramMtx + param_mtx_em_name).astype('int')
-    parMtxHad = pd.read_pickle(inputdir_paramMtx + param_mtx_had_name).astype('int')
+    parMtxHad = pd.read_pickle(inputdir_paramMtx + param_mtx_had_name_silic).astype('int')
     writeTowerPerModuleToFile(outputdir, parMtxEM, parMtxHad)
 
-def module_per_tower(inputdir, outputdir, bundles_file_path, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name):
+def module_per_tower(inputdir, outputdir, bundles_file_path, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name_silic):
     with open(inputdir + bundles_file_path) as f:
         lines = [line.rstrip('\n') for line in f]
     f.close()
     bundles = getModulesPerBundle(lines, isScintil=False)
-    parMtxEM_PerBundle, parMtxHad_PerBundle = getParMtxPerBundle(bundles, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name)
+    parMtxEM_PerBundle, parMtxHad_PerBundle = getParMtxPerBundle_Silic(bundles, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name_silic)
     writeParMtxPerBundleToFile(outputdir, parMtxEM_PerBundle, name='CE-E')
     writeParMtxPerBundleToFile(outputdir, parMtxHad_PerBundle, name='CE-H')
 
@@ -189,7 +189,7 @@ def main():
                   SC_position_file=config['param_mtx']['SC_position_file'],\
                   outputdir=config['param_mtx']['outputdir'], \
                   param_mtx_em_name=config['param_mtx']['param_mtx_em_name'],\
-                  param_mtx_had_name=config['param_mtx']['param_mtx_had_name'], \
+                  param_mtx_had_name_silic=config['param_mtx']['param_mtx_had_name_silic'], \
                   inputdir_bundlefile=config['module_per_tower']['inputdir'],\
                   bundles_file_path=config['module_per_tower']['bundles_file'],\
                   do2DHists=config['param_mtx']['do2DHists']\
@@ -199,7 +199,7 @@ def main():
         tower_per_module(outputdir=config['tower_per_module']['outputdir'],\
                          inputdir_paramMtx=config['param_mtx']['outputdir'],\
                          param_mtx_em_name=config['param_mtx']['param_mtx_em_name'],\
-                         param_mtx_had_name=config['param_mtx']['param_mtx_had_name']\
+                         param_mtx_had_name_silic=config['param_mtx']['param_mtx_had_name_silic']\
                          )
 
     if (config['mainFuncs']['module_per_tower']):
@@ -208,7 +208,7 @@ def main():
                          bundles_file_path=config['module_per_tower']['bundles_file'],\
                          inputdir_paramMtx=config['param_mtx']['outputdir'],\
                          param_mtx_em_name=config['param_mtx']['param_mtx_em_name'],\
-                         param_mtx_had_name=config['param_mtx']['param_mtx_had_name']\
+                         param_mtx_had_name_silic=config['param_mtx']['param_mtx_had_name_silic']\
                          )
 
 if __name__ == "__main__":

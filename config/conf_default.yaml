@@ -9,23 +9,25 @@ param_mtx:
     inputdir: './input/cellPositions/'
     outputdir: './output/tower_module_mapping_array/'
     param_mtx_em_name: 'param_mtx_em.pkl'
-    param_mtx_had_name: 'param_mtx_had.pkl'
+    param_mtx_had_name_silic: 'param_mtx_had_silic.pkl'
+    param_mtx_had_name_scint: 'param_mtx_had_scint.pkl'
     do2DHists: False
 
 tower_per_module:
     outputdir: './output/tower_per_module/'
 
 module_per_tower:
-    #bundles_file: 'allocation_20200729_1.txt'
+    #bundles_file: 'allocation_20200729_OLD.txt'
     bundles_file: 'allocation_20210421.txt'
     inputdir: './input/allocation/'
     outputdir: './output/module_per_tower/'
 
 ##########plotter.py##########
 plotterFuncs:
-    towersPerStage1: False
+    towersPerStage1: True
     plotSCsOverTower: False
-    plotSCsOverTower_singleModule: True
+    plotSCsOverTower_singleModule: False
+    TotNumOfSumsPerTower: False
 
 towersPerStage1:
     outputdir: './output/plots/towersPerStage1/'
@@ -33,3 +35,13 @@ plotSCsOverTower:
     outputdir: './output/plots/plotSCsOverTower/'
 plotSCsOverTower_singleModule:
     outputdir: './output/plots/plotSCsOverTower_singleModule/'
+TotNumOfSumsPerTower:
+    outputdir: './output/plots/TotNumOfSumsPerTower/'
+
+histRange:
+    etaBinStep: 0.0870
+    minBinEta: 14
+    maxBinEta: 36
+    phiBinStep: 2*math.pi/72
+    minBinPhi: -5
+    maxBinPhi: 28
