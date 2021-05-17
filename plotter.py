@@ -117,7 +117,7 @@ def towersPerStage1(lpgbtMappingsFile, inputdir_paramMtx, param_mtx_em_name, par
     
     with open(lpgbtMappingsFile) as f:
         lines = [line.rstrip('\n') for line in f]
-        f.close()
+    f.close()
     bundlesSilic = getModulesPerBundle(lines, isScintil=False)
     bundlesScint = getModulesPerBundle(lines, isScintil=True)
     

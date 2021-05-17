@@ -7,7 +7,7 @@ import math
 import yaml
 from  root_numpy import hist2array, array2hist
 from funcs import partitions, chisquare, calc_kernel, getModulesPerBundle,\
-                    getParMtxPerBundle_Silic, writeParMtxPerBundleToFile, writeTowerPerModuleToFile,\
+                    getParMtxPerBundle_Silic, getParMtxPerBundle_Scint, writeParMtxPerBundleToFile, writeTowerPerModuleToFile,\
                     getModulesWithTC, applyKernel, sortAndNormalize, findBestFit, SaveHist
 
 ROOT.gStyle.SetOptStat(0)
@@ -156,17 +156,30 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
     SaveHist(inclusive_numOfModulesPerTower_OnlyEM, outputdir+'/plots/', \
                     'inclusive_numOfModulesPerTower_OnlyEM_1Over'+str(N_div)+'s', 'root', AddGrid=False) #How many sums per tower in CE-E
 
-def tower_per_module(outputdir, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name_silic):
+def tower_per_module(outputdir, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name_silic, param_mtx_had_name_scint):
     parMtxEM = pd.read_pickle(inputdir_paramMtx + param_mtx_em_name).astype('int')
-    parMtxHad = pd.read_pickle(inputdir_paramMtx + param_mtx_had_name_silic).astype('int')
-    writeTowerPerModuleToFile(outputdir, parMtxEM, parMtxHad)
+    parMtxHadSilic = pd.read_pickle(inputdir_paramMtx + param_mtx_had_name_silic).astype('int')
+    parMtxHadScint = pd.read_pickle(inputdir_paramMtx + param_mtx_had_name_scint).astype('int')
+    writeTowerPerModuleToFile(outputdir, parMtxEM, parMtxHadSilic, parMtxHadScint)
 
-def module_per_tower(inputdir, outputdir, bundles_file_path, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name_silic):
+def module_per_tower(inputdir, outputdir, bundles_file_path, inputdir_paramMtx, param_mtx_em_name,\
+                        param_mtx_had_name_silic, param_mtx_had_name_scint):
     with open(inputdir + bundles_file_path) as f:
         lines = [line.rstrip('\n') for line in f]
     f.close()
-    bundles = getModulesPerBundle(lines, isScintil=False)
-    parMtxEM_PerBundle, parMtxHad_PerBundle = getParMtxPerBundle_Silic(bundles, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name_silic)
+    
+    bundlesSilic = getModulesPerBundle(lines, isScintil=False)
+    bundlesScint = getModulesPerBundle(lines, isScintil=True)
+    
+    parMtxEM_PerBundle, parMtxHadSilic_PerBundle = getParMtxPerBundle_Silic(bundlesSilic, inputdir_paramMtx,\
+                                                                        param_mtx_em_name, param_mtx_had_name_silic)
+    parMtxHadScint_PerBundle = getParMtxPerBundle_Scint(bundlesScint, inputdir_paramMtx, param_mtx_had_name_scint)
+
+    #merging silicon and scintillators:
+    parMtxHad_PerBundle = {}
+    for i in range(len(bundlesScint)):
+        parMtxHad_PerBundle[i] = pd.concat([parMtxHadSilic_PerBundle[i],parMtxHadScint_PerBundle[i]], axis=1).fillna(0).astype('int')
+    
     writeParMtxPerBundleToFile(outputdir, parMtxEM_PerBundle, name='CE-E')
     writeParMtxPerBundleToFile(outputdir, parMtxHad_PerBundle, name='CE-H')
 
@@ -199,7 +212,8 @@ def main():
         tower_per_module(outputdir=config['tower_per_module']['outputdir'],\
                          inputdir_paramMtx=config['param_mtx']['outputdir'],\
                          param_mtx_em_name=config['param_mtx']['param_mtx_em_name'],\
-                         param_mtx_had_name_silic=config['param_mtx']['param_mtx_had_name_silic']\
+                         param_mtx_had_name_silic=config['param_mtx']['param_mtx_had_name_silic'],\
+                         param_mtx_had_name_scint=config['param_mtx']['param_mtx_had_name_scint']\
                          )
 
     if (config['mainFuncs']['module_per_tower']):
@@ -208,7 +222,8 @@ def main():
                          bundles_file_path=config['module_per_tower']['bundles_file'],\
                          inputdir_paramMtx=config['param_mtx']['outputdir'],\
                          param_mtx_em_name=config['param_mtx']['param_mtx_em_name'],\
-                         param_mtx_had_name_silic=config['param_mtx']['param_mtx_had_name_silic']\
+                         param_mtx_had_name_silic=config['param_mtx']['param_mtx_had_name_silic'],\
+                         param_mtx_had_name_scint=config['param_mtx']['param_mtx_had_name_scint']\
                          )
 
 if __name__ == "__main__":

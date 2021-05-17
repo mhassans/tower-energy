@@ -94,7 +94,7 @@ def getParMtxPerBundle_Silic(bundles, inputdir_paramMtx, param_mtx_em_name, para
     return parMtxEM_PerBundle, parMtxHad_PerBundle
 
 def getParMtxPerBundle_Scint(bundlesScint, inputdir_paramMtx, param_mtx_had_name_scint):    
-    parMtxHadScint = pd.read_pickle(inputdir_paramMtx + param_mtx_had_name_scint).astype('int')    
+    parMtxHadScint = pd.read_pickle(inputdir_paramMtx + param_mtx_had_name_scint).astype('int')
     parMtxHadScint_PerBundle = {}
     for i in range(len(bundlesScint)):
         parMtxHadScint_PerBundle[i] = parMtxHadScint[parMtxHadScint.columns.intersection(bundlesScint[i])]    
@@ -114,17 +114,31 @@ def writeParMtxPerBundleToFile(outputdir, parMtx, name):
                 f.write('\n')
         f.close()
 
-def writeTowerPerModuleToFile(outputdir, parMtxEM, parMtxHad):
+def writeTowerPerModuleToFile(outputdir, parMtxEM, parMtxHadSilic, parMtxHadScint):
+    last_CE_E_layer = 28
     with open(outputdir + 'tower_per_module.txt', 'w') as f:
-        f.write('layer waferu waferv numTowers binEta binPhi fraction\n')
-        for parMtx in [parMtxEM, parMtxHad]:
+        f.write('0=CEE/1=CEH/2=scint layer u/eta v/phi numTowers binEta binPhi fraction\n')
+        for parMtx in [parMtxEM, parMtxHadSilic, parMtxHadScint]:
+            moduExmpl = parMtx.columns[0]
+            SubDet = -1
+            if (moduExmpl[:6]=='scint-'):
+                SubDet = 2
+            elif (find_lyr(moduExmpl) <= last_CE_E_layer):
+                SubDet = 0
+            elif (find_lyr(moduExmpl) > last_CE_E_layer):
+                SubDet = 1
+            else:
+                print(20*'*' + 'ERROR: Incorrect layer number?!: ' + 20*'*')
+                sys.exit(1)
+                        
             for col in parMtx.columns:
-                f.write('{} {} {} '.format(col[col.find('l')+1 : col.find('-u')],\
-                                           col[col.find('u')+1 : col.find('-v')],\
-                                           col[col.find('v')+1 : ]))
+                f.write('{} {} {} {} '.format(SubDet,\
+                                              col[col.find('l')+1 : col.find('-u')],\
+                                              col[col.find('u')+1 : col.find('-v')],\
+                                              col[col.find('v')+1 : ]))
                 towersInModule = parMtx[col].loc[parMtx[col]!=0]
                 f.write('{} '.format(len(towersInModule)))
-                for tower, frac in towersInModule.items(): #tower like 'had-eta2-phi23'. frac is 1,2,3,..
+                for tower, frac in towersInModule.items(): #tower is like 'had-eta2-phi23'. frac is 1,2,3,..
                    f.write('{} {} {} '.format(tower[tower.find('eta')+3 : tower.find('-phi')], tower[tower.find('-phi')+4:], frac))
                 f.write('\n')
     f.close()
@@ -226,6 +240,9 @@ def find_phi(name):
 
 def find_v(name):
     return int(name[name.find('-v')+2:])
+
+def find_lyr(name):
+    return int( name[ name.find('l')+1 : name.find('-u') ] )
 
 def getPerStage1TowerHists(parMtx_PerBundle, coord, name):
     below30 = {}
