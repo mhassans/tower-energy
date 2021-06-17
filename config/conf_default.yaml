@@ -1,8 +1,8 @@
 ###########main.py#########
 mainFuncs:
     param_mtx: False
-    tower_per_module: True
-    module_per_tower: False
+    tower_per_module: False
+    module_per_tower: True
 
 param_mtx:
     SC_position_file: 'sensorCell_positions.txt'

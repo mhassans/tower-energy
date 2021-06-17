@@ -178,6 +178,10 @@ def module_per_tower(inputdir, outputdir, bundles_file_path, inputdir_paramMtx, 
     #merging silicon and scintillators:
     parMtxHad_PerBundle = {}
     for i in range(len(bundlesScint)):
+        parMtxHadSilic_PerBundle[i] = parMtxHadSilic_PerBundle[i].multiply(2) #WARNING!!! \
+                                                #On the current version, scint modules are \
+                                                #divided to 1/16th's and silicons by 1/8th's. \
+                                                #This line equalizes both denominators.
         parMtxHad_PerBundle[i] = pd.concat([parMtxHadSilic_PerBundle[i],parMtxHadScint_PerBundle[i]], axis=1).fillna(0).astype('int')
     
     writeParMtxPerBundleToFile(outputdir, parMtxEM_PerBundle, name='CE-E')
