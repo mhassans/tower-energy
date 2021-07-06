@@ -252,11 +252,11 @@ def getPerStage1TowerHists(parMtx_PerBundle, coord, name):
         sumPerTower = sumPerTower.astype(bool).astype(int).sum(axis=1)
         below30[bundle] = ROOT.TH2D("towerFit_"+name+"_below30deg_Stage1FPGA_num"+str(bundle),""\
                                     ,coord[0],coord[1],coord[2],coord[3],coord[4],coord[5])
-        below30[bundle].SetTitle(";eta;phi;required number of sums")
+        below30[bundle].SetTitle(";eta;phi;num. of sums by the S1 FPGA")
         
         above30[bundle] = ROOT.TH2D("towerFit_"+name+"_above30deg_Stage1FPGA_num"+str(bundle),""\
                                     ,coord[0],coord[1],coord[2],coord[3],coord[4],coord[5])
-        above30[bundle].SetTitle(";eta;phi;required number of sums")
+        above30[bundle].SetTitle(";eta;phi;num. of sums by the S1 FPGA")
         
         for tower in sumPerTower.index:
             if(find_phi(tower)<=5):
