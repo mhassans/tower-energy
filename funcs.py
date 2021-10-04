@@ -132,10 +132,17 @@ def writeTowerPerModuleToFile(outputdir, parMtxEM, parMtxHadSilic, parMtxHadScin
                 sys.exit(1)
                         
             for col in parMtx.columns:
-                f.write('{} {} {} {} '.format(SubDet,\
-                                              col[col.find('l')+1 : col.find('-u')],\
-                                              col[col.find('u')+1 : col.find('-v')],\
-                                              col[col.find('v')+1 : ]))
+                if (SubDet==0):
+                    layer = int(col[col.find('l')+1 : col.find('-u')])
+                elif (SubDet==1 or SubDet==2):
+                    layer = int(col[col.find('l')+1 : col.find('-u')]) - last_CE_E_layer #to make CE-H layers start from 1 (not 29)
+                else:
+                    print(20*'*' + 'ERROR: Incorrect subdetector value!: ' + 20*'*')
+                    sys.exit(1)
+                moduleU = col[col.find('u')+1 : col.find('-v')]
+                moduleV = col[col.find('v')+1 : ]
+                f.write('{} {} {} {} '.format(SubDet, layer, moduleU, moduleV))                
+                
                 towersInModule = parMtx[col].loc[parMtx[col]!=0]
                 f.write('{} '.format(len(towersInModule)))
                 for tower, frac in towersInModule.items(): #tower is like 'had-eta2-phi23'. frac is 1,2,3,..
