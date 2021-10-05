@@ -117,12 +117,3 @@ for module in modules:
         parMtx.at['had-eta'+str(index-2)+'-phi'+str(1+2*find_v(module)), module] = shares[index]
 
 parMtx.to_pickle('output/tower_module_mapping_array/param_mtx_had_Scint.pkl')
-
-#parMtx_perBundle = {}
-
-#for i in range(len(bundlesScint)):
-#    parMtx_perBundle[i] = parMtx[parMtx.columns.intersection(bundlesScint[i])]
-
-
-
-

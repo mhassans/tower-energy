@@ -273,6 +273,13 @@ def getPerStage1TowerHists(parMtx_PerBundle, coord, name):
     return below30, above30
 
 def weight(highEtaEdge, lowEtaEdge, noWeight=False):
+    """
+    The larger a tower overlaps with a module, the larger share it gets. 
+    
+    If noweight=True, the overlapping area is calculated in eta-phi coordinates. Since all towers have the same sizes in this coordinate, almost all towers have the same area (except those at eta edges).
+
+    If noweight=False, the overlapping area is a realistic one which is calculated using the physical distance in the x-y-z coordinate of the modules. It is recommended to use noweight=False, as module sums should be shared proportional to the physical area, not those in eta-phi coordinate.
+    """
     if(noWeight):
         return 1
     else:
