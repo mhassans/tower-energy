@@ -1,17 +1,21 @@
 ###########main.py#########
 mainFuncs:
-    param_mtx: False
-    tower_per_module: True
+    silicons: False
+    scintillators: True
+    tower_per_module: False
     module_per_tower: False
 
-param_mtx:
-    SC_position_file: 'sensorCell_positions.txt'
+silicons:
+    SCsPosition_file: 'sensorCell_positions.txt'
     inputdir: './input/cellPositions/'
     outputdir: './output/tower_module_mapping_array/'
     param_mtx_em_name: 'param_mtx_em.pkl'
     param_mtx_had_name_silic: 'param_mtx_had_silic.pkl'
     param_mtx_had_name_scint: 'param_mtx_had_scint.pkl'
     do2DHists: False
+
+scintillators:
+    TCsPosition_file: 'TCPositions_sctintillator.csv'
 
 tower_per_module:
     outputdir: './output/tower_per_module/'

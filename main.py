@@ -8,17 +8,18 @@ import yaml
 from  root_numpy import hist2array, array2hist
 from funcs import partitions, chisquare, calc_kernel, getModulesPerBundle,\
                     getParMtxPerBundle_Silic, getParMtxPerBundle_Scint, writeParMtxPerBundleToFile, writeTowerPerModuleToFile,\
-                    getModulesWithTC, applyKernel, sortAndNormalize, findBestFit, SaveHist
+                    getModulesWithTC, applyKernel, sortAndNormalize, findBestFit, SaveHist,\
+                    findBestFit, sortAndNormalize, weight, getModulesPerBundle, find_v
 
 ROOT.gStyle.SetOptStat(0)
 ROOT.gROOT.SetBatch()
 
-def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mtx_had_name_silic,\
+def silicons(inputdir, SCsPosition_file, outputdir, param_mtx_em_name, param_mtx_had_name_silic,\
                 inputdir_bundlefile, bundles_file_path, do2DHists):
 
     last_CE_E_layer = 28
 
-    cells = pd.read_csv(inputdir + SC_position_file , sep=' ') 
+    cells = pd.read_csv(inputdir + SCsPosition_file , sep=' ') 
     cells.columns= ["layer","waferu","waferv","triggercellu","triggercellv","SC_eta","SC_phi"]
     
     cells = cells[(cells.layer % 2 == 1) | (cells.layer > last_CE_E_layer)].reset_index(drop=True)#Only use trigger layers. 
@@ -156,6 +157,124 @@ def param_mtx(inputdir, SC_position_file, outputdir, param_mtx_em_name, param_mt
     SaveHist(inclusive_numOfModulesPerTower_OnlyEM, outputdir+'/plots/', \
                     'inclusive_numOfModulesPerTower_OnlyEM_1Over'+str(N_div)+'s', 'root', AddGrid=False) #How many sums per tower in CE-E
 
+def scintillators(TCsPosition_path, bundles_path, output_path):
+    N_div = 16
+    half_N_div = N_div//2 #Splitting over two phi slices (of 5 deg) assumed to be the same. So optmiziation performed on one only.
+    etaBinStep = 0.0870
+    
+    TCs = pd.read_csv(TCsPosition_path, sep=' ')
+    
+    thresh ={
+            37 : 1.57,
+            38 : 1.58,
+            39 : 1.59,
+            40 : 1.60,
+            41 : 1.79,
+            42 : 1.81,
+            43 : 1.83,
+            44 : 1.85,
+            45 : 1.86,
+            46 : 1.88,
+            47 : 1.90,
+            48 : 1.92,
+            49 : 1.93,
+            50 : 1.95
+            }
+    
+    eta_low = [] #(estimate for) the lowest-eta edge of scintillators (for all layers)
+    eta_high = [] #(estimate for) highest-eta edge of scintillators (for all layers)
+    eta_mid = [] #(estimate for) the border of u=0 and u=1 (for all layers)
+    
+    for j in range(37,51): #layers
+        m = (TCs['triggercelleta']*-1)[(TCs['layer']==j) & (TCs['triggercelliphi']==1)]
+        eta_low.append(pd.array(m)[-1] - (pd.array(m)[-2] - pd.array(m)[-1])/2) #2nd term added because last TC is not exactly on the border!
+        eta_high.append(pd.array(m)[0] + (pd.array(m)[0] - pd.array(m)[1])/2) #2nd term added because last TC is not exactly on the border!
+        for i in range(len(pd.array(m))):
+            if pd.array(m)[i]<thresh[j]:
+                eta_mid.append(0.5*(pd.array(m)[i]+pd.array(m)[i-1]))
+                break
+    
+    borders = pd.DataFrame({
+        "layer": list(range(37,51)),
+        "eta_low": eta_low,
+        "eta_mid": eta_mid,
+        "eta_high": eta_high,    
+    })
+    
+    
+    
+    luSlices = {} #Scints are divided into layer(l) and eta/u slices. No need to do it for phi/v as it is symmetrical. luSLices will be like: {'l50-u1': [0., 0.03, 3.50, 2.85, 2.33, 1.91, 1.58, 0.26, 0., 0. , 0. , 0.], ...}
+    luSlicesFit = {} #shows the final allocation (Fit with integers summed to 8). Members will be like: {'l42-u1': [0, 2, 2, 2, 1, 1, 0, 0, 0, 0, 0, 0],...}
+    towerEtaLines = []
+    
+    for i in range(15, 28): #the eta range of scintillators
+        towerEtaLines.append(i*etaBinStep)
+    
+    NormConst = 1000 # to avoid calculation on small numbers
+    for layer in borders['layer']:
+        slice_u0 = np.zeros(len(towerEtaLines)-1)
+        slice_u1 = np.zeros(len(towerEtaLines)-1)
+        low = borders['eta_low'][borders['layer']==layer].iloc[0]
+        mid = borders['eta_mid'][borders['layer']==layer].iloc[0]
+        high = borders['eta_high'][borders['layer']==layer].iloc[0]
+        
+        for index in range(len(towerEtaLines)-1):
+            
+            if ( (towerEtaLines[index] < mid) and (towerEtaLines[index+1] > low )):
+                highEtaEdge=min(towerEtaLines[index+1], mid)
+                lowEtaEdge=max(towerEtaLines[index], low)
+                slice_u1[index] = (highEtaEdge - lowEtaEdge) * weight(highEtaEdge, lowEtaEdge, noWeight=False) * NormConst
+            
+            if ( (towerEtaLines[index] < high) and (towerEtaLines[index+1] > mid )):
+                highEtaEdge=min(towerEtaLines[index+1], high)
+                lowEtaEdge=max(towerEtaLines[index], mid)
+                slice_u0[index] = (highEtaEdge - lowEtaEdge) * weight(highEtaEdge, lowEtaEdge, noWeight=False) * NormConst
+        
+        luSlices['l'+str(layer)+'-u0'] = slice_u0
+        luSlices['l'+str(layer)+'-u1'] = slice_u1
+    
+    
+    for luSlice in luSlices:
+        sort_index = np.argsort(luSlices[luSlice])#save indices before sorting
+        
+        luSliceSortedNormed = sortAndNormalize(luSlices[luSlice], half_N_div) #returns 1D np array of float type with sum=half_N_div
+                            
+        bestFit, isDegenerate = findBestFit(luSliceSortedNormed, half_N_div) #returns 1D np array of integer type with sum=half_N_div
+        if (isDegenerate):
+            print('check: degenerate fit result!')
+            print(luSlice)
+            print(20*'-')
+        sliceFit = np.zeros(len(luSlices[luSlice]))
+        for fit_index in range(len(bestFit)):#undo sort (retrieve original index)
+            sliceFit[ sort_index[-1 - fit_index] ] = bestFit[-1 - fit_index]
+        
+        luSlicesFit[luSlice] = sliceFit
+    
+    #using bundles' mapping-file ONLY for retrieving module names, e.g. 'scint-l46-u1-v6', 'scint-l49-u0-v3', ...
+    with open(bundles_path) as f:
+        lines = [line.rstrip('\n') for line in f]
+        f.close()
+    
+    bundlesScint = getModulesPerBundle(lines, isScintil=True)
+    
+    modules = []
+    for bundle in bundlesScint:
+        modules += bundlesScint[bundle]
+    towers = []
+    for towerPhi in range(24): #tower phi bins in one sector
+        for towerEta in range(-2,10): #tower eta bins. defined such that silicon layers start at towerEta=0.
+            towers.append('had-eta'+str(towerEta)+'-phi'+str(towerPhi))
+    
+    parMtx = pd.DataFrame(0, index=towers, columns=modules)
+    
+    for module in modules:
+        shares = luSlicesFit[module[6:12]]
+        for index in range(len(shares)):
+            parMtx.at['had-eta'+str(index-2)+'-phi'+str(2*find_v(module)), module] = shares[index]
+            parMtx.at['had-eta'+str(index-2)+'-phi'+str(1+2*find_v(module)), module] = shares[index]
+    
+    parMtx.to_pickle(output_path)
+
 def tower_per_module(outputdir, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name_silic, param_mtx_had_name_scint):
     parMtxEM = pd.read_pickle(inputdir_paramMtx + param_mtx_em_name).astype('int')
     parMtxHadSilic = pd.read_pickle(inputdir_paramMtx + param_mtx_had_name_silic).astype('int')
@@ -201,33 +320,39 @@ def main():
         print("Please give a valid config file")
         exit()
     
-    if (config['mainFuncs']['param_mtx']):
-        param_mtx(inputdir=config['param_mtx']['inputdir'], \
-                  SC_position_file=config['param_mtx']['SC_position_file'],\
-                  outputdir=config['param_mtx']['outputdir'], \
-                  param_mtx_em_name=config['param_mtx']['param_mtx_em_name'],\
-                  param_mtx_had_name_silic=config['param_mtx']['param_mtx_had_name_silic'], \
+    if (config['mainFuncs']['silicons']):
+        silicons(inputdir=config['silicons']['inputdir'], \
+                  SCsPosition_file=config['silicons']['SCsPosition_file'],\
+                  outputdir=config['silicons']['outputdir'], \
+                  param_mtx_em_name=config['silicons']['param_mtx_em_name'],\
+                  param_mtx_had_name_silic=config['silicons']['param_mtx_had_name_silic'], \
                   inputdir_bundlefile=config['module_per_tower']['inputdir'],\
                   bundles_file_path=config['module_per_tower']['bundles_file'],\
-                  do2DHists=config['param_mtx']['do2DHists']\
+                  do2DHists=config['silicons']['do2DHists']\
                   )
+
+    if(config['mainFuncs']['scintillators']):
+        scintillators(TCsPosition_path=config['silicons']['inputdir']+config['scintillators']['TCsPosition_file'],\
+                      bundles_path=config['module_per_tower']['inputdir']+config['module_per_tower']['bundles_file'],\
+                      output_path=config['silicons']['outputdir']+config['silicons']['param_mtx_had_name_scint']
+                      )
 
     if (config['mainFuncs']['tower_per_module']):
         tower_per_module(outputdir=config['tower_per_module']['outputdir'],\
-                         inputdir_paramMtx=config['param_mtx']['outputdir'],\
-                         param_mtx_em_name=config['param_mtx']['param_mtx_em_name'],\
-                         param_mtx_had_name_silic=config['param_mtx']['param_mtx_had_name_silic'],\
-                         param_mtx_had_name_scint=config['param_mtx']['param_mtx_had_name_scint']\
+                         inputdir_paramMtx=config['silicons']['outputdir'],\
+                         param_mtx_em_name=config['silicons']['param_mtx_em_name'],\
+                         param_mtx_had_name_silic=config['silicons']['param_mtx_had_name_silic'],\
+                         param_mtx_had_name_scint=config['silicons']['param_mtx_had_name_scint']\
                          )
 
     if (config['mainFuncs']['module_per_tower']):
         module_per_tower(inputdir=config['module_per_tower']['inputdir'],\
                          outputdir=config['module_per_tower']['outputdir'],\
                          bundles_file_path=config['module_per_tower']['bundles_file'],\
-                         inputdir_paramMtx=config['param_mtx']['outputdir'],\
-                         param_mtx_em_name=config['param_mtx']['param_mtx_em_name'],\
-                         param_mtx_had_name_silic=config['param_mtx']['param_mtx_had_name_silic'],\
-                         param_mtx_had_name_scint=config['param_mtx']['param_mtx_had_name_scint']\
+                         inputdir_paramMtx=config['silicons']['outputdir'],\
+                         param_mtx_em_name=config['silicons']['param_mtx_em_name'],\
+                         param_mtx_had_name_silic=config['silicons']['param_mtx_had_name_silic'],\
+                         param_mtx_had_name_scint=config['silicons']['param_mtx_had_name_scint']\
                          )
 
 if __name__ == "__main__":
