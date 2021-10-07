@@ -46,3 +46,8 @@ This script is for producing some plots. It is better to run them after running 
 The command to run is:
 
 `python3 plotter.py config/conf_default.yaml`
+
+## Other files/directories
+
+The "jupyter" and "extraChecks" directories include codes for make some validation checks of the code. The input files, e.g. sensor cell or trigger cell positions are in the "input" directory and the produced mapping files are made in the "output" directory.
+
