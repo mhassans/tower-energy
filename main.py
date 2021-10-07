@@ -301,6 +301,11 @@ def module_per_tower(inputdir, outputdir, bundles_file_path, inputdir_paramMtx, 
                                                 #On the current version, scint modules are \
                                                 #divided by 1/16th's and silicons by 1/8th's. \
                                                 #This line equalizes both denominators.
+        print("WARNING: energy shares each scintillator module gets are multiplied by 2.\
+               This is because silicons are divided to 1/8th's, and scintillators to 1/16's,\
+               so we can now have the same denominator (i.e. 16). If this is not the case,\
+               you should changed the code before writing into the file.\
+               Only module_per_tower function needs to be changed.")
         parMtxHad_PerBundle[i] = pd.concat([parMtxHadSilic_PerBundle[i],parMtxHadScint_PerBundle[i]], axis=1).fillna(0).astype('int')
     
     writeParMtxPerBundleToFile(outputdir, parMtxEM_PerBundle, name='CE-E')
