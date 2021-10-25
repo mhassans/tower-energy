@@ -114,9 +114,11 @@ def writeParMtxPerBundleToFile(outputdir, parMtx, name):
                 f.write('\n')
         f.close()
 
-def writeTowerPerModuleToFile(outputdir, parMtxEM, parMtxHadSilic, parMtxHadScint):
+def writeTowerPerModuleToFile(N_div_silic, N_div_scint, outputdir, parMtxEM, parMtxHadSilic, parMtxHadScint):
     last_CE_E_layer = 28
     with open(outputdir + 'tower_per_module.txt', 'w') as f:
+        f.write('splitDivisorSilic splitDivisorScint\n')
+        f.write('{} {}\n\n'.format(N_div_silic, N_div_scint))
         f.write('0=CEE/1=CEH/2=scint layer u/eta v/phi numTowers binEta binPhi fraction\n')
         for parMtx in [parMtxEM, parMtxHadSilic, parMtxHadScint]:
             moduExmpl = parMtx.columns[0]

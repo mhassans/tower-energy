@@ -14,8 +14,11 @@ from funcs import partitions, chisquare, calc_kernel, getModulesPerBundle,\
 ROOT.gStyle.SetOptStat(0)
 ROOT.gROOT.SetBatch()
 
-def silicons(inputdir, SCsPosition_file, outputdir, param_mtx_em_name, param_mtx_had_name_silic,\
+def silicons(N_div, inputdir, SCsPosition_file, outputdir, param_mtx_em_name, param_mtx_had_name_silic,\
                 inputdir_bundlefile, bundles_file_path, do2DHists):
+    """
+    Module sums will be split to (1/N_div)'s.
+    """
 
     last_CE_E_layer = 28
 
@@ -24,8 +27,6 @@ def silicons(inputdir, SCsPosition_file, outputdir, param_mtx_em_name, param_mtx
     
     cells = cells[(cells.layer % 2 == 1) | (cells.layer > last_CE_E_layer)].reset_index(drop=True)#Only use trigger layers. 
     cells["SC_phi"] = cells["SC_phi"].replace(0, 1e-5) #Force SCs on border phi=0 to fill positive-phi bins.
-    
-    N_div = 8 # Divide module sum to (1/N_div)'s
     
     etaBinStep = 0.0870
     minBinEta = 16 #chosen conservatively for visualization
@@ -157,8 +158,10 @@ def silicons(inputdir, SCsPosition_file, outputdir, param_mtx_em_name, param_mtx
     SaveHist(inclusive_numOfModulesPerTower_OnlyEM, outputdir+'/plots/', \
                     'inclusive_numOfModulesPerTower_OnlyEM_1Over'+str(N_div)+'s', 'root', AddGrid=False) #How many sums per tower in CE-E
 
-def scintillators(TCsPosition_path, bundles_path, output_path):
-    N_div = 16
+def scintillators(N_div, TCsPosition_path, bundles_path, output_path):
+    """
+    Module sums will be split to (1/N_div)'s.
+    """
     half_N_div = N_div//2 #Splitting over two phi slices (of 5 deg) assumed to be the same. So optmiziation performed on one only.
     etaBinStep = 0.0870
     
@@ -275,11 +278,11 @@ def scintillators(TCsPosition_path, bundles_path, output_path):
     
     parMtx.to_pickle(output_path)
 
-def tower_per_module(outputdir, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name_silic, param_mtx_had_name_scint):
+def tower_per_module(N_div_silic, N_div_scint, outputdir, inputdir_paramMtx, param_mtx_em_name, param_mtx_had_name_silic, param_mtx_had_name_scint):
     parMtxEM = pd.read_pickle(inputdir_paramMtx + param_mtx_em_name).astype('int')
     parMtxHadSilic = pd.read_pickle(inputdir_paramMtx + param_mtx_had_name_silic).astype('int')
     parMtxHadScint = pd.read_pickle(inputdir_paramMtx + param_mtx_had_name_scint).astype('int')
-    writeTowerPerModuleToFile(outputdir, parMtxEM, parMtxHadSilic, parMtxHadScint)
+    writeTowerPerModuleToFile(N_div_silic, N_div_scint, outputdir, parMtxEM, parMtxHadSilic, parMtxHadScint)
 
 def module_per_tower(inputdir, outputdir, bundles_file_path, inputdir_paramMtx, param_mtx_em_name,\
                         param_mtx_had_name_silic, param_mtx_had_name_scint):
@@ -326,24 +329,28 @@ def main():
         exit()
     
     if (config['mainFuncs']['silicons']):
-        silicons(inputdir=config['silicons']['inputdir'], \
-                  SCsPosition_file=config['silicons']['SCsPosition_file'],\
-                  outputdir=config['silicons']['outputdir'], \
-                  param_mtx_em_name=config['silicons']['param_mtx_em_name'],\
-                  param_mtx_had_name_silic=config['silicons']['param_mtx_had_name_silic'], \
-                  inputdir_bundlefile=config['module_per_tower']['inputdir'],\
-                  bundles_file_path=config['module_per_tower']['bundles_file'],\
-                  do2DHists=config['silicons']['do2DHists']\
-                  )
+        silicons(N_div=config['silicons']['N_div_silic'],\
+                 inputdir=config['silicons']['inputdir'], \
+                 SCsPosition_file=config['silicons']['SCsPosition_file'],\
+                 outputdir=config['silicons']['outputdir'], \
+                 param_mtx_em_name=config['silicons']['param_mtx_em_name'],\
+                 param_mtx_had_name_silic=config['silicons']['param_mtx_had_name_silic'], \
+                 inputdir_bundlefile=config['module_per_tower']['inputdir'],\
+                 bundles_file_path=config['module_per_tower']['bundles_file'],\
+                 do2DHists=config['silicons']['do2DHists']\
+                 )
 
     if(config['mainFuncs']['scintillators']):
-        scintillators(TCsPosition_path=config['silicons']['inputdir']+config['scintillators']['TCsPosition_file'],\
+        scintillators(N_div=config['scintillators']['N_div_scint'],\
+                      TCsPosition_path=config['silicons']['inputdir']+config['scintillators']['TCsPosition_file'],\
                       bundles_path=config['module_per_tower']['inputdir']+config['module_per_tower']['bundles_file'],\
                       output_path=config['silicons']['outputdir']+config['silicons']['param_mtx_had_name_scint']
                       )
 
     if (config['mainFuncs']['tower_per_module']):
-        tower_per_module(outputdir=config['tower_per_module']['outputdir'],\
+        tower_per_module(N_div_silic=config['silicons']['N_div_silic'],\
+                         N_div_scint=config['scintillators']['N_div_scint'],\
+                         outputdir=config['tower_per_module']['outputdir'],\
                          inputdir_paramMtx=config['silicons']['outputdir'],\
                          param_mtx_em_name=config['silicons']['param_mtx_em_name'],\
                          param_mtx_had_name_silic=config['silicons']['param_mtx_had_name_silic'],\
