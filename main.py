@@ -300,16 +300,17 @@ def module_per_tower(inputdir, outputdir, bundles_file_path, inputdir_paramMtx, 
     #merging silicon and scintillators:
     parMtxHad_PerBundle = {}
     for i in range(len(bundlesScint)):
-        parMtxHadSilic_PerBundle[i] = parMtxHadSilic_PerBundle[i].multiply(2) #WARNING!!! \
-                                                #On the current version, scint modules are \
-                                                #divided by 1/16th's and silicons by 1/8th's. \
-                                                #This line equalizes both denominators.
-        print("WARNING: energy shares each scintillator module gets are multiplied by 2.\
-               This is because silicons are divided to 1/8th's, and scintillators to 1/16's,\
-               so we can now have the same denominator (i.e. 16). If this is not the case,\
-               you should changed the code before writing into the file.\
-               Only module_per_tower function needs to be changed.")
+        parMtxHadSilic_PerBundle[i] = parMtxHadSilic_PerBundle[i].multiply(2) #WARNING!!!\
+                                                #To make all CE-H have the same denominator (16).Should\
+                                                #be changed if the N_div_scint or N_div_silic changes in the config.
         parMtxHad_PerBundle[i] = pd.concat([parMtxHadSilic_PerBundle[i],parMtxHadScint_PerBundle[i]], axis=1).fillna(0).astype('int')
+    print("==================================================")
+    print("WARNING: In the current version, scintillators and silicons are divided by 1/16's and 1/8's,"\
+           + "respectively. Energy shares of silicons in CE-H are multiplied by two so that all CE-E are"\
+           + "divided by 8 and all CE-H are divided by 16 regardless of silicon/scint type."\
+           + "This multiplication exists only in module_per_tower files."\
+           + "Currently hardcoded, should be later be implemented in a clever way.")
+    print("==================================================")
     
     writeParMtxPerBundleToFile(outputdir, parMtxEM_PerBundle, name='CE-E')
     writeParMtxPerBundleToFile(outputdir, parMtxHad_PerBundle, name='CE-H')

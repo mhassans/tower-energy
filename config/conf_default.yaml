@@ -1,9 +1,9 @@
 ###########main.py#########
 mainFuncs:
-    silicons: False
-    scintillators: False
+    silicons: True
+    scintillators: True
     tower_per_module: True
-    module_per_tower: False
+    module_per_tower: True
 
 silicons:
     N_div_silic: 8

@@ -1,0 +1,516 @@
+tower numModules moduleID fraction
+had-eta14-phi21 0
+had-eta14-phi22 0
+had-eta14-phi23 0
+had-eta15-phi21 0
+had-eta15-phi22 0
+had-eta15-phi23 0
+had-eta15-phi24 0
+had-eta16-phi22 0
+had-eta11-phi22 0
+had-eta11-phi23 0
+had-eta11-phi24 0
+had-eta12-phi22 0
+had-eta12-phi23 0
+had-eta12-phi24 0
+had-eta13-phi22 0
+had-eta13-phi23 0
+had-eta8-phi22 2 10 2 26 2
+had-eta8-phi23 2 10 4 26 4
+had-eta9-phi22 0
+had-eta9-phi23 0
+had-eta9-phi24 0
+had-eta10-phi22 0
+had-eta10-phi23 0
+had-eta6-phi22 2 11 2 27 2
+had-eta6-phi23 3 10 2 11 4 27 6
+had-eta6-phi24 1 27 2
+had-eta7-phi22 2 10 2 26 2
+had-eta7-phi23 2 10 4 26 4
+had-eta7-phi24 2 10 2 26 2
+had-eta4-phi22 2 12 2 28 2
+had-eta4-phi23 2 12 8 28 8
+had-eta5-phi22 2 11 2 27 2
+had-eta5-phi23 3 11 6 27 4 28 2
+had-eta5-phi24 1 11 2
+had-eta3-phi22 0
+had-eta3-phi23 4 12 4 13 6 28 2 29 10
+had-eta3-phi24 1 29 2
+had-eta1-phi23 3 14 10 30 6 31 6
+had-eta2-phi23 4 13 8 14 4 29 4 30 6
+had-eta2-phi24 2 13 2 30 2
+had-eta15-phi16 0
+had-eta15-phi17 0
+had-eta15-phi18 0
+had-eta15-phi19 0
+had-eta16-phi16 0
+had-eta16-phi17 0
+had-eta16-phi18 0
+had-eta16-phi19 0
+had-eta11-phi19 0
+had-eta12-phi18 0
+had-eta12-phi19 0
+had-eta12-phi20 0
+had-eta13-phi18 0
+had-eta13-phi19 0
+had-eta13-phi20 0
+had-eta14-phi19 0
+had-eta9-phi19 1 0 2
+had-eta9-phi20 0
+had-eta9-phi21 0
+had-eta10-phi19 0
+had-eta10-phi20 0
+had-eta10-phi21 0
+had-eta11-phi20 0
+had-eta7-phi20 2 1 2 71 2
+had-eta7-phi21 1 71 2
+had-eta8-phi20 2 0 2 71 2
+had-eta8-phi21 1 71 2
+had-eta5-phi21 1 71 2
+had-eta6-phi21 1 71 2
+had-eta3-phi21 2 3 6 72 1
+had-eta4-phi21 2 2 2 72 1
+had-eta2-phi21 4 3 2 4 6 67 4 72 1
+had-eta2-phi22 0
+had-eta1-phi22 0
+had-eta16-phi1 1 18 2
+had-eta16-phi2 1 18 2
+had-eta16-phi3 0
+had-eta16-phi4 0
+had-eta17-phi1 0
+had-eta17-phi2 0
+had-eta17-phi3 0
+had-eta17-phi4 0
+had-eta16-phi7 0
+had-eta16-phi8 0
+had-eta16-phi9 0
+had-eta16-phi10 0
+had-eta17-phi6 0
+had-eta17-phi8 0
+had-eta17-phi9 0
+had-eta17-phi10 0
+had-eta14-phi12 0
+had-eta14-phi13 0
+had-eta14-phi14 0
+had-eta15-phi12 0
+had-eta15-phi13 0
+had-eta15-phi14 0
+had-eta16-phi12 0
+had-eta16-phi13 0
+had-eta12-phi15 0
+had-eta12-phi16 0
+had-eta12-phi17 1 48 2
+had-eta13-phi15 0
+had-eta13-phi16 0
+had-eta13-phi17 0
+had-eta14-phi15 0
+had-eta14-phi16 0
+had-eta9-phi17 2 42 2 49 4
+had-eta9-phi18 1 42 2
+had-eta10-phi16 0
+had-eta10-phi17 1 48 4
+had-eta10-phi18 1 48 4
+had-eta11-phi17 1 48 4
+had-eta11-phi18 1 48 2
+had-eta7-phi18 4 0 2 42 2 43 4 50 6
+had-eta7-phi19 3 0 2 1 2 43 2
+had-eta8-phi18 3 0 4 42 4 50 2
+had-eta8-phi19 1 0 4
+had-eta5-phi19 5 1 2 21 2 32 2 44 8 51 2
+had-eta5-phi20 4 1 2 2 4 44 2 71 2
+had-eta6-phi19 5 1 4 32 4 43 4 44 2 51 4
+had-eta6-phi20 2 1 4 71 2
+had-eta4-phi19 4 2 2 21 4 22 2 44 2
+had-eta4-phi20 2 2 8 72 1
+had-eta2-phi20 5 3 2 4 2 23 6 67 4 72 1
+had-eta3-phi20 2 3 6 72 1
+had-eta1-phi20 4 4 2 24 10 67 4 72 2
+had-eta1-phi21 4 4 6 5 6 67 4 72 2
+had-eta0-phi21 3 5 8 68 7 72 2
+had-eta0-phi22 1 5 2
+had-eta12-phi1 1 19 2
+had-eta12-phi2 1 19 2
+had-eta13-phi1 1 19 2
+had-eta13-phi2 0
+had-eta13-phi3 0
+had-eta14-phi1 0
+had-eta14-phi2 0
+had-eta14-phi3 0
+had-eta13-phi4 0
+had-eta13-phi5 1 39 2
+had-eta13-phi6 1 39 2
+had-eta13-phi7 1 15 2
+had-eta14-phi4 0
+had-eta14-phi5 0
+had-eta14-phi6 0
+had-eta14-phi7 0
+had-eta12-phi9 0
+had-eta12-phi10 0
+had-eta13-phi8 0
+had-eta13-phi9 0
+had-eta13-phi10 0
+had-eta14-phi8 0
+had-eta14-phi9 0
+had-eta14-phi10 0
+had-eta11-phi12 0
+had-eta11-phi13 0
+had-eta12-phi11 0
+had-eta12-phi12 0
+had-eta12-phi13 0
+had-eta12-phi14 0
+had-eta13-phi12 0
+had-eta13-phi13 0
+had-eta9-phi14 0
+had-eta9-phi15 0
+had-eta9-phi16 1 49 4
+had-eta10-phi14 0
+had-eta10-phi15 0
+had-eta11-phi14 0
+had-eta11-phi15 0
+had-eta7-phi16 3 45 2 52 6 65 2
+had-eta7-phi17 4 42 2 45 4 50 6 65 2
+had-eta8-phi15 0
+had-eta8-phi16 3 49 4 52 2 65 1
+had-eta8-phi17 4 42 4 49 4 50 2 65 1
+had-eta5-phi17 8 6 6 20 4 33 4 46 6 47 2 53 4 55 2 65 3
+had-eta5-phi18 7 20 2 21 4 32 4 33 2 44 2 46 6 51 4
+had-eta6-phi17 5 20 6 45 6 46 2 53 6 65 2
+had-eta6-phi18 4 20 4 32 6 43 6 51 6
+had-eta4-phi18 2 21 6 33 4
+had-eta2-phi19 2 22 2 23 8
+had-eta3-phi18 1 22 2
+had-eta3-phi19 1 22 10
+had-eta1-phi19 2 23 2 24 4
+had-eta0-phi20 3 24 2 68 7 72 2
+had-eta9-phi1 1 25 2
+had-eta9-phi2 0
+had-eta10-phi0 1 25 2
+had-eta10-phi1 1 25 2
+had-eta10-phi2 0
+had-eta11-phi0 2 19 2 25 2
+had-eta11-phi1 1 19 2
+had-eta11-phi2 0
+had-eta10-phi3 0
+had-eta10-phi4 1 40 4
+had-eta10-phi5 2 16 2 40 4
+had-eta11-phi3 0
+had-eta11-phi4 0
+had-eta11-phi5 1 39 2
+had-eta12-phi4 1 39 2
+had-eta12-phi5 1 39 2
+had-eta10-phi6 3 16 2 41 4 56 4
+had-eta10-phi7 3 15 2 41 4 56 4
+had-eta10-phi8 2 17 2 56 2
+had-eta11-phi6 3 15 2 39 2 56 2
+had-eta11-phi7 2 15 2 56 4
+had-eta11-phi8 1 15 2
+had-eta12-phi7 2 15 2 39 2
+had-eta12-phi8 1 15 2
+had-eta9-phi9 1 17 2
+had-eta9-phi10 0
+had-eta10-phi9 0
+had-eta10-phi10 0
+had-eta10-phi11 0
+had-eta11-phi9 0
+had-eta11-phi10 0
+had-eta11-phi11 0
+had-eta8-phi12 0
+had-eta8-phi13 0
+had-eta9-phi11 0
+had-eta9-phi12 0
+had-eta9-phi13 0
+had-eta10-phi12 0
+had-eta7-phi13 0
+had-eta7-phi14 0
+had-eta7-phi15 1 52 4
+had-eta8-phi14 0
+had-eta5-phi15 2 47 2 54 6
+had-eta5-phi16 6 6 4 47 8 53 2 54 2 55 6 65 3
+had-eta6-phi15 2 52 2 54 6
+had-eta6-phi16 6 45 4 47 2 52 2 53 4 54 2 65 2
+had-eta4-phi16 5 6 2 7 4 47 2 55 6 66 1
+had-eta4-phi17 6 6 4 33 6 34 2 46 2 55 2 66 1
+had-eta3-phi17 3 7 2 34 10 66 1
+had-eta1-phi18 0
+had-eta2-phi18 0
+had-eta0-phi19 0
+had-eta7-phi0 2 35 4 73 2
+had-eta7-phi1 2 35 6 73 2
+had-eta7-phi2 0
+had-eta8-phi0 2 35 2 73 1
+had-eta8-phi1 2 35 2 73 1
+had-eta8-phi2 0
+had-eta7-phi3 0
+had-eta8-phi3 0
+had-eta8-phi4 1 69 2
+had-eta9-phi3 0
+had-eta9-phi4 1 40 4
+had-eta8-phi5 2 16 2 69 2
+had-eta8-phi6 1 16 2
+had-eta9-phi5 2 16 4 40 4
+had-eta9-phi6 2 16 4 41 4
+had-eta7-phi8 1 58 8
+had-eta8-phi7 2 17 2 57 4
+had-eta8-phi8 2 17 2 57 4
+had-eta8-phi9 1 17 2
+had-eta9-phi7 3 17 2 41 4 57 4
+had-eta9-phi8 2 17 4 57 4
+had-eta7-phi9 1 58 4
+had-eta7-phi10 0
+had-eta7-phi11 0
+had-eta8-phi10 0
+had-eta8-phi11 0
+had-eta6-phi11 0
+had-eta6-phi12 0
+had-eta6-phi13 0
+had-eta7-phi12 0
+had-eta5-phi13 0
+had-eta5-phi14 0
+had-eta6-phi14 0
+had-eta4-phi14 1 63 8
+had-eta4-phi15 1 63 8
+had-eta2-phi16 2 8 6 66 1
+had-eta3-phi15 3 7 2 8 2 64 1
+had-eta3-phi16 3 7 8 34 4 66 1
+had-eta1-phi17 1 66 1
+had-eta2-phi17 1 66 1
+had-eta5-phi0 2 36 6 73 3
+had-eta5-phi1 2 36 4 73 3
+had-eta6-phi0 2 36 4 73 2
+had-eta6-phi1 3 35 2 36 2 73 2
+had-eta5-phi2 0
+had-eta6-phi2 0
+had-eta6-phi3 0
+had-eta6-phi4 1 69 3
+had-eta6-phi5 1 69 3
+had-eta7-phi4 1 69 2
+had-eta7-phi5 1 69 2
+had-eta6-phi6 0
+had-eta6-phi7 0
+had-eta7-phi6 0
+had-eta7-phi7 1 58 2
+had-eta5-phi8 1 59 4
+had-eta5-phi9 1 59 4
+had-eta6-phi8 2 58 2 59 3
+had-eta6-phi9 1 59 3
+had-eta5-phi10 0
+had-eta5-phi11 0
+had-eta6-phi10 0
+had-eta4-phi12 0
+had-eta4-phi13 0
+had-eta5-phi12 0
+had-eta3-phi13 0
+had-eta3-phi14 1 64 1
+had-eta2-phi14 1 64 1
+had-eta2-phi15 2 8 8 64 1
+had-eta1-phi15 2 9 14 64 2
+had-eta1-phi16 2 9 2 66 1
+had-eta0-phi16 1 66 2
+had-eta3-phi0 4 37 2 38 10 62 1 74 1
+had-eta3-phi1 3 38 4 62 1 74 1
+had-eta4-phi0 3 37 8 61 8 74 1
+had-eta4-phi1 3 37 6 61 8 74 1
+had-eta4-phi2 0
+had-eta4-phi3 0
+had-eta4-phi4 1 70 1
+had-eta5-phi3 0
+had-eta5-phi4 1 69 1
+had-eta4-phi5 1 70 1
+had-eta4-phi6 0
+had-eta5-phi5 1 69 1
+had-eta5-phi6 0
+had-eta4-phi7 0
+had-eta4-phi8 1 59 1
+had-eta5-phi7 0
+had-eta4-phi9 1 59 1
+had-eta4-phi10 0
+had-eta3-phi10 0
+had-eta3-phi11 0
+had-eta4-phi11 0
+had-eta3-phi12 0
+had-eta2-phi13 0
+had-eta1-phi14 1 64 2
+had-eta0-phi15 1 64 2
+had-eta2-phi0 3 38 2 62 1 74 1
+had-eta2-phi1 2 62 1 74 1
+had-eta2-phi2 0
+had-eta3-phi2 0
+had-eta3-phi3 0
+had-eta3-phi4 1 70 1
+had-eta3-phi5 1 70 1
+had-eta3-phi6 0
+had-eta3-phi7 0
+had-eta3-phi8 1 60 1
+had-eta2-phi9 1 60 1
+had-eta3-phi9 1 60 1
+had-eta2-phi10 0
+had-eta2-phi11 0
+had-eta1-phi12 0
+had-eta2-phi12 0
+had-eta1-phi13 0
+had-eta0-phi13 0
+had-eta0-phi14 1 64 2
+had-eta1-phi0 2 62 2 74 1
+had-eta1-phi1 2 62 2 74 1
+had-eta1-phi2 0
+had-eta2-phi3 0
+had-eta2-phi4 1 70 2
+had-eta2-phi5 1 70 2
+had-eta2-phi6 0
+had-eta2-phi7 0
+had-eta2-phi8 1 60 1
+had-eta1-phi9 1 60 2
+had-eta1-phi10 0
+had-eta1-phi11 0
+had-eta0-phi1 2 62 2 74 2
+had-eta0-phi2 0
+had-eta1-phi3 0
+had-eta1-phi4 1 70 2
+had-eta1-phi5 1 70 2
+had-eta1-phi6 0
+had-eta1-phi7 0
+had-eta1-phi8 1 60 2
+had-eta0-phi9 1 60 2
+had-eta0-phi10 0
+had-eta16-phi20 0
+had-eta16-phi21 0
+had-eta17-phi19 0
+had-eta17-phi20 0
+had-eta17-phi21 0
+had-eta17-phi22 0
+had-eta12-phi21 0
+had-eta13-phi21 0
+had-eta14-phi20 0
+had-eta11-phi21 0
+had-eta16-phi14 0
+had-eta16-phi15 0
+had-eta17-phi13 0
+had-eta17-phi14 0
+had-eta17-phi15 0
+had-eta17-phi16 0
+had-eta17-phi17 0
+had-eta14-phi17 0
+had-eta14-phi18 0
+had-eta14-phi0 0
+had-eta15-phi0 1 18 2
+had-eta15-phi1 1 18 2
+had-eta15-phi2 1 18 2
+had-eta16-phi0 1 18 2
+had-eta15-phi4 0
+had-eta15-phi5 0
+had-eta15-phi6 0
+had-eta16-phi5 0
+had-eta16-phi6 0
+had-eta14-phi11 0
+had-eta15-phi9 0
+had-eta15-phi10 0
+had-eta15-phi11 0
+had-eta16-phi11 0
+had-eta13-phi14 0
+had-eta11-phi16 0
+had-eta12-phi-1 1 19 2
+had-eta12-phi0 1 19 2
+had-eta13-phi0 1 19 2
+had-eta12-phi3 0
+had-eta12-phi6 2 15 2 39 2
+had-eta13-phi11 0
+had-eta10-phi13 0
+had-eta9-phi-1 1 25 2
+had-eta9-phi0 1 25 4
+had-eta0-phi18 0
+had-eta7-phi-1 0
+had-eta5-phi-1 0
+had-eta0-phi17 1 66 2
+had-eta3-phi-1 0
+had-eta2-phi-1 0
+had-eta0-phi0 2 62 2 74 2
+had-eta1-phi-1 0
+had-eta0-phi11 0
+had-eta0-phi3 0
+had-eta0-phi8 1 60 2
+had-eta16-phi23 0
+had-eta4-phi24 2 12 2 28 2
+had-eta0-phi23 1 31 8
+had-eta1-phi24 2 14 2 30 2
+had-eta17-phi5 0
+had-eta17-phi7 0
+had-eta0-phi12 0
+had-eta0-phi4 1 70 2
+had-eta0-phi5 1 70 2
+had-eta0-phi6 0
+had-eta0-phi7 0
+had-eta17-phi18 0
+had-eta16-phi-1 1 18 2
+had-eta17-phi11 0
+had-eta4-phi-1 0
+had-eta16-phi24 0
+had-eta17-phi23 0
+had-eta10-phi24 0
+had-eta17-phi12 0
+had-eta15-phi7 0
+had-eta17-phi0 1 18 2
+had-eta15-phi15 0
+had-eta10-phi-1 1 25 2
+had-eta8-phi-1 0
+had-eta13-phi24 0
+had-eta8-phi24 1 26 2
+had-eta0-phi24 1 31 2
+had-eta15-phi8 0
+had-eta13-phi-1 0
+had-eta15-phi3 0
+had-eta6-phi-1 0
+had-eta15-phi20 0
+had-eta17-phi24 0
+had-eta17-phi-1 0
+had-eta11-phi-1 0
+had-eta14-phi24 0
+had-eta14-phi-1 0
+had-eta15-phi-1 0
+had-eta-2-phi0 0
+had-eta-1-phi0 2 62 2 74 2
+had-eta-2-phi1 0
+had-eta-1-phi1 2 62 2 74 2
+had-eta-2-phi2 0
+had-eta-1-phi2 0
+had-eta-2-phi3 0
+had-eta-1-phi3 0
+had-eta-2-phi4 0
+had-eta-1-phi4 0
+had-eta-2-phi5 0
+had-eta-1-phi5 0
+had-eta-2-phi6 0
+had-eta-1-phi6 0
+had-eta-2-phi7 0
+had-eta-1-phi7 0
+had-eta-2-phi8 0
+had-eta-1-phi8 1 60 2
+had-eta-2-phi9 0
+had-eta-1-phi9 1 60 2
+had-eta-2-phi10 0
+had-eta-1-phi10 0
+had-eta-2-phi11 0
+had-eta-1-phi11 0
+had-eta-2-phi12 0
+had-eta-1-phi12 0
+had-eta-2-phi13 0
+had-eta-1-phi13 0
+had-eta-2-phi14 0
+had-eta-1-phi14 1 64 2
+had-eta-2-phi15 0
+had-eta-1-phi15 1 64 2
+had-eta-2-phi16 0
+had-eta-1-phi16 1 66 2
+had-eta-2-phi17 0
+had-eta-1-phi17 1 66 2
+had-eta-2-phi18 0
+had-eta-1-phi18 0
+had-eta-2-phi19 0
+had-eta-1-phi19 0
+had-eta-2-phi20 0
+had-eta-1-phi20 2 68 1 72 1
+had-eta-2-phi21 0
+had-eta-1-phi21 2 68 1 72 1
+had-eta-2-phi22 0
+had-eta-1-phi22 0
+had-eta-2-phi23 0
+had-eta-1-phi23 0
