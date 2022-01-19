@@ -110,7 +110,7 @@ def writeParMtxPerBundleToFile(outputdir, parMtx, name):
                                         #becomes sth like (('l29-u0-v2', 7), ('l31-u0-v2', 3), ('l33-u0-v2', 1))
                 f.write('{} {}'.format(tower.name, len(towerModuleOverlap)))
                 for module in towerModuleOverlap:
-                    f.write(' {} {}'.format(parMtx[i].columns.get_loc(module[0]), module[1]))
+                    f.write(' {} {} {}'.format(parMtx[i].columns.get_loc(module[0]), module[0], module[1]))
                 f.write('\n')
         f.close()
 

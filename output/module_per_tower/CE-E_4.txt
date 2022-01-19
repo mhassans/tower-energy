@@ -1,57 +1,57 @@
 tower numModules moduleID fraction
 em-eta16-phi16 0
-em-eta16-phi17 1 37 1
+em-eta16-phi17 1 37 l13-u1-v2 1
 em-eta16-phi18 0
 em-eta16-phi19 0
 em-eta17-phi15 0
-em-eta17-phi16 1 37 1
-em-eta17-phi17 1 37 1
-em-eta17-phi18 1 37 1
-em-eta12-phi19 1 29 1
-em-eta12-phi20 1 29 1
-em-eta12-phi21 1 39 1
-em-eta13-phi18 2 29 1 38 1
-em-eta13-phi19 2 29 1 38 1
-em-eta13-phi20 2 29 1 38 1
-em-eta13-phi21 2 29 1 38 1
-em-eta14-phi20 1 38 1
-em-eta9-phi20 1 30 1
-em-eta9-phi21 3 30 1 39 1 40 1
+em-eta17-phi16 1 37 l13-u1-v2 1
+em-eta17-phi17 1 37 l13-u1-v2 1
+em-eta17-phi18 1 37 l13-u1-v2 1
+em-eta12-phi19 1 29 l7-u1-v3 1
+em-eta12-phi20 1 29 l7-u1-v3 1
+em-eta12-phi21 1 39 l13-u1-v4 1
+em-eta13-phi18 2 29 l7-u1-v3 1 38 l13-u1-v3 1
+em-eta13-phi19 2 29 l7-u1-v3 1 38 l13-u1-v3 1
+em-eta13-phi20 2 29 l7-u1-v3 1 38 l13-u1-v3 1
+em-eta13-phi21 2 29 l7-u1-v3 1 38 l13-u1-v3 1
+em-eta14-phi20 1 38 l13-u1-v3 1
+em-eta9-phi20 1 30 l7-u1-v4 1
+em-eta9-phi21 3 30 l7-u1-v4 1 39 l13-u1-v4 1 40 l13-u1-v5 1
 em-eta9-phi22 0
-em-eta10-phi20 2 30 1 39 1
-em-eta10-phi21 2 30 1 39 1
-em-eta10-phi22 2 30 1 39 1
-em-eta11-phi20 2 30 1 39 1
-em-eta11-phi21 2 30 1 39 1
-em-eta6-phi21 3 17 1 18 1 49 1
-em-eta6-phi22 1 18 1
-em-eta7-phi20 4 2 1 17 1 34 1 49 1
-em-eta7-phi21 2 17 2 40 2
-em-eta7-phi22 2 17 2 40 1
-em-eta8-phi21 2 17 1 40 2
-em-eta8-phi22 2 17 1 40 1
-em-eta4-phi21 3 19 1 35 2 50 2
-em-eta4-phi22 2 18 1 19 2
-em-eta5-phi21 3 18 2 35 1 50 1
-em-eta5-phi22 1 18 2
-em-eta5-phi23 1 18 1
-em-eta2-phi22 1 20 4
-em-eta3-phi21 3 19 1 36 3 51 4
-em-eta3-phi22 1 19 3
-em-eta3-phi23 1 19 1
-em-eta1-phi22 4 20 1 21 3 52 1 53 1
-em-eta1-phi23 2 20 1 21 1
-em-eta2-phi23 1 20 2
-em-eta0-phi22 2 21 3 53 2
-em-eta0-phi23 1 21 1
-em-eta15-phi-2 1 0 1
-em-eta15-phi-1 1 0 1
-em-eta15-phi0 1 0 1
-em-eta15-phi1 1 0 1
-em-eta16-phi-3 1 0 1
-em-eta16-phi-1 2 0 1 76 1
-em-eta16-phi0 2 0 1 76 1
-em-eta16-phi2 1 0 1
+em-eta10-phi20 2 30 l7-u1-v4 1 39 l13-u1-v4 1
+em-eta10-phi21 2 30 l7-u1-v4 1 39 l13-u1-v4 1
+em-eta10-phi22 2 30 l7-u1-v4 1 39 l13-u1-v4 1
+em-eta11-phi20 2 30 l7-u1-v4 1 39 l13-u1-v4 1
+em-eta11-phi21 2 30 l7-u1-v4 1 39 l13-u1-v4 1
+em-eta6-phi21 3 17 l5-u1-v5 1 18 l5-u1-v6 1 49 l15-u2-v6 1
+em-eta6-phi22 1 18 l5-u1-v6 1
+em-eta7-phi20 4 2 l1-u2-v5 1 17 l5-u1-v5 1 34 l9-u2-v6 1 49 l15-u2-v6 1
+em-eta7-phi21 2 17 l5-u1-v5 2 40 l13-u1-v5 2
+em-eta7-phi22 2 17 l5-u1-v5 2 40 l13-u1-v5 1
+em-eta8-phi21 2 17 l5-u1-v5 1 40 l13-u1-v5 2
+em-eta8-phi22 2 17 l5-u1-v5 1 40 l13-u1-v5 1
+em-eta4-phi21 3 19 l5-u1-v7 1 35 l9-u2-v7 2 50 l15-u2-v7 2
+em-eta4-phi22 2 18 l5-u1-v6 1 19 l5-u1-v7 2
+em-eta5-phi21 3 18 l5-u1-v6 2 35 l9-u2-v7 1 50 l15-u2-v7 1
+em-eta5-phi22 1 18 l5-u1-v6 2
+em-eta5-phi23 1 18 l5-u1-v6 1
+em-eta2-phi22 1 20 l5-u1-v8 4
+em-eta3-phi21 3 19 l5-u1-v7 1 36 l9-u2-v8 3 51 l15-u2-v8 4
+em-eta3-phi22 1 19 l5-u1-v7 3
+em-eta3-phi23 1 19 l5-u1-v7 1
+em-eta1-phi22 4 20 l5-u1-v8 1 21 l5-u1-v9 3 52 l15-u2-v9 1 53 l15-u2-v10 1
+em-eta1-phi23 2 20 l5-u1-v8 1 21 l5-u1-v9 1
+em-eta2-phi23 1 20 l5-u1-v8 2
+em-eta0-phi22 2 21 l5-u1-v9 3 53 l15-u2-v10 2
+em-eta0-phi23 1 21 l5-u1-v9 1
+em-eta15-phi-2 1 0 l1-u2-v0 1
+em-eta15-phi-1 1 0 l1-u2-v0 1
+em-eta15-phi0 1 0 l1-u2-v0 1
+em-eta15-phi1 1 0 l1-u2-v0 1
+em-eta16-phi-3 1 0 l1-u2-v0 1
+em-eta16-phi-1 2 0 l1-u2-v0 1 76 l21-u2-v0 1
+em-eta16-phi0 2 0 l1-u2-v0 1 76 l21-u2-v0 1
+em-eta16-phi2 1 0 l1-u2-v0 1
 em-eta16-phi4 0
 em-eta16-phi5 0
 em-eta16-phi6 0
@@ -61,12 +61,12 @@ em-eta17-phi6 0
 em-eta17-phi7 0
 em-eta17-phi8 0
 em-eta15-phi10 0
-em-eta15-phi11 1 48 1
-em-eta15-phi12 1 48 1
+em-eta15-phi11 1 48 l15-u2-v2 1
+em-eta15-phi12 1 48 l15-u2-v2 1
 em-eta15-phi13 0
-em-eta16-phi10 1 48 1
-em-eta16-phi12 1 48 1
-em-eta16-phi13 1 48 1
+em-eta16-phi10 1 48 l15-u2-v2 1
+em-eta16-phi12 1 48 l15-u2-v2 1
+em-eta16-phi13 1 48 l15-u2-v2 1
 em-eta17-phi12 0
 em-eta12-phi14 0
 em-eta12-phi15 0
@@ -76,46 +76,46 @@ em-eta13-phi15 0
 em-eta13-phi16 0
 em-eta13-phi17 0
 em-eta14-phi16 0
-em-eta9-phi17 1 1 1
-em-eta9-phi18 1 1 1
-em-eta10-phi16 1 1 1
-em-eta10-phi17 1 1 1
-em-eta10-phi18 1 1 1
-em-eta10-phi19 1 1 1
-em-eta11-phi17 1 1 1
-em-eta11-phi18 1 1 1
-em-eta7-phi18 1 2 1
-em-eta7-phi19 3 2 2 34 1 49 1
-em-eta8-phi18 1 2 1
-em-eta8-phi19 1 2 1
-em-eta8-phi20 2 2 1 40 1
-em-eta9-phi19 1 2 1
-em-eta5-phi19 1 34 1
-em-eta5-phi20 4 34 1 35 1 49 1 50 2
-em-eta6-phi19 2 34 2 49 2
-em-eta6-phi20 2 34 2 49 2
-em-eta3-phi20 3 35 1 36 1 51 2
-em-eta4-phi20 2 35 3 50 3
-em-eta2-phi20 2 36 1 51 1
-em-eta2-phi21 3 36 3 51 1 52 3
-em-eta0-phi21 1 53 4
-em-eta1-phi21 2 52 4 53 1
-em-eta11-phi-1 2 3 1 41 1
-em-eta11-phi0 2 3 1 41 1
-em-eta11-phi1 2 3 1 79 1
-em-eta12-phi-2 2 3 1 41 1
-em-eta12-phi-1 3 3 1 41 1 77 1
-em-eta12-phi0 3 3 1 41 1 77 1
-em-eta12-phi1 3 3 1 41 1 77 1
-em-eta13-phi0 3 3 1 41 1 77 1
-em-eta12-phi2 1 79 1
-em-eta12-phi3 1 79 1
+em-eta9-phi17 1 1 l1-u2-v4 1
+em-eta9-phi18 1 1 l1-u2-v4 1
+em-eta10-phi16 1 1 l1-u2-v4 1
+em-eta10-phi17 1 1 l1-u2-v4 1
+em-eta10-phi18 1 1 l1-u2-v4 1
+em-eta10-phi19 1 1 l1-u2-v4 1
+em-eta11-phi17 1 1 l1-u2-v4 1
+em-eta11-phi18 1 1 l1-u2-v4 1
+em-eta7-phi18 1 2 l1-u2-v5 1
+em-eta7-phi19 3 2 l1-u2-v5 2 34 l9-u2-v6 1 49 l15-u2-v6 1
+em-eta8-phi18 1 2 l1-u2-v5 1
+em-eta8-phi19 1 2 l1-u2-v5 1
+em-eta8-phi20 2 2 l1-u2-v5 1 40 l13-u1-v5 1
+em-eta9-phi19 1 2 l1-u2-v5 1
+em-eta5-phi19 1 34 l9-u2-v6 1
+em-eta5-phi20 4 34 l9-u2-v6 1 35 l9-u2-v7 1 49 l15-u2-v6 1 50 l15-u2-v7 2
+em-eta6-phi19 2 34 l9-u2-v6 2 49 l15-u2-v6 2
+em-eta6-phi20 2 34 l9-u2-v6 2 49 l15-u2-v6 2
+em-eta3-phi20 3 35 l9-u2-v7 1 36 l9-u2-v8 1 51 l15-u2-v8 2
+em-eta4-phi20 2 35 l9-u2-v7 3 50 l15-u2-v7 3
+em-eta2-phi20 2 36 l9-u2-v8 1 51 l15-u2-v8 1
+em-eta2-phi21 3 36 l9-u2-v8 3 51 l15-u2-v8 1 52 l15-u2-v9 3
+em-eta0-phi21 1 53 l15-u2-v10 4
+em-eta1-phi21 2 52 l15-u2-v9 4 53 l15-u2-v10 1
+em-eta11-phi-1 2 3 l1-u3-v0 1 41 l13-u3-v0 1
+em-eta11-phi0 2 3 l1-u3-v0 1 41 l13-u3-v0 1
+em-eta11-phi1 2 3 l1-u3-v0 1 79 l23-u4-v1 1
+em-eta12-phi-2 2 3 l1-u3-v0 1 41 l13-u3-v0 1
+em-eta12-phi-1 3 3 l1-u3-v0 1 41 l13-u3-v0 1 77 l21-u3-v0 1
+em-eta12-phi0 3 3 l1-u3-v0 1 41 l13-u3-v0 1 77 l21-u3-v0 1
+em-eta12-phi1 3 3 l1-u3-v0 1 41 l13-u3-v0 1 77 l21-u3-v0 1
+em-eta13-phi0 3 3 l1-u3-v0 1 41 l13-u3-v0 1 77 l21-u3-v0 1
+em-eta12-phi2 1 79 l23-u4-v1 1
+em-eta12-phi3 1 79 l23-u4-v1 1
 em-eta12-phi4 0
-em-eta13-phi2 1 78 1
-em-eta13-phi3 1 78 1
-em-eta13-phi4 1 78 1
+em-eta13-phi2 1 78 l23-u3-v1 1
+em-eta13-phi3 1 78 l23-u3-v1 1
+em-eta13-phi4 1 78 l23-u3-v1 1
 em-eta13-phi5 0
-em-eta14-phi3 1 78 1
+em-eta14-phi3 1 78 l23-u3-v1 1
 em-eta12-phi7 0
 em-eta12-phi8 0
 em-eta12-phi9 0
@@ -125,14 +125,14 @@ em-eta13-phi8 0
 em-eta13-phi9 0
 em-eta14-phi7 0
 em-eta11-phi11 0
-em-eta11-phi12 1 54 1
+em-eta11-phi12 1 54 l15-u3-v3 1
 em-eta12-phi10 0
-em-eta12-phi11 1 54 1
-em-eta12-phi12 1 54 1
-em-eta12-phi13 1 54 1
-em-eta13-phi11 1 54 1
-em-eta13-phi12 1 54 1
-em-eta9-phi13 1 55 1
+em-eta12-phi11 1 54 l15-u3-v3 1
+em-eta12-phi12 1 54 l15-u3-v3 1
+em-eta12-phi13 1 54 l15-u3-v3 1
+em-eta13-phi11 1 54 l15-u3-v3 1
+em-eta13-phi12 1 54 l15-u3-v3 1
+em-eta9-phi13 1 55 l15-u4-v4 1
 em-eta9-phi14 0
 em-eta9-phi15 0
 em-eta10-phi13 0
@@ -140,14 +140,14 @@ em-eta10-phi14 0
 em-eta10-phi15 0
 em-eta11-phi14 0
 em-eta11-phi15 0
-em-eta7-phi15 1 43 1
-em-eta7-phi16 1 43 1
+em-eta7-phi15 1 43 l13-u4-v6 1
+em-eta7-phi16 1 43 l13-u4-v6 1
 em-eta7-phi17 0
 em-eta8-phi15 0
 em-eta8-phi16 0
 em-eta8-phi17 0
 em-eta9-phi16 0
-em-eta5-phi17 1 31 2
+em-eta5-phi17 1 31 l7-u4-v7 2
 em-eta5-phi18 0
 em-eta6-phi17 0
 em-eta6-phi18 0
@@ -155,236 +155,236 @@ em-eta3-phi18 0
 em-eta3-phi19 0
 em-eta4-phi18 0
 em-eta4-phi19 0
-em-eta2-phi19 1 22 1
-em-eta1-phi19 2 22 1 23 2
+em-eta2-phi19 1 22 l5-u4-v9 1
+em-eta1-phi19 2 22 l5-u4-v9 1 23 l5-u4-v10 2
 em-eta1-phi20 0
 em-eta0-phi20 0
-em-eta8-phi-1 1 42 1
-em-eta8-phi0 1 42 1
-em-eta9-phi-1 1 42 1
-em-eta9-phi0 1 42 1
-em-eta9-phi1 2 42 1 80 1
-em-eta10-phi-1 1 42 1
-em-eta10-phi0 1 42 1
-em-eta9-phi2 1 80 1
+em-eta8-phi-1 1 42 l13-u4-v0 1
+em-eta8-phi0 1 42 l13-u4-v0 1
+em-eta9-phi-1 1 42 l13-u4-v0 1
+em-eta9-phi0 1 42 l13-u4-v0 1
+em-eta9-phi1 2 42 l13-u4-v0 1 80 l23-u5-v1 1
+em-eta10-phi-1 1 42 l13-u4-v0 1
+em-eta10-phi0 1 42 l13-u4-v0 1
+em-eta9-phi2 1 80 l23-u5-v1 1
 em-eta9-phi3 0
-em-eta10-phi1 1 79 1
-em-eta10-phi2 1 79 1
-em-eta10-phi3 1 79 1
-em-eta11-phi2 1 79 1
-em-eta11-phi3 1 79 1
-em-eta9-phi5 1 14 1
-em-eta9-phi6 1 14 1
-em-eta10-phi4 1 14 1
-em-eta10-phi5 1 14 1
-em-eta10-phi6 1 14 1
+em-eta10-phi1 1 79 l23-u4-v1 1
+em-eta10-phi2 1 79 l23-u4-v1 1
+em-eta10-phi3 1 79 l23-u4-v1 1
+em-eta11-phi2 1 79 l23-u4-v1 1
+em-eta11-phi3 1 79 l23-u4-v1 1
+em-eta9-phi5 1 14 l3-u4-v2 1
+em-eta9-phi6 1 14 l3-u4-v2 1
+em-eta10-phi4 1 14 l3-u4-v2 1
+em-eta10-phi5 1 14 l3-u4-v2 1
+em-eta10-phi6 1 14 l3-u4-v2 1
 em-eta10-phi7 0
-em-eta11-phi5 1 14 1
-em-eta11-phi6 1 14 1
+em-eta11-phi5 1 14 l3-u4-v2 1
+em-eta11-phi6 1 14 l3-u4-v2 1
 em-eta9-phi8 0
 em-eta9-phi9 0
-em-eta9-phi10 1 55 1
+em-eta9-phi10 1 55 l15-u4-v4 1
 em-eta10-phi8 0
 em-eta10-phi9 0
 em-eta10-phi10 0
 em-eta11-phi8 0
 em-eta11-phi9 0
-em-eta8-phi11 1 55 1
-em-eta8-phi12 1 55 1
-em-eta9-phi11 1 55 1
-em-eta9-phi12 1 55 1
-em-eta10-phi11 1 55 1
-em-eta10-phi12 1 55 1
-em-eta6-phi13 1 69 2
-em-eta6-phi14 2 43 1 69 2
+em-eta8-phi11 1 55 l15-u4-v4 1
+em-eta8-phi12 1 55 l15-u4-v4 1
+em-eta9-phi11 1 55 l15-u4-v4 1
+em-eta9-phi12 1 55 l15-u4-v4 1
+em-eta10-phi11 1 55 l15-u4-v4 1
+em-eta10-phi12 1 55 l15-u4-v4 1
+em-eta6-phi13 1 69 l17-u5-v6 2
+em-eta6-phi14 2 43 l13-u4-v6 1 69 l17-u5-v6 2
 em-eta7-phi13 0
 em-eta7-phi14 0
 em-eta8-phi13 0
 em-eta8-phi14 0
-em-eta5-phi15 2 43 1 44 2
-em-eta5-phi16 1 31 1
-em-eta6-phi15 1 43 2
-em-eta6-phi16 1 43 2
-em-eta3-phi16 1 32 3
-em-eta3-phi17 2 32 1 70 1
-em-eta4-phi16 1 31 2
-em-eta4-phi17 1 31 3
-em-eta2-phi17 1 70 5
-em-eta2-phi18 1 22 3
-em-eta1-phi18 4 22 3 23 1 24 1 71 4
-em-eta0-phi18 2 23 1 24 2
-em-eta0-phi19 1 23 4
+em-eta5-phi15 2 43 l13-u4-v6 1 44 l13-u5-v7 2
+em-eta5-phi16 1 31 l7-u4-v7 1
+em-eta6-phi15 1 43 l13-u4-v6 2
+em-eta6-phi16 1 43 l13-u4-v6 2
+em-eta3-phi16 1 32 l7-u5-v8 3
+em-eta3-phi17 2 32 l7-u5-v8 1 70 l17-u5-v9 1
+em-eta4-phi16 1 31 l7-u4-v7 2
+em-eta4-phi17 1 31 l7-u4-v7 3
+em-eta2-phi17 1 70 l17-u5-v9 5
+em-eta2-phi18 1 22 l5-u4-v9 3
+em-eta1-phi18 4 22 l5-u4-v9 3 23 l5-u4-v10 1 24 l5-u5-v10 1 71 l17-u5-v10 4
+em-eta0-phi18 2 23 l5-u4-v10 1 24 l5-u5-v10 2
+em-eta0-phi19 1 23 l5-u4-v10 4
 em-eta5-phi-1 0
 em-eta5-phi0 0
 em-eta6-phi-1 0
-em-eta6-phi0 1 56 1
+em-eta6-phi0 1 56 l15-u6-v1 1
 em-eta7-phi-1 0
 em-eta7-phi0 0
-em-eta6-phi1 1 56 2
-em-eta6-phi2 2 56 2 57 1
+em-eta6-phi1 1 56 l15-u6-v1 2
+em-eta6-phi2 2 56 l15-u6-v1 2 57 l15-u6-v2 1
 em-eta7-phi1 0
-em-eta7-phi2 1 80 1
-em-eta7-phi3 2 15 1 57 1
-em-eta8-phi1 1 80 2
-em-eta8-phi2 1 80 2
-em-eta7-phi4 2 15 2 57 1
-em-eta7-phi5 2 15 1 25 1
-em-eta8-phi3 2 15 1 80 1
-em-eta8-phi4 1 15 1
-em-eta8-phi5 1 15 1
-em-eta9-phi4 1 15 1
-em-eta7-phi6 2 16 1 25 1
-em-eta7-phi7 1 16 2
-em-eta7-phi8 1 16 1
-em-eta8-phi6 1 16 1
-em-eta8-phi7 1 16 1
-em-eta8-phi8 1 16 1
-em-eta9-phi7 1 16 1
-em-eta6-phi9 1 58 2
-em-eta6-phi10 1 58 2
+em-eta7-phi2 1 80 l23-u5-v1 1
+em-eta7-phi3 2 15 l3-u5-v2 1 57 l15-u6-v2 1
+em-eta8-phi1 1 80 l23-u5-v1 2
+em-eta8-phi2 1 80 l23-u5-v1 2
+em-eta7-phi4 2 15 l3-u5-v2 2 57 l15-u6-v2 1
+em-eta7-phi5 2 15 l3-u5-v2 1 25 l5-u6-v3 1
+em-eta8-phi3 2 15 l3-u5-v2 1 80 l23-u5-v1 1
+em-eta8-phi4 1 15 l3-u5-v2 1
+em-eta8-phi5 1 15 l3-u5-v2 1
+em-eta9-phi4 1 15 l3-u5-v2 1
+em-eta7-phi6 2 16 l3-u5-v3 1 25 l5-u6-v3 1
+em-eta7-phi7 1 16 l3-u5-v3 2
+em-eta7-phi8 1 16 l3-u5-v3 1
+em-eta8-phi6 1 16 l3-u5-v3 1
+em-eta8-phi7 1 16 l3-u5-v3 1
+em-eta8-phi8 1 16 l3-u5-v3 1
+em-eta9-phi7 1 16 l3-u5-v3 1
+em-eta6-phi9 1 58 l15-u6-v5 2
+em-eta6-phi10 1 58 l15-u6-v5 2
 em-eta7-phi9 0
 em-eta7-phi10 0
 em-eta8-phi9 0
 em-eta8-phi10 0
 em-eta5-phi11 0
 em-eta5-phi12 0
-em-eta6-phi11 1 58 1
-em-eta6-phi12 1 69 1
+em-eta6-phi11 1 58 l15-u6-v5 1
+em-eta6-phi12 1 69 l17-u5-v6 1
 em-eta7-phi11 0
 em-eta7-phi12 0
-em-eta4-phi13 1 72 3
-em-eta4-phi14 2 44 2 72 1
-em-eta5-phi13 2 69 2 72 1
-em-eta5-phi14 2 44 1 69 1
-em-eta3-phi14 1 45 3
-em-eta3-phi15 2 32 1 45 2
-em-eta4-phi15 1 44 3
-em-eta2-phi15 3 32 1 33 2 45 1
-em-eta2-phi16 3 32 2 33 1 70 2
-em-eta1-phi16 2 33 2 73 5
-em-eta1-phi17 3 24 2 71 4 73 2
-em-eta0-phi17 1 24 3
-em-eta3-phi0 1 62 1
+em-eta4-phi13 1 72 l17-u6-v7 3
+em-eta4-phi14 2 44 l13-u5-v7 2 72 l17-u6-v7 1
+em-eta5-phi13 2 69 l17-u5-v6 2 72 l17-u6-v7 1
+em-eta5-phi14 2 44 l13-u5-v7 1 69 l17-u5-v6 1
+em-eta3-phi14 1 45 l13-u6-v8 3
+em-eta3-phi15 2 32 l7-u5-v8 1 45 l13-u6-v8 2
+em-eta4-phi15 1 44 l13-u5-v7 3
+em-eta2-phi15 3 32 l7-u5-v8 1 33 l7-u6-v9 2 45 l13-u6-v8 1
+em-eta2-phi16 3 32 l7-u5-v8 2 33 l7-u6-v9 1 70 l17-u5-v9 2
+em-eta1-phi16 2 33 l7-u6-v9 2 73 l17-u6-v10 5
+em-eta1-phi17 3 24 l5-u5-v10 2 71 l17-u5-v10 4 73 l17-u6-v10 2
+em-eta0-phi17 1 24 l5-u5-v10 3
+em-eta3-phi0 1 62 l15-u8-v1 1
 em-eta4-phi-1 0
-em-eta4-phi0 1 59 1
-em-eta4-phi1 1 59 3
-em-eta4-phi2 3 5 2 59 1 60 2
-em-eta5-phi1 2 56 2 59 1
-em-eta5-phi2 2 56 1 60 1
-em-eta5-phi3 3 4 2 57 1 60 2
-em-eta5-phi4 2 4 2 81 2
-em-eta6-phi3 2 4 2 57 2
-em-eta6-phi4 3 4 2 57 2 81 1
-em-eta5-phi5 2 25 1 81 3
-em-eta5-phi6 2 25 1 26 1
-em-eta6-phi5 2 25 2 81 1
-em-eta6-phi6 1 25 2
-em-eta5-phi7 1 26 1
+em-eta4-phi0 1 59 l15-u7-v1 1
+em-eta4-phi1 1 59 l15-u7-v1 3
+em-eta4-phi2 3 5 l1-u7-v2 2 59 l15-u7-v1 1 60 l15-u7-v2 2
+em-eta5-phi1 2 56 l15-u6-v1 2 59 l15-u7-v1 1
+em-eta5-phi2 2 56 l15-u6-v1 1 60 l15-u7-v2 1
+em-eta5-phi3 3 4 l1-u6-v2 2 57 l15-u6-v2 1 60 l15-u7-v2 2
+em-eta5-phi4 2 4 l1-u6-v2 2 81 l23-u7-v3 2
+em-eta6-phi3 2 4 l1-u6-v2 2 57 l15-u6-v2 2
+em-eta6-phi4 3 4 l1-u6-v2 2 57 l15-u6-v2 2 81 l23-u7-v3 1
+em-eta5-phi5 2 25 l5-u6-v3 1 81 l23-u7-v3 3
+em-eta5-phi6 2 25 l5-u6-v3 1 26 l5-u7-v4 1
+em-eta6-phi5 2 25 l5-u6-v3 2 81 l23-u7-v3 1
+em-eta6-phi6 1 25 l5-u6-v3 2
+em-eta5-phi7 1 26 l5-u7-v4 1
 em-eta5-phi8 0
 em-eta6-phi7 0
 em-eta6-phi8 0
-em-eta4-phi9 1 61 1
-em-eta4-phi10 1 61 3
-em-eta5-phi9 1 58 1
-em-eta5-phi10 2 58 2 61 1
-em-eta3-phi12 1 74 1
-em-eta4-phi11 1 61 1
-em-eta4-phi12 1 72 1
-em-eta2-phi13 2 74 3 75 1
-em-eta3-phi13 2 72 2 74 3
-em-eta2-phi14 2 45 2 46 2
-em-eta1-phi15 2 33 3 46 1
-em-eta0-phi16 1 73 1
+em-eta4-phi9 1 61 l15-u7-v6 1
+em-eta4-phi10 1 61 l15-u7-v6 3
+em-eta5-phi9 1 58 l15-u6-v5 1
+em-eta5-phi10 2 58 l15-u6-v5 2 61 l15-u7-v6 1
+em-eta3-phi12 1 74 l17-u7-v8 1
+em-eta4-phi11 1 61 l15-u7-v6 1
+em-eta4-phi12 1 72 l17-u6-v7 1
+em-eta2-phi13 2 74 l17-u7-v8 3 75 l17-u8-v9 1
+em-eta3-phi13 2 72 l17-u6-v7 2 74 l17-u7-v8 3
+em-eta2-phi14 2 45 l13-u6-v8 2 46 l13-u7-v9 2
+em-eta1-phi15 2 33 l7-u6-v9 3 46 l13-u7-v9 1
+em-eta0-phi16 1 73 l17-u6-v10 1
 em-eta2-phi-1 0
-em-eta2-phi0 1 62 1
+em-eta2-phi0 1 62 l15-u8-v1 1
 em-eta3-phi-1 0
-em-eta2-phi1 2 62 4 65 1
-em-eta3-phi1 2 59 2 62 2
-em-eta3-phi2 3 5 1 6 1 63 4
-em-eta3-phi3 5 5 2 6 1 63 2 82 1 83 1
-em-eta4-phi3 3 5 3 60 3 82 1
-em-eta3-phi4 2 82 3 83 1
-em-eta3-phi5 1 7 2
-em-eta4-phi4 1 82 3
-em-eta4-phi5 1 81 1
-em-eta3-phi6 3 7 2 26 1 27 1
-em-eta3-phi7 1 27 3
-em-eta4-phi6 1 26 3
-em-eta4-phi7 1 26 2
-em-eta3-phi8 1 27 1
+em-eta2-phi1 2 62 l15-u8-v1 4 65 l15-u9-v1 1
+em-eta3-phi1 2 59 l15-u7-v1 2 62 l15-u8-v1 2
+em-eta3-phi2 3 5 l1-u7-v2 1 6 l1-u8-v2 1 63 l15-u8-v2 4
+em-eta3-phi3 5 5 l1-u7-v2 2 6 l1-u8-v2 1 63 l15-u8-v2 2 82 l23-u8-v3 1 83 l23-u9-v3 1
+em-eta4-phi3 3 5 l1-u7-v2 3 60 l15-u7-v2 3 82 l23-u8-v3 1
+em-eta3-phi4 2 82 l23-u8-v3 3 83 l23-u9-v3 1
+em-eta3-phi5 1 7 l1-u8-v4 2
+em-eta4-phi4 1 82 l23-u8-v3 3
+em-eta4-phi5 1 81 l23-u7-v3 1
+em-eta3-phi6 3 7 l1-u8-v4 2 26 l5-u7-v4 1 27 l5-u8-v5 1
+em-eta3-phi7 1 27 l5-u8-v5 3
+em-eta4-phi6 1 26 l5-u7-v4 3
+em-eta4-phi7 1 26 l5-u7-v4 2
+em-eta3-phi8 1 27 l5-u8-v5 1
 em-eta3-phi9 0
 em-eta4-phi8 0
-em-eta2-phi10 1 64 4
-em-eta3-phi10 2 61 2 64 2
-em-eta3-phi11 1 64 1
-em-eta2-phi11 1 64 1
-em-eta2-phi12 1 74 1
-em-eta1-phi12 1 75 3
-em-eta1-phi13 3 46 1 47 1 75 4
-em-eta0-phi14 1 47 4
-em-eta1-phi14 2 46 4 47 1
+em-eta2-phi10 1 64 l15-u8-v7 4
+em-eta3-phi10 2 61 l15-u7-v6 2 64 l15-u8-v7 2
+em-eta3-phi11 1 64 l15-u8-v7 1
+em-eta2-phi11 1 64 l15-u8-v7 1
+em-eta2-phi12 1 74 l17-u7-v8 1
+em-eta1-phi12 1 75 l17-u8-v9 3
+em-eta1-phi13 3 46 l13-u7-v9 1 47 l13-u8-v10 1 75 l17-u8-v9 4
+em-eta0-phi14 1 47 l13-u8-v10 4
+em-eta1-phi14 2 46 l13-u7-v9 4 47 l13-u8-v10 1
 em-eta0-phi15 0
 em-eta1-phi-1 0
-em-eta1-phi0 1 65 3
-em-eta1-phi1 4 8 1 65 4 66 1 68 1
-em-eta2-phi2 3 6 4 63 1 66 3
-em-eta2-phi3 3 6 2 63 1 83 4
-em-eta2-phi4 2 9 1 83 2
-em-eta2-phi5 2 7 2 9 2
-em-eta2-phi6 2 7 2 10 2
-em-eta2-phi7 3 10 1 27 2 28 1
-em-eta2-phi8 2 27 1 28 2
+em-eta1-phi0 1 65 l15-u9-v1 3
+em-eta1-phi1 4 8 l1-u9-v2 1 65 l15-u9-v1 4 66 l15-u9-v2 1 68 l15-u10-v2 1
+em-eta2-phi2 3 6 l1-u8-v2 4 63 l15-u8-v2 1 66 l15-u9-v2 3
+em-eta2-phi3 3 6 l1-u8-v2 2 63 l15-u8-v2 1 83 l23-u9-v3 4
+em-eta2-phi4 2 9 l1-u9-v4 1 83 l23-u9-v3 2
+em-eta2-phi5 2 7 l1-u8-v4 2 9 l1-u9-v4 2
+em-eta2-phi6 2 7 l1-u8-v4 2 10 l1-u9-v5 2
+em-eta2-phi7 3 10 l1-u9-v5 1 27 l5-u8-v5 2 28 l5-u9-v6 1
+em-eta2-phi8 2 27 l5-u8-v5 1 28 l5-u9-v6 2
 em-eta2-phi9 0
-em-eta1-phi10 1 67 4
-em-eta1-phi11 1 67 3
+em-eta1-phi10 1 67 l15-u9-v8 4
+em-eta1-phi11 1 67 l15-u9-v8 3
 em-eta0-phi12 0
-em-eta0-phi13 1 47 2
+em-eta0-phi13 1 47 l13-u8-v10 2
 em-eta0-phi0 0
-em-eta0-phi1 1 68 2
-em-eta0-phi2 2 8 2 68 4
-em-eta1-phi2 4 8 5 66 4 68 1 84 1
-em-eta1-phi3 1 84 6
-em-eta1-phi4 2 9 1 11 1
-em-eta1-phi5 2 9 4 12 1
-em-eta1-phi6 2 10 4 12 1
-em-eta1-phi7 3 10 1 13 1 28 2
-em-eta1-phi8 1 28 3
+em-eta0-phi1 1 68 l15-u10-v2 2
+em-eta0-phi2 2 8 l1-u9-v2 2 68 l15-u10-v2 4
+em-eta1-phi2 4 8 l1-u9-v2 5 66 l15-u9-v2 4 68 l15-u10-v2 1 84 l23-u10-v3 1
+em-eta1-phi3 1 84 l23-u10-v3 6
+em-eta1-phi4 2 9 l1-u9-v4 1 11 l1-u10-v4 1
+em-eta1-phi5 2 9 l1-u9-v4 4 12 l1-u10-v5 1
+em-eta1-phi6 2 10 l1-u9-v5 4 12 l1-u10-v5 1
+em-eta1-phi7 3 10 l1-u9-v5 1 13 l1-u10-v6 1 28 l5-u9-v6 2
+em-eta1-phi8 1 28 l5-u9-v6 3
 em-eta0-phi9 0
 em-eta1-phi9 0
-em-eta0-phi10 1 67 1
+em-eta0-phi10 1 67 l15-u9-v8 1
 em-eta0-phi11 0
-em-eta0-phi3 1 84 1
-em-eta0-phi4 1 11 5
-em-eta0-phi5 2 11 2 12 3
-em-eta0-phi6 2 12 3 13 2
-em-eta0-phi7 1 13 5
+em-eta0-phi3 1 84 l23-u10-v3 1
+em-eta0-phi4 1 11 l1-u10-v4 5
+em-eta0-phi5 2 11 l1-u10-v4 2 12 l1-u10-v5 3
+em-eta0-phi6 2 12 l1-u10-v5 3 13 l1-u10-v6 2
+em-eta0-phi7 1 13 l1-u10-v6 5
 em-eta0-phi8 0
-em-eta17-phi19 1 37 1
+em-eta17-phi19 1 37 l13-u1-v2 1
 em-eta17-phi20 0
-em-eta16-phi-2 1 76 1
-em-eta16-phi1 1 76 1
-em-eta17-phi0 1 76 1
+em-eta16-phi-2 1 76 l21-u2-v0 1
+em-eta16-phi1 1 76 l21-u2-v0 1
+em-eta17-phi0 1 76 l21-u2-v0 1
 em-eta17-phi3 0
 em-eta17-phi4 0
-em-eta16-phi11 1 48 1
+em-eta16-phi11 1 48 l15-u2-v2 1
 em-eta14-phi14 0
 em-eta14-phi15 0
 em-eta11-phi16 0
-em-eta13-phi-1 2 41 1 77 1
+em-eta13-phi-1 2 41 l13-u3-v0 1 77 l21-u3-v0 1
 em-eta14-phi8 0
 em-eta14-phi9 0
-em-eta9-phi-2 1 42 1
-em-eta11-phi7 1 14 1
-em-eta14-phi19 2 29 1 38 1
+em-eta9-phi-2 1 42 l13-u4-v0 1
+em-eta11-phi7 1 14 l3-u4-v2 1
+em-eta14-phi19 2 29 l7-u1-v3 1 38 l13-u1-v3 1
 em-eta14-phi17 0
 em-eta11-phi19 0
-em-eta14-phi4 1 78 1
+em-eta14-phi4 1 78 l23-u3-v1 1
 em-eta14-phi6 0
 em-eta11-phi4 0
-em-eta14-phi21 2 29 1 38 1
-em-eta11-phi22 2 30 1 39 1
+em-eta14-phi21 2 29 l7-u1-v3 1 38 l13-u1-v3 1
+em-eta11-phi22 2 30 l7-u1-v4 1 39 l13-u1-v4 1
 em-eta12-phi17 0
-em-eta14-phi2 1 78 1
+em-eta14-phi2 1 78 l23-u3-v1 1
 em-eta11-phi13 0
 em-eta12-phi6 0
 em-eta11-phi10 0
@@ -393,26 +393,26 @@ em-eta17-phi11 0
 em-eta12-phi18 0
 em-eta12-phi5 0
 em-eta0-phi-1 0
-em-eta14-phi18 1 38 1
+em-eta14-phi18 1 38 l13-u1-v3 1
 em-eta6-phi23 0
-em-eta17-phi13 1 48 1
-em-eta14-phi5 1 78 1
-em-eta17-phi2 1 76 1
+em-eta17-phi13 1 48 l15-u2-v2 1
+em-eta14-phi5 1 78 l23-u3-v1 1
+em-eta17-phi2 1 76 l21-u2-v0 1
 em-eta17-phi-2 0
 em-eta17-phi1 0
-em-eta17-phi10 1 48 1
+em-eta17-phi10 1 48 l15-u2-v2 1
 em-eta15-phi15 0
-em-eta14-phi0 1 77 1
+em-eta14-phi0 1 77 l21-u3-v0 1
 em-eta15-phi8 0
-em-eta13-phi10 1 54 1
-em-eta13-phi13 1 54 1
+em-eta13-phi10 1 54 l15-u3-v3 1
+em-eta13-phi13 1 54 l15-u3-v3 1
 em-eta15-phi20 0
-em-eta17-phi-3 1 76 1
-em-eta17-phi-1 1 76 1
+em-eta17-phi-3 1 76 l21-u2-v0 1
+em-eta17-phi-1 1 76 l21-u2-v0 1
 em-eta15-phi16 0
-em-eta13-phi-2 1 77 1
-em-eta13-phi1 1 77 1
-em-eta15-phi3 1 78 1
+em-eta13-phi-2 1 77 l21-u3-v0 1
+em-eta13-phi1 1 77 l21-u3-v0 1
+em-eta15-phi3 1 78 l23-u3-v1 1
 em-eta15-phi7 0
 em-eta14-phi11 0
 em-eta14-phi12 0
