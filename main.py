@@ -306,10 +306,11 @@ def module_per_tower(inputdir, outputdir, bundles_file_path, inputdir_paramMtx, 
         parMtxHad_PerBundle[i] = pd.concat([parMtxHadSilic_PerBundle[i],parMtxHadScint_PerBundle[i]], axis=1).fillna(0).astype('int')
     print("==================================================")
     print("WARNING: In the current version, scintillators and silicons are divided by 1/16's and 1/8's,"\
-           + "respectively. Energy shares of silicons in CE-H are multiplied by two so that all CE-E are"\
-           + "divided by 8 and all CE-H are divided by 16 regardless of silicon/scint type."\
-           + "This multiplication exists only in module_per_tower files."\
-           + "Currently hardcoded, should be later be implemented in a clever way.")
+           + " respectively. Energy shares of silicons in CE-H are multiplied by 2, so that all CE-E are"\
+           + " divided by 8 and all CE-H are divided by 16 regardless of silicon/scint type."\
+           + " IF THE DIVISORS ARE DIFFERENT, THE CODE NEEDS TO BE CHANGED. This change applied only in"\
+           + " the module_per_tower function, as requested by Ante. No change is needed in other functions."\
+           + " This change is currently hardcoded, should later be implemented in a clever way.")
     print("==================================================")
     
     writeParMtxPerBundleToFile(outputdir, parMtxEM_PerBundle, name='CE-E')
