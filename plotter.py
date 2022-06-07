@@ -13,16 +13,16 @@ ROOT.gROOT.SetBatch()
 
 def plotSCsOverTower_singleModule(SC_file, outputdir): #for quick plotting single module position wrt tower coordinate
     layer = 3
-    u = 6
-    v = 2
+    u = 4
+    v = 10
     
     etaBinStep = 0.0870
-    minBinEta = 22 #to be tuned manually
-    maxBinEta = 28 #to be tuned manually
+    minBinEta = 16 #to be tuned manually
+    maxBinEta = 22 #to be tuned manually
     
     phiBinStep = 2*math.pi/72
-    minBinPhi = 2 #to be tuned manually
-    maxBinPhi = 10 #to be tuned manually
+    minBinPhi = 17 #to be tuned manually
+    maxBinPhi = 23 #to be tuned manually
 
     eta_ticks = [round(a * etaBinStep,3) for a in range(minBinEta, maxBinEta)] 
     phi_ticks = [round(b * phiBinStep,3) for b in range(minBinPhi, maxBinPhi)] 
