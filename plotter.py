@@ -12,17 +12,17 @@ ROOT.gStyle.SetOptStat(0)
 ROOT.gROOT.SetBatch()
 
 def plotSCsOverTower_singleModule(SC_file, outputdir): #for quick plotting single module position wrt tower coordinate
-    layer = 11
-    u = 1
-    v = 3
+    layer = 3
+    u = 6
+    v = 2
     
     etaBinStep = 0.0870
-    minBinEta = 16 #to be tuned manually
-    maxBinEta = 38 #to be tuned manually
+    minBinEta = 22 #to be tuned manually
+    maxBinEta = 28 #to be tuned manually
     
     phiBinStep = 2*math.pi/72
-    minBinPhi = -2 #to be tuned manually
-    maxBinPhi = 24 #to be tuned manually
+    minBinPhi = 2 #to be tuned manually
+    maxBinPhi = 10 #to be tuned manually
 
     eta_ticks = [round(a * etaBinStep,3) for a in range(minBinEta, maxBinEta)] 
     phi_ticks = [round(b * phiBinStep,3) for b in range(minBinPhi, maxBinPhi)] 
@@ -44,12 +44,12 @@ def plotSCsOverTower_singleModule(SC_file, outputdir): #for quick plotting singl
     ax.set_xticklabels(eta_ticks, rotation = 45)
     ax.set_yticks(phi_ticks)
     ax.grid(which='both')
-    ax.set_xlabel('eta')
-    ax.set_ylabel('phi')
+    ax.set_xlabel('pseudorapidity ($\eta$)')
+    ax.set_ylabel('$\phi$')
     plt.tight_layout()
     fig.savefig(outputdir+'l'+str(layer)+'-u'+str(u)+'-v'+str(v)+'.png', dpi=300)
 
-def plotSCsOverTower(SC_file, outputdir):
+def plotSCsOverTower_towerOnBorder(SC_file, outputdir):
     etaBinStep = 0.0870
     minBinEta = 27 #to be tuned manually
     maxBinEta = 39 #to be tuned manually
@@ -218,21 +218,21 @@ def main():
     
     if (config['plotterFuncs']['towersPerStage1']):
         towersPerStage1(lpgbtMappingsFile=config['module_per_tower']['inputdir']+config['module_per_tower']['bundles_file'],\
-                        inputdir_paramMtx=config['param_mtx']['outputdir'],\
-                        param_mtx_em_name=config['param_mtx']['param_mtx_em_name'],\
-                        param_mtx_had_name_silic=config['param_mtx']['param_mtx_had_name_silic'],\
-                        param_mtx_had_name_scint=config['param_mtx']['param_mtx_had_name_scint'],\
+                        inputdir_paramMtx=config['silicons']['outputdir'],\
+                        param_mtx_em_name=config['silicons']['param_mtx_em_name'],\
+                        param_mtx_had_name_silic=config['silicons']['param_mtx_had_name_silic'],\
+                        param_mtx_had_name_scint=config['silicons']['param_mtx_had_name_scint'],\
                         outputdir=config['towersPerStage1']['outputdir'],\
                         histRange=config['histRange']\
                         )
     
-    if (config['plotterFuncs']['plotSCsOverTower']):
-        plotSCsOverTower(SC_file=config['param_mtx']['inputdir']+config['param_mtx']['SC_position_file'],\
-                        outputdir=config['plotSCsOverTower']['outputdir']\
+    if (config['plotterFuncs']['plotSCsOverTower_towerOnBorder']):
+        plotSCsOverTower_towerOnBorder(SC_file=config['silicons']['inputdir']+config['silicons']['SCsPosition_file'],\
+                        outputdir=config['plotSCsOverTower_towerOnBorder']['outputdir']\
                         )
 
     if (config['plotterFuncs']['plotSCsOverTower_singleModule']):
-        plotSCsOverTower_singleModule(SC_file=config['param_mtx']['inputdir']+config['param_mtx']['SC_position_file'],\
+        plotSCsOverTower_singleModule(SC_file=config['silicons']['inputdir']+config['silicons']['SCsPosition_file'],\
                         outputdir=config['plotSCsOverTower_singleModule']['outputdir']\
                         )
 

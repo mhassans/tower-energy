@@ -29,15 +29,15 @@ module_per_tower:
 
 ##########plotter.py##########
 plotterFuncs:
-    towersPerStage1: True
-    plotSCsOverTower: False
+    towersPerStage1: False
+    plotSCsOverTower_towerOnBorder: False
     plotSCsOverTower_singleModule: False
     TotNumOfSumsPerTower: False
 
 towersPerStage1:
     outputdir: './output/plots/towersPerStage1/'
-plotSCsOverTower:
-    outputdir: './output/plots/plotSCsOverTower/'
+plotSCsOverTower_towerOnBorder:
+    outputdir: './output/plots/plotSCsOverTower_towerOnBorder/'
 plotSCsOverTower_singleModule:
     outputdir: './output/plots/plotSCsOverTower_singleModule/'
 TotNumOfSumsPerTower:
