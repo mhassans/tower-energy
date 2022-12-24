@@ -302,5 +302,3 @@ def fillTowersIncl(df, hist, DoNumOfSums, N_div): #N_div is ignored when DoNumOf
     hist.SetTitle(title+";eta;phi;"+ztitle)
     
     return hist
-
-
